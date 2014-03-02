@@ -30,10 +30,11 @@
 //	And my own EasyTimeline https://github.com/mmislam101/EasyTimeline
 
 #import <UIKit/UIKit.h>
+#import "DACircularProgressView.h"
+#import "EasyTimeline.h"
 
 @class LoadingFlow;
 @class LoadingFlowSection;
-@class DACircularProgressView;
 
 @protocol LoadingFlowDelegate <NSObject>
 
@@ -47,6 +48,8 @@
 {
 	NSMutableArray *_sections;
 	NSInteger _currentSection;
+
+	EasyTimeline *_timeline;
 }
 
 @property (nonatomic, readonly) DACircularProgressView *progressView; // So that users have access to it
@@ -56,12 +59,14 @@
 @property (nonatomic, assign) UIColor *tintColor;
 @property (nonatomic, readonly) NSArray *sections;
 
+- (void)addSection:(LoadingFlowSection *)section;
+- (void)removeSection:(LoadingFlowSection *)section;
+
 #pragma mark Loading Flow Control
 
-- (void)addSection:(LoadingFlowSection *)section;
 - (void)start;
 - (void)pause;
-- (void)reset;
+- (void)stop;
 - (void)nextSection;
 - (void)displayMessage:(NSString *)string withDuration:(CGFloat)duration andCompletion:(void (^)(LoadingFlow *loadingFlow))completion; // This will stop the LoadingFlow, display the message for the duration and then fade out to completion
 

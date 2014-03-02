@@ -1,9 +1,9 @@
 //
-//  LoadingFlowSection.m
-//  TypeTeacher
+//  NSTimer+EasyTimeline.m
+//  EasyTimelineExample
 //
-//  Created by Mohammed Islam on 2/26/14.
-//  Copyright (c) 2014 KSITechnology. All rights reserved.
+//  Created by Mohammed Islam on 2/28/14.
+//  Copyright (c) 2014 KSI Technology. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person
 //  obtaining a copy of this software and associated documentation
@@ -26,21 +26,52 @@
 //  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //  OTHER DEALINGS IN THE SOFTWARE.
 
-#import "LoadingFlowSection.h"
+#import "NSTimer+EasyTimeline.h"
+#import <objc/runtime.h>
 
-@implementation LoadingFlowSection
+@interface NSTimer (EasyTimelinePrivate)
 
-+ (LoadingFlowSection *)loadingFlowWithText:(NSString *)text andDuration:(NSTimeInterval)duration
+@property (nonatomic) NSNumber *timeDeltaNumber;
+
+@end
+
+@implementation NSTimer (EasyTimelinePrivate)
+
+static void *AssociationKey;
+
+- (NSNumber *)timeDeltaNumber
 {
-	LoadingFlowSection *section		= [[LoadingFlowSection alloc] init];
-
-	section.label					= [[UILabel alloc] initWithFrame:CGRectZero];
-	section.label.backgroundColor	= [UIColor clearColor];
-	section.label.text				= text;
-
-	section.duration				= duration;
-
-	return section;
+    return objc_getAssociatedObject(self, AssociationKey);
 }
+
+- (void)setTimeDeltaNumber:(NSNumber *)timeDeltaNumber
+{
+    objc_setAssociatedObject(self, AssociationKey, timeDeltaNumber, OBJC_ASSOCIATION_RETAIN);
+}
+
+@end
+
+@implementation NSTimer (EasyTimeline)
+
+- (void)pauseOrResume
+{
+    if ([self isPaused])
+	{
+        self.fireDate			= [[NSDate date] dateByAddingTimeInterval:self.timeDeltaNumber.doubleValue];
+        self.timeDeltaNumber	= nil;
+    }
+    else
+	{
+        NSTimeInterval interval = [[self fireDate] timeIntervalSinceNow];
+        self.timeDeltaNumber	= @(interval);
+        self.fireDate			= [NSDate distantFuture];
+    }
+}
+
+- (BOOL)isPaused
+{
+    return (self.timeDeltaNumber != nil);
+}
+
 
 @end

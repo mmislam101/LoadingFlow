@@ -22,8 +22,12 @@
 		B61AB8AE18C2FD160043850F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B61AB88D18C2FD150043850F /* UIKit.framework */; };
 		B61AB8B618C2FD160043850F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B61AB8B418C2FD160043850F /* InfoPlist.strings */; };
 		B61AB8B818C2FD160043850F /* LoadingFlowExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B61AB8B718C2FD160043850F /* LoadingFlowExampleTests.m */; };
-		B61AB8C618C2FDD60043850F /* LoadingFlow.m in Sources */ = {isa = PBXBuildFile; fileRef = B61AB8C318C2FDD60043850F /* LoadingFlow.m */; };
-		B61AB8C718C2FDD60043850F /* LoadingFlowSection.m in Sources */ = {isa = PBXBuildFile; fileRef = B61AB8C518C2FDD60043850F /* LoadingFlowSection.m */; };
+		B61AB8D718C2FFDB0043850F /* DACircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = B61AB8CB18C2FFDB0043850F /* DACircularProgressView.m */; };
+		B61AB8D818C2FFDB0043850F /* EasyTimeline.m in Sources */ = {isa = PBXBuildFile; fileRef = B61AB8CE18C2FFDB0043850F /* EasyTimeline.m */; };
+		B61AB8D918C2FFDB0043850F /* EasyTimelineEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = B61AB8D018C2FFDB0043850F /* EasyTimelineEvent.m */; };
+		B61AB8DA18C2FFDB0043850F /* NSTimer+EasyTimeline.m in Sources */ = {isa = PBXBuildFile; fileRef = B61AB8D218C2FFDB0043850F /* NSTimer+EasyTimeline.m */; };
+		B61AB8DB18C2FFDB0043850F /* LoadingFlow.m in Sources */ = {isa = PBXBuildFile; fileRef = B61AB8D418C2FFDB0043850F /* LoadingFlow.m */; };
+		B61AB8DC18C2FFDB0043850F /* LoadingFlowSection.m in Sources */ = {isa = PBXBuildFile; fileRef = B61AB8D618C2FFDB0043850F /* LoadingFlowSection.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,10 +61,18 @@
 		B61AB8B318C2FD160043850F /* LoadingFlowExampleTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "LoadingFlowExampleTests-Info.plist"; sourceTree = "<group>"; };
 		B61AB8B518C2FD160043850F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		B61AB8B718C2FD160043850F /* LoadingFlowExampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LoadingFlowExampleTests.m; sourceTree = "<group>"; };
-		B61AB8C218C2FDD60043850F /* LoadingFlow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingFlow.h; sourceTree = "<group>"; };
-		B61AB8C318C2FDD60043850F /* LoadingFlow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingFlow.m; sourceTree = "<group>"; };
-		B61AB8C418C2FDD60043850F /* LoadingFlowSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingFlowSection.h; sourceTree = "<group>"; };
-		B61AB8C518C2FDD60043850F /* LoadingFlowSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingFlowSection.m; sourceTree = "<group>"; };
+		B61AB8CA18C2FFDB0043850F /* DACircularProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DACircularProgressView.h; sourceTree = "<group>"; };
+		B61AB8CB18C2FFDB0043850F /* DACircularProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DACircularProgressView.m; sourceTree = "<group>"; };
+		B61AB8CD18C2FFDB0043850F /* EasyTimeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EasyTimeline.h; sourceTree = "<group>"; };
+		B61AB8CE18C2FFDB0043850F /* EasyTimeline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EasyTimeline.m; sourceTree = "<group>"; };
+		B61AB8CF18C2FFDB0043850F /* EasyTimelineEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EasyTimelineEvent.h; sourceTree = "<group>"; };
+		B61AB8D018C2FFDB0043850F /* EasyTimelineEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EasyTimelineEvent.m; sourceTree = "<group>"; };
+		B61AB8D118C2FFDB0043850F /* NSTimer+EasyTimeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTimer+EasyTimeline.h"; sourceTree = "<group>"; };
+		B61AB8D218C2FFDB0043850F /* NSTimer+EasyTimeline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSTimer+EasyTimeline.m"; sourceTree = "<group>"; };
+		B61AB8D318C2FFDB0043850F /* LoadingFlow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingFlow.h; sourceTree = "<group>"; };
+		B61AB8D418C2FFDB0043850F /* LoadingFlow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingFlow.m; sourceTree = "<group>"; };
+		B61AB8D518C2FFDB0043850F /* LoadingFlowSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingFlowSection.h; sourceTree = "<group>"; };
+		B61AB8D618C2FFDB0043850F /* LoadingFlowSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingFlowSection.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,7 +132,7 @@
 		B61AB88F18C2FD150043850F /* LoadingFlowExample */ = {
 			isa = PBXGroup;
 			children = (
-				B61AB8C118C2FDD60043850F /* LoadingFlow */,
+				B61AB8C818C2FFDB0043850F /* LoadingFlow */,
 				B61AB89818C2FD150043850F /* LFEAppDelegate.h */,
 				B61AB89918C2FD150043850F /* LFEAppDelegate.m */,
 				B61AB89B18C2FD150043850F /* Main_iPhone.storyboard */,
@@ -162,16 +174,40 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		B61AB8C118C2FDD60043850F /* LoadingFlow */ = {
+		B61AB8C818C2FFDB0043850F /* LoadingFlow */ = {
 			isa = PBXGroup;
 			children = (
-				B61AB8C218C2FDD60043850F /* LoadingFlow.h */,
-				B61AB8C318C2FDD60043850F /* LoadingFlow.m */,
-				B61AB8C418C2FDD60043850F /* LoadingFlowSection.h */,
-				B61AB8C518C2FDD60043850F /* LoadingFlowSection.m */,
+				B61AB8C918C2FFDB0043850F /* DACircularProgress */,
+				B61AB8CC18C2FFDB0043850F /* EasyTimeline */,
+				B61AB8D318C2FFDB0043850F /* LoadingFlow.h */,
+				B61AB8D418C2FFDB0043850F /* LoadingFlow.m */,
+				B61AB8D518C2FFDB0043850F /* LoadingFlowSection.h */,
+				B61AB8D618C2FFDB0043850F /* LoadingFlowSection.m */,
 			);
 			name = LoadingFlow;
 			path = ../../LoadingFlow;
+			sourceTree = "<group>";
+		};
+		B61AB8C918C2FFDB0043850F /* DACircularProgress */ = {
+			isa = PBXGroup;
+			children = (
+				B61AB8CA18C2FFDB0043850F /* DACircularProgressView.h */,
+				B61AB8CB18C2FFDB0043850F /* DACircularProgressView.m */,
+			);
+			path = DACircularProgress;
+			sourceTree = "<group>";
+		};
+		B61AB8CC18C2FFDB0043850F /* EasyTimeline */ = {
+			isa = PBXGroup;
+			children = (
+				B61AB8CD18C2FFDB0043850F /* EasyTimeline.h */,
+				B61AB8CE18C2FFDB0043850F /* EasyTimeline.m */,
+				B61AB8CF18C2FFDB0043850F /* EasyTimelineEvent.h */,
+				B61AB8D018C2FFDB0043850F /* EasyTimelineEvent.m */,
+				B61AB8D118C2FFDB0043850F /* NSTimer+EasyTimeline.h */,
+				B61AB8D218C2FFDB0043850F /* NSTimer+EasyTimeline.m */,
+			);
+			path = EasyTimeline;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -273,11 +309,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B61AB8C718C2FDD60043850F /* LoadingFlowSection.m in Sources */,
 				B61AB89A18C2FD150043850F /* LFEAppDelegate.m in Sources */,
+				B61AB8D718C2FFDB0043850F /* DACircularProgressView.m in Sources */,
+				B61AB8D818C2FFDB0043850F /* EasyTimeline.m in Sources */,
+				B61AB8DA18C2FFDB0043850F /* NSTimer+EasyTimeline.m in Sources */,
 				B61AB8A318C2FD150043850F /* LFEViewController.m in Sources */,
-				B61AB8C618C2FDD60043850F /* LoadingFlow.m in Sources */,
 				B61AB89618C2FD150043850F /* main.m in Sources */,
+				B61AB8DB18C2FFDB0043850F /* LoadingFlow.m in Sources */,
+				B61AB8DC18C2FFDB0043850F /* LoadingFlowSection.m in Sources */,
+				B61AB8D918C2FFDB0043850F /* EasyTimelineEvent.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

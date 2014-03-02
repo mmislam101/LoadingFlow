@@ -1,9 +1,9 @@
 //
-//  LoadingFlowSection.h
-//  TypeTeacher
+//  EasyTimelineEvents.h
+//  EasyTimelineExample
 //
-//  Created by Mohammed Islam on 2/26/14.
-//  Copyright (c) 2014 KSITechnology. All rights reserved.
+//  Created by Mohammed Islam on 2/27/14.
+//  Copyright (c) 2014 KSI Technology. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person
 //  obtaining a copy of this software and associated documentation
@@ -28,11 +28,17 @@
 
 #import <Foundation/Foundation.h>
 
-@interface LoadingFlowSection : NSObject
+@class EasyTimeline;
+@class EasyTimelineEvent;
 
-@property (nonatomic, strong) UILabel *label;
-@property (nonatomic, assign) NSTimeInterval duration;
+typedef void (^timelineEventBlock)(EasyTimelineEvent *event, EasyTimeline *timeline);
 
-+ (LoadingFlowSection *)loadingFlowWithText:(NSString *)text andDuration:(NSTimeInterval)duration;
+@interface EasyTimelineEvent : NSObject
+
+@property (nonatomic, copy) timelineEventBlock eventBlock;
+@property (nonatomic, assign) NSTimeInterval time;
+@property (nonatomic, assign) BOOL willRepeat; // Default to NO
+
++ (EasyTimelineEvent *)eventAtTime:(NSTimeInterval)time withEventBlock:(timelineEventBlock)completionBlock;
 
 @end

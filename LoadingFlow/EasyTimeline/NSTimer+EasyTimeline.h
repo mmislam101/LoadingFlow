@@ -1,9 +1,9 @@
 //
-//  LoadingFlowSection.h
-//  TypeTeacher
+//  NSTimer+EasyTimeline.h
+//  EasyTimelineExample
 //
-//  Created by Mohammed Islam on 2/26/14.
-//  Copyright (c) 2014 KSITechnology. All rights reserved.
+//  Created by Mohammed Islam on 2/28/14.
+//  Copyright (c) 2014 KSI Technology. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person
 //  obtaining a copy of this software and associated documentation
@@ -25,14 +25,14 @@
 //  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 //  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //  OTHER DEALINGS IN THE SOFTWARE.
+//
+//	Got this from: http://stackoverflow.com/questions/347219/how-can-i-programmatically-pause-an-nstimer
 
 #import <Foundation/Foundation.h>
 
-@interface LoadingFlowSection : NSObject
+@interface NSTimer (EasyTimeline)
 
-@property (nonatomic, strong) UILabel *label;
-@property (nonatomic, assign) NSTimeInterval duration;
-
-+ (LoadingFlowSection *)loadingFlowWithText:(NSString *)text andDuration:(NSTimeInterval)duration;
+- (void)pauseOrResume;
+- (BOOL)isPaused;
 
 @end

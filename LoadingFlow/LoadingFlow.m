@@ -37,18 +37,51 @@
 	if (!(self = [super initWithFrame:frame]))
         return self;
 
-	
+	_sections		= [[NSMutableArray alloc] init];
+	_currentSection	= 0;
+
+	_timeline		= [[EasyTimeline alloc] init];
 
     return self;
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
+#pragma mark Loading Flow Properties
+
+- (void)addSection:(LoadingFlowSection *)section
 {
-    // Drawing code
+
 }
-*/
+
+- (void)removeSection:(LoadingFlowSection *)section
+{
+
+}
+
+#pragma mark Loading Flow Control
+
+- (void)start
+{
+
+}
+
+- (void)pause
+{
+
+}
+
+- (void)stop
+{
+
+}
+
+- (void)nextSection
+{
+
+}
+
+- (void)displayMessage:(NSString *)string withDuration:(CGFloat)duration andCompletion:(void (^)(LoadingFlow *loadingFlow))completion
+{
+	
+}
 
 @end
