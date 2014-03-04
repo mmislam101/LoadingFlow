@@ -44,23 +44,32 @@
 
 @end
 
-@interface LoadingFlow : UIView
+@interface LoadingFlow : UIView <EasyTimelineDelegate>
 {
 	NSMutableArray *_sections;
-	NSInteger _currentSection;
+	DACircularProgressView *_progressView;
 
 	EasyTimeline *_timeline;
+	NSTimeInterval _tickFactor;
+
+	NSTimeInterval _timeSinceStart;
+	NSInteger _currentSection;
 }
 
 @property (nonatomic, readonly) DACircularProgressView *progressView; // So that users have access to it
 
 #pragma mark Loading Flow Properties
 
-@property (nonatomic, assign) UIColor *tintColor;
+@property (nonatomic, strong) UIColor *tintColor;
 @property (nonatomic, readonly) NSArray *sections;
 
 - (void)addSection:(LoadingFlowSection *)section;
 - (void)removeSection:(LoadingFlowSection *)section;
+
+#pragma mark Loading Flow State Property
+
+@property (nonatomic, readonly) NSTimeInterval timeSinceStart;
+@property (nonatomic, readonly) NSInteger currentSection;
 
 #pragma mark Loading Flow Control
 
@@ -68,6 +77,7 @@
 - (void)pause;
 - (void)stop;
 - (void)nextSection;
+
 - (void)displayMessage:(NSString *)string withDuration:(CGFloat)duration andCompletion:(void (^)(LoadingFlow *loadingFlow))completion; // This will stop the LoadingFlow, display the message for the duration and then fade out to completion
 
 @end

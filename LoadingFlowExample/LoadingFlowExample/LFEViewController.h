@@ -8,6 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
+@class LoadingFlow;
+
 @interface LFEViewController : UIViewController
+{
+	LoadingFlow *_loadingFlow;
+}
 
 @end
