@@ -7,10 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LoadingFlow.h"
 
-@class LoadingFlow;
-
-@interface LFEViewController : UIViewController
+@interface LFEViewController : UIViewController <LoadingFlowDelegate>
 {
 	LoadingFlow *_loadingFlow;
 }

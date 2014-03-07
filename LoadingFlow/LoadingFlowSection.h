@@ -32,6 +32,7 @@
 
 @property (nonatomic, strong) UILabel *label;
 @property (nonatomic, assign) NSTimeInterval duration;
+@property (nonatomic, strong) UIColor *backgroundColor; // Default set to translucent black
 
 + (LoadingFlowSection *)loadingFlowWithText:(NSString *)text andDuration:(NSTimeInterval)duration;
 

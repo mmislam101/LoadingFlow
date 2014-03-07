@@ -8,7 +8,6 @@
 
 #import "LFEViewController.h"
 #import "LoadingFlow.h"
-#import "LoadingFlowSection.h"
 
 @interface LFEViewController ()
 
@@ -29,10 +28,12 @@
 
 	_loadingFlow			= [[LoadingFlow alloc] initWithFrame:CGRectMake(0.0, 200.0, self.view.frame.size.width, self.view.frame.size.height - 200.0)];
 	_loadingFlow.tintColor	= [UIColor blueColor];
+	_loadingFlow.delegate	= self;
 
 	[self.view addSubview:_loadingFlow];
 
-	[_loadingFlow addSection:[LoadingFlowSection loadingFlowWithText:@"monkey" andDuration:5.0]];
+	[_loadingFlow addSection:[LoadingFlowSection loadingFlowWithText:@"monkey" andDuration:2.0]];
+	[_loadingFlow addSection:[LoadingFlowSection loadingFlowWithText:@"butt" andDuration:1.0]];
 }
 
 - (void)viewDidLoad
@@ -57,6 +58,13 @@
 - (void)displayCurrentTime
 {
 	NSLog(@"current time: %f", _loadingFlow.timeSinceStart);
+}
+
+#pragma mark LoadingFlowDelegate
+
+- (void)loadingFlow:(LoadingFlow *)loadingFlow hasCompletedSection:(LoadingFlowSection *)section atIndex:(NSInteger)idx
+{
+	NSLog(@"finished section:%i %@", idx, section.label.text);
 }
 
 @end

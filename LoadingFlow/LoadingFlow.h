@@ -30,22 +30,23 @@
 //	And my own EasyTimeline https://github.com/mmislam101/EasyTimeline
 
 #import <UIKit/UIKit.h>
+#import "LoadingFlowSection.h"
 #import "DACircularProgressView.h"
 #import "EasyTimeline.h"
 
 @class LoadingFlow;
-@class LoadingFlowSection;
 
 @protocol LoadingFlowDelegate <NSObject>
 
 @optional
 
-- (void)loadingFlow:(LoadingFlow *)loadingFlow hasCompletedSection:(NSInteger)section;
+- (void)loadingFlow:(LoadingFlow *)loadingFlow hasCompletedSection:(LoadingFlowSection *)section atIndex:(NSInteger)idx;
 
 @end
 
 @interface LoadingFlow : UIView <EasyTimelineDelegate>
 {
+	CGFloat _sideWidth;
 	NSMutableArray *_sections;
 	DACircularProgressView *_progressView;
 
@@ -54,8 +55,13 @@
 
 	NSTimeInterval _timeSinceStart;
 	NSInteger _currentSection;
+
+	UIColor *_ringBackgroundColor;
+
+	__weak id <LoadingFlowDelegate> _delegate;
 }
 
+@property (weak, nonatomic) id <LoadingFlowDelegate> delegate;
 @property (nonatomic, readonly) DACircularProgressView *progressView; // So that users have access to it
 
 #pragma mark Loading Flow Properties
