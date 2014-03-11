@@ -172,13 +172,23 @@ timeSinceStart	= _timeSinceStart;
 - (void)setupSections
 {
 	[self drawRing];
+
+	
 }
 
 - (void)drawRing
 {
 	UIBezierPath *ringPath	= [UIBezierPath bezierPath];
-	[ringPath addArcWithCenter:_progressView.center radius:(_progressView.bounds.size.width / 2.0) + (_sideWidth * kRingRatio) startAngle:0 endAngle:DEGREES_TO_RADIANS(360.0) clockwise:YES];
-	[ringPath addArcWithCenter:_progressView.center radius:_sideWidth / 2.0 startAngle:DEGREES_TO_RADIANS(360.0) endAngle:0 clockwise:NO];
+
+	[ringPath addArcWithCenter:_progressView.center
+						radius:(_progressView.bounds.size.width / 2.0) + (_sideWidth * kRingRatio)
+					startAngle:0 endAngle:DEGREES_TO_RADIANS(360.0)
+					 clockwise:YES];
+
+	[ringPath addArcWithCenter:_progressView.center
+						radius:_sideWidth / 2.0
+					startAngle:DEGREES_TO_RADIANS(360.0)
+					  endAngle:0 clockwise:NO];
 
 	CAShapeLayer *ringLayer	= [CAShapeLayer layer];
 	ringLayer.frame			= self.bounds;

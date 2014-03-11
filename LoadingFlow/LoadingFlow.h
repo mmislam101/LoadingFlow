@@ -27,6 +27,7 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 //	This class uses DACircularProgressView https://github.com/danielamitay/DACircularProgress
+//	As well as SKBounceAnimation https://github.com/khanlou/SKBounceAnimation
 //	And my own EasyTimeline https://github.com/mmislam101/EasyTimeline
 
 #import <UIKit/UIKit.h>

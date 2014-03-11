@@ -19,16 +19,18 @@
 {
 	[super loadView];
 
-	UIButton *button		= [UIButton buttonWithType:UIButtonTypeRoundedRect];
-	button.frame			= CGRectMake(100.0, 100.0, 100.0, 44.0);
-	[button setTitle:@"Current Time" forState:UIControlStateNormal];
-	[button addTarget:self action:@selector(displayCurrentTime) forControlEvents:UIControlEventTouchDown];
+	CGRect frame				= self.view.frame;
+	self.view.backgroundColor	= [UIColor orangeColor];
 
-	[self.view addSubview:button];
+	_currentLabel				= [[UILabel alloc] initWithFrame:CGRectMake(frame.size.width / 4.0, 100.0, frame.size.width, 44.0)];
+	_currentLabel.text			= @"Current Time:";
+	_currentLabel.backgroundColor	= [UIColor clearColor];
 
-	_loadingFlow			= [[LoadingFlow alloc] initWithFrame:CGRectMake(0.0, 200.0, self.view.frame.size.width, self.view.frame.size.height - 200.0)];
-	_loadingFlow.tintColor	= [UIColor blueColor];
-	_loadingFlow.delegate	= self;
+	[self.view addSubview:_currentLabel];
+
+	_loadingFlow				= [[LoadingFlow alloc] initWithFrame:CGRectMake(0.0, 200.0, self.view.frame.size.width, self.view.frame.size.height - 200.0)];
+	_loadingFlow.tintColor		= [UIColor blueColor];
+	_loadingFlow.delegate		= self;
 
 	[self.view addSubview:_loadingFlow];
 
@@ -40,6 +42,9 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+
+	self.navigationItem.rightBarButtonItem	= [[UIBarButtonItem alloc] initWithTitle:@"Pause" style:UIBarButtonItemStylePlain target:self action:@selector(pauseFlow)];
+	self.navigationItem.leftBarButtonItem	= [[UIBarButtonItem alloc] initWithTitle:@"Start" style:UIBarButtonItemStylePlain target:self action:@selector(startFlow)];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -47,6 +52,8 @@
 	[super viewDidAppear:animated];
 
 	[_loadingFlow start];
+
+	[NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(displayCurrentTime) userInfo:nil repeats:YES];
 }
 
 - (void)didReceiveMemoryWarning
@@ -57,7 +64,17 @@
 
 - (void)displayCurrentTime
 {
-	NSLog(@"current time: %f", _loadingFlow.timeSinceStart);
+	_currentLabel.text = [NSString stringWithFormat:@"Current Time: %f", _loadingFlow.timeSinceStart];
+}
+
+- (void)pauseFlow
+{
+	NSLog(@"pause");
+}
+
+- (void)startFlow
+{
+	NSLog(@"start");
 }
 
 #pragma mark LoadingFlowDelegate

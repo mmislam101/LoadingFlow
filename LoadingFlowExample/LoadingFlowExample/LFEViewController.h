@@ -12,6 +12,7 @@
 @interface LFEViewController : UIViewController <LoadingFlowDelegate>
 {
 	LoadingFlow *_loadingFlow;
+	UILabel *_currentLabel;
 }
 
 @end

@@ -13,8 +13,6 @@
 		B61AB89418C2FD150043850F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B61AB89218C2FD150043850F /* InfoPlist.strings */; };
 		B61AB89618C2FD150043850F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B61AB89518C2FD150043850F /* main.m */; };
 		B61AB89A18C2FD150043850F /* LFEAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B61AB89918C2FD150043850F /* LFEAppDelegate.m */; };
-		B61AB89D18C2FD150043850F /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B61AB89B18C2FD150043850F /* Main_iPhone.storyboard */; };
-		B61AB8A018C2FD150043850F /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B61AB89E18C2FD150043850F /* Main_iPad.storyboard */; };
 		B61AB8A318C2FD150043850F /* LFEViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B61AB8A218C2FD150043850F /* LFEViewController.m */; };
 		B61AB8A518C2FD150043850F /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B61AB8A418C2FD150043850F /* Images.xcassets */; };
 		B61AB8AC18C2FD160043850F /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B61AB8AB18C2FD160043850F /* XCTest.framework */; };
@@ -52,8 +50,6 @@
 		B61AB89718C2FD150043850F /* LoadingFlowExample-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LoadingFlowExample-Prefix.pch"; sourceTree = "<group>"; };
 		B61AB89818C2FD150043850F /* LFEAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFEAppDelegate.h; sourceTree = "<group>"; };
 		B61AB89918C2FD150043850F /* LFEAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFEAppDelegate.m; sourceTree = "<group>"; };
-		B61AB89C18C2FD150043850F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
-		B61AB89F18C2FD150043850F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
 		B61AB8A118C2FD150043850F /* LFEViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFEViewController.h; sourceTree = "<group>"; };
 		B61AB8A218C2FD150043850F /* LFEViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFEViewController.m; sourceTree = "<group>"; };
 		B61AB8A418C2FD150043850F /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -138,8 +134,6 @@
 				B61AB8C818C2FFDB0043850F /* LoadingFlow */,
 				B61AB89818C2FD150043850F /* LFEAppDelegate.h */,
 				B61AB89918C2FD150043850F /* LFEAppDelegate.m */,
-				B61AB89B18C2FD150043850F /* Main_iPhone.storyboard */,
-				B61AB89E18C2FD150043850F /* Main_iPad.storyboard */,
 				B61AB8A118C2FD150043850F /* LFEViewController.h */,
 				B61AB8A218C2FD150043850F /* LFEViewController.m */,
 				B61AB8A418C2FD150043850F /* Images.xcassets */,
@@ -300,9 +294,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B61AB8A018C2FD150043850F /* Main_iPad.storyboard in Resources */,
 				B61AB8A518C2FD150043850F /* Images.xcassets in Resources */,
-				B61AB89D18C2FD150043850F /* Main_iPhone.storyboard in Resources */,
 				B61AB89418C2FD150043850F /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -360,22 +352,6 @@
 				B61AB89318C2FD150043850F /* en */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		B61AB89B18C2FD150043850F /* Main_iPhone.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				B61AB89C18C2FD150043850F /* Base */,
-			);
-			name = Main_iPhone.storyboard;
-			sourceTree = "<group>";
-		};
-		B61AB89E18C2FD150043850F /* Main_iPad.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				B61AB89F18C2FD150043850F /* Base */,
-			);
-			name = Main_iPad.storyboard;
 			sourceTree = "<group>";
 		};
 		B61AB8B418C2FD160043850F /* InfoPlist.strings */ = {
