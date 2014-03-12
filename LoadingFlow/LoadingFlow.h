@@ -60,6 +60,9 @@
 	UIColor *_ringBackgroundColor;
 
 	__weak id <LoadingFlowDelegate> _delegate;
+
+	CGFloat _innerRadius;
+	CGFloat _outerRadius;
 }
 
 @property (weak, nonatomic) id <LoadingFlowDelegate> delegate;
@@ -69,6 +72,10 @@
 
 @property (nonatomic, strong) UIColor *tintColor;
 @property (nonatomic, readonly) NSArray *sections;
+
+#define LOADING_FLOW_RING_SIZE			0.33	// This determines size of loading ring
+#define LOADING_FLOW_RING_GAP_RATIO		0.05	// This determines how large the gap between loading indicator and sections are
+#define LOADING_FLOW_SECTION_GAP_RATIO	0.003	// This determines how large the gaps between sections are
 
 - (void)addSection:(LoadingFlowSection *)section;
 - (void)removeSection:(LoadingFlowSection *)section;

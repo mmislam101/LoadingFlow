@@ -31,7 +31,6 @@
 #import "SKBounceAnimation.h"
 
 #define DEGREES_TO_RADIANS(degrees)	((M_PI * degrees) / 180.0)
-#define kRingRatio 0.05
 
 @implementation LoadingFlow
 
@@ -54,7 +53,7 @@ timeSinceStart	= _timeSinceStart;
 	_timeline.delegate			= self;
 	_sideWidth					= ((self.frame.size.width < self.frame.size.height) ? self.frame.size.width : self.frame.size.height);
 
-	CGFloat progressViewSide	= ((frame.size.width < frame.size.height) ? frame.size.width : frame.size.height) / 3.0;
+	CGFloat progressViewSide	= ((frame.size.width < frame.size.height) ? frame.size.width : frame.size.height) * LOADING_FLOW_RING_SIZE;
 	CGRect progressFrame		= CGRectMake(0.0, 0.0, progressViewSide, progressViewSide);
 	_progressView				= [[DACircularProgressView alloc] initWithFrame:progressFrame];
 	_progressView.center		= CGPointMake(frame.size.width / 2.0, frame.size.height / 2.0);
@@ -62,6 +61,9 @@ timeSinceStart	= _timeSinceStart;
 	_progressView.transform		= CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(-90.0));
 
 	[self addSubview:_progressView];
+
+	_innerRadius				= (_progressView.bounds.size.width / 2.0) + (_sideWidth * LOADING_FLOW_RING_GAP_RATIO);
+	_outerRadius				= _sideWidth / 2.0;
 
     return self;
 }
@@ -131,8 +133,6 @@ timeSinceStart	= _timeSinceStart;
 	if (_sections.count == 0)
 		return;
 
-	[self setupSections];
-
 	__block NSTimeInterval duration = 0.0;
 	[_sections enumerateObjectsUsingBlock:^(LoadingFlowSection *section, NSUInteger idx, BOOL *stop) {
 		duration += section.duration;
@@ -155,6 +155,8 @@ timeSinceStart	= _timeSinceStart;
 	_timeline.duration				= duration;
 	_timeline.tickPeriod			= 0.01;
 
+	[self setupSections];
+
 	[UIView animateWithDuration:0.3 animations:^{
 		weakSelf.alpha = 1.0;
 	} completion:^(BOOL finished) {
@@ -171,46 +173,52 @@ timeSinceStart	= _timeSinceStart;
 
 - (void)setupSections
 {
-	[self drawRing];
-
-	
+	__block CGFloat degreeCursor = 0.0;
+	CGFloat sectionGap = LOADING_FLOW_SECTION_GAP_RATIO * _sideWidth;
+	[_sections enumerateObjectsUsingBlock:^(LoadingFlowSection *section, NSUInteger idx, BOOL *stop) {
+		[self drawRingWithStartingDegree:degreeCursor + sectionGap endingDegree:(360.0 * (section.duration / _timeline.duration) + degreeCursor - sectionGap)];
+		degreeCursor += 360.0 * (section.duration / _timeline.duration);
+	}];
 }
 
-- (void)drawRing
+- (void)drawRingWithStartingDegree:(CGFloat)startAngle endingDegree:(CGFloat)endAngle
 {
+	NSLog(@"start: %f end: %f",startAngle, endAngle);
 	UIBezierPath *ringPath	= [UIBezierPath bezierPath];
 
+	// Inner circle
 	[ringPath addArcWithCenter:_progressView.center
-						radius:(_progressView.bounds.size.width / 2.0) + (_sideWidth * kRingRatio)
-					startAngle:0 endAngle:DEGREES_TO_RADIANS(360.0)
+						radius:_innerRadius
+					startAngle:DEGREES_TO_RADIANS(startAngle)
+					  endAngle:DEGREES_TO_RADIANS(endAngle)
 					 clockwise:YES];
 
+	// Outer circle
 	[ringPath addArcWithCenter:_progressView.center
-						radius:_sideWidth / 2.0
-					startAngle:DEGREES_TO_RADIANS(360.0)
-					  endAngle:0 clockwise:NO];
+						radius:_outerRadius
+					startAngle:DEGREES_TO_RADIANS(endAngle)
+					  endAngle:DEGREES_TO_RADIANS(startAngle)
+					 clockwise:NO];
 
 	CAShapeLayer *ringLayer	= [CAShapeLayer layer];
 	ringLayer.frame			= self.bounds;
 	ringLayer.path			= ringPath.CGPath;
 	ringLayer.fillColor		= [_sections[0] backgroundColor].CGColor;
+	ringLayer.transform		= CATransform3DMakeRotation(DEGREES_TO_RADIANS(-180.0), 0.0, 0.0, 1.0);
 
 	[self.layer addSublayer:ringLayer];
 }
 
-- (CGPoint)pointOnInnerCircleAtDegree:(CGFloat)degree
+- (CGPoint)pointOnCircleWithRadius:(CGFloat)radius andCenter:(CGPoint)center atDegree:(CGFloat)degree
 {
-	CGFloat innerCircleRadius	= (_progressView.bounds.size.width / 2.0) + 10.0;
-	CGPoint innerCircleCenter	= _progressView.center;
-
-	return CGPointMake(innerCircleCenter.x + (innerCircleRadius * cos(DEGREES_TO_RADIANS(degree))),
-					   innerCircleCenter.y + (innerCircleRadius * sin(DEGREES_TO_RADIANS(degree))));
+	return CGPointMake(center.x + (radius * cos(DEGREES_TO_RADIANS(degree))),
+					   center.y + (radius * sin(DEGREES_TO_RADIANS(degree))));
 }
 
 - (void)progressBigBounce
 {
 	SKBounceAnimation *bounceProgress	= [SKBounceAnimation animationWithKeyPath:@"bounds"];
-	bounceProgress.fromValue			= [NSValue valueWithCGRect:CGRectInset(_progressView.bounds, -(_sideWidth * kRingRatio), -(_sideWidth * kRingRatio))];
+	bounceProgress.fromValue			= [NSValue valueWithCGRect:CGRectInset(_progressView.bounds, -(_sideWidth * LOADING_FLOW_RING_GAP_RATIO), -(_sideWidth * LOADING_FLOW_RING_GAP_RATIO))];
 	bounceProgress.toValue				= [NSValue valueWithCGRect:_progressView.bounds];
 	bounceProgress.duration				= 2.0f;
 	bounceProgress.numberOfBounces		= 10;
@@ -223,7 +231,7 @@ timeSinceStart	= _timeSinceStart;
 - (void)progressSmallBounce
 {
 	SKBounceAnimation *bounceProgress	= [SKBounceAnimation animationWithKeyPath:@"bounds"];
-	bounceProgress.fromValue			= [NSValue valueWithCGRect:CGRectInset(_progressView.bounds, -(_sideWidth * kRingRatio / 3.0), -(_sideWidth * kRingRatio / 3.0))];
+	bounceProgress.fromValue			= [NSValue valueWithCGRect:CGRectInset(_progressView.bounds, -(_sideWidth * LOADING_FLOW_RING_GAP_RATIO / 3.0), -(_sideWidth * LOADING_FLOW_RING_GAP_RATIO / 3.0))];
 	bounceProgress.toValue				= [NSValue valueWithCGRect:_progressView.bounds];
 	bounceProgress.duration				= 2.0f;
 	bounceProgress.numberOfBounces		= 10;
