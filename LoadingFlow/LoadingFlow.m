@@ -108,9 +108,16 @@ timeSinceStart	= _timeSinceStart;
 
 - (void)start
 {
-	if (_progressView.progress > 0.0)
+	if (_progressView.progress > 0.0) // If Loading Flow is running
 	{
 		[self stop];
+		[self startFirstSection];
+
+		return;
+	}
+
+	if (_timeline.duration > 0.0) // If Loading Flow is stopped, but setup for run
+	{
 		[self startFirstSection];
 
 		return;
@@ -131,7 +138,8 @@ timeSinceStart	= _timeSinceStart;
 
 - (void)stop
 {
-	_progressView.progress = 0.0;
+	_progressView.progress	= 0.0;
+	_currentSection			= 0;
 	[_timeline stop];
 }
 
@@ -292,6 +300,8 @@ timeSinceStart	= _timeSinceStart;
 
 	if (_delegate && [_delegate respondsToSelector:@selector(loadingFlow:hasCompletedSection:atIndex:)])
 		[_delegate loadingFlow:self hasCompletedSection:section atIndex:[_sections indexOfObject:section]];
+
+	_currentSection = [_sections indexOfObject:section] + 1;
 }
 
 - (void)tickAt:(NSTimeInterval)time forTimeline:(EasyTimeline *)timeline
