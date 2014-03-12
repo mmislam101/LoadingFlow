@@ -49,6 +49,7 @@
 {
 	CGFloat _sideWidth;
 	NSMutableArray *_sections;
+	NSMutableArray *_sectionsMeta;
 	DACircularProgressView *_progressView;
 
 	EasyTimeline *_timeline;
@@ -76,6 +77,7 @@
 #define LOADING_FLOW_RING_SIZE			0.33	// This determines size of loading ring
 #define LOADING_FLOW_RING_GAP_RATIO		0.05	// This determines how large the gap between loading indicator and sections are
 #define LOADING_FLOW_SECTION_GAP_RATIO	0.003	// This determines how large the gaps between sections are
+#define LOADING_FLOW_SKIPPING_SPEED		1.0		// The speed at which sections will be skipped
 
 - (void)addSection:(LoadingFlowSection *)section;
 - (void)removeSection:(LoadingFlowSection *)section;
@@ -92,7 +94,7 @@
 - (void)pause;
 - (void)resume;
 - (void)stop;
-- (void)nextSection;
+- (void)skipToNextSection; // This will speed up the loading till it hits the next section. Can only be called once till skip finishes
 
 - (void)displayMessage:(NSString *)string withDuration:(CGFloat)duration andCompletion:(void (^)(LoadingFlow *loadingFlow))completion; // This will stop the LoadingFlow, display the message for the duration and then fade out to completion
 

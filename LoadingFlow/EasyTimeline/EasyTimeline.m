@@ -42,6 +42,7 @@ isRunning	= _isRunning;
 
 	self.willLoop	= NO;
 	_events			= [[NSMutableArray alloc] init];
+	_eventTimers	= [[NSMutableArray alloc] init];
 	_startTime		= 0;
 	_isRunning		= NO;
 	_loop			= 0;
@@ -79,7 +80,6 @@ isRunning	= _isRunning;
 	// Do timers for events
 	if (_events.count > 0)
 	{
-		_eventTimers = [[NSMutableArray alloc] init];
 		for (EasyTimelineEvent *event in _events)
 		{
 			if (event.time > 0.0 && (event.time <= self.duration || self.willLoop))
@@ -104,8 +104,9 @@ isRunning	= _isRunning;
 	[_mainTimer pauseOrResume];
 	[_tickTimer pauseOrResume];
 
-	for (NSTimer *eventTimer in _eventTimers)
+	[_eventTimers enumerateObjectsUsingBlock:^(NSTimer *eventTimer, NSUInteger idx, BOOL *stop) {
 		[eventTimer pauseOrResume];
+	}];
 
 	_pausedTime	= [NSDate timeIntervalSinceReferenceDate];
 }
@@ -117,12 +118,14 @@ isRunning	= _isRunning;
 
 	_isRunning	= YES;
 	_startTime	= _startTime + ([NSDate timeIntervalSinceReferenceDate] - _pausedTime);
+	_pausedTime	= 0;
 
 	[_mainTimer pauseOrResume];
 	[_tickTimer pauseOrResume];
 
-	for (NSTimer *eventTimer in _eventTimers)
+	[_eventTimers enumerateObjectsUsingBlock:^(NSTimer *eventTimer, NSUInteger idx, BOOL *stop) {
 		[eventTimer pauseOrResume];
+	}];
 }
 
 - (void)stop
@@ -142,6 +145,83 @@ isRunning	= _isRunning;
 	_loop		= 0;
 }
 
+- (void)skipForwardSeconds:(NSTimeInterval)seconds
+{
+	// If you're skipping past the end of the timeline, finish the timeline
+	if (!self.willLoop && (_mainTimer.fireDate.timeIntervalSinceReferenceDate - [NSDate timeIntervalSinceReferenceDate] <= seconds))
+	{
+		[self stop];
+
+		if (self.completionBlock)
+			self.completionBlock(self);
+
+		if (_delegate && [_delegate respondsToSelector:@selector(finishedTimeLine:)])
+			[_delegate finishedTimeLine:self];
+
+		return;
+	}
+
+	// Stop all the other timers and save the fire date
+	NSDate *mainFireDate			= _mainTimer.oldFireDate;
+	[_mainTimer invalidate];
+
+	NSDate *tickFireDate			= _tickTimer.oldFireDate;
+	[_tickTimer invalidate];
+
+	__block NSMutableArray *eventFireDate	= [[NSMutableArray alloc] init];
+	[_eventTimers enumerateObjectsUsingBlock:^(NSTimer *eventTimer, NSUInteger idx, BOOL *stop) {
+		[eventFireDate addObject:eventTimer.oldFireDate];
+		[eventTimer invalidate];
+	}];
+
+	// Reset all timers with a shorter first fire date
+	// Do main timeline timer
+	_mainTimer			= [NSTimer timerWithTimeInterval:_duration target:self selector:@selector(finishedTimer:) userInfo:nil repeats:self.willLoop];
+	_mainTimer.fireDate	= [mainFireDate dateByAddingTimeInterval:-seconds];
+
+	[[NSRunLoop currentRunLoop] addTimer:_mainTimer forMode:NSDefaultRunLoopMode];
+
+	if (_pausedTime > 0.0)
+		[_mainTimer pauseOrResume];
+
+	// Do tick timer
+	NSDate *newTickFireDate = [tickFireDate dateByAddingTimeInterval:-seconds];
+	if (self.tickPeriod > 0.0)// && (self.tickPeriod <= self.duration || self.willLoop))
+	{
+		_tickTimer			= [NSTimer timerWithTimeInterval:self.tickPeriod target:self selector:@selector(tick:) userInfo:nil repeats:YES];
+		_tickTimer.fireDate	= newTickFireDate;
+
+		[[NSRunLoop currentRunLoop] addTimer:_tickTimer forMode:NSDefaultRunLoopMode];
+
+		if (_pausedTime > 0.0)
+			[_tickTimer pauseOrResume];
+	}
+
+	// Do timers for events
+	if (_events.count > 0)
+	{
+		NSInteger idx	= 0;
+		_eventTimers	= [[NSMutableArray alloc] init];
+		for (EasyTimelineEvent *event in _events)
+		{
+			if (event.time > 0.0)// && (event.time <= self.duration || self.willLoop))
+			{
+				NSTimer *eventTimer = [NSTimer scheduledTimerWithTimeInterval:event.time
+																	   target:self
+																	 selector:@selector(runEvent:)
+																	 userInfo:event repeats:event.willRepeat];
+				eventTimer.fireDate	= [eventFireDate[idx++] dateByAddingTimeInterval:-seconds];
+				[_eventTimers addObject:eventTimer];
+
+				if (_pausedTime > 0.0)
+					[eventTimer pauseOrResume];
+			}
+		}
+	}
+
+	_startTime -= seconds;
+}
+
 #pragma mark Easy Timeline Events
 
 - (void)addEvent:(EasyTimelineEvent *)event
@@ -159,7 +239,7 @@ isRunning	= _isRunning;
 - (NSTimeInterval)currentTime
 {
 	if (_startTime)
-		return [NSDate timeIntervalSinceReferenceDate] - _startTime;
+		return (_pausedTime > 0.0 ? _pausedTime :[NSDate timeIntervalSinceReferenceDate]) - _startTime;
 	else
 		return 0.0;
 }

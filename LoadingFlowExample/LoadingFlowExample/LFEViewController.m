@@ -34,7 +34,7 @@
 
 	[self.view addSubview:_loadingFlow];
 
-	[_loadingFlow addSection:[LoadingFlowSection loadingFlowWithText:@"monkey" andDuration:2.0]];
+	[_loadingFlow addSection:[LoadingFlowSection loadingFlowWithText:@"monkey" andDuration:3.0]];
 	[_loadingFlow addSection:[LoadingFlowSection loadingFlowWithText:@"butt\ndog" andDuration:1.0]];
 }
 
@@ -54,6 +54,8 @@
 	[_loadingFlow start];
 
 	[NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(displayCurrentTime) userInfo:nil repeats:YES];
+
+	[self performSelector:@selector(skipSection) withObject:nil afterDelay:1.0];
 }
 
 - (void)didReceiveMemoryWarning
@@ -65,6 +67,11 @@
 - (void)displayCurrentTime
 {
 	_currentLabel.text = [NSString stringWithFormat:@"Current Time: %f", _loadingFlow.timeSinceStart];
+}
+
+- (void)skipSection
+{
+	[_loadingFlow skipToNextSection];
 }
 
 - (void)pauseFlow

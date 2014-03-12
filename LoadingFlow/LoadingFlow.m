@@ -48,6 +48,7 @@ timeSinceStart	= _timeSinceStart;
 	self.layer.masksToBounds	= YES;
 	
 	_sections					= [[NSMutableArray alloc] init];
+	_sectionsMeta				= [[NSMutableArray alloc] init];
 	_currentSection				= 0;
 	_timeline					= [[EasyTimeline alloc] init];
 	_timeline.delegate			= self;
@@ -116,7 +117,7 @@ timeSinceStart	= _timeSinceStart;
 		return;
 	}
 
-	if (_timeline.duration > 0.0) // If Loading Flow is stopped, but setup for run
+	if (_timeline.duration > 0.0) // If Loading Flow is stopped, but setup for run, restart it
 	{
 		[self startFirstSection];
 
@@ -143,9 +144,18 @@ timeSinceStart	= _timeSinceStart;
 	[_timeline stop];
 }
 
-- (void)nextSection
+- (void)skipToNextSection
 {
+	[_timeline pause];
 
+	EasyTimelineEvent *nextEvent	= [_timeline.events objectAtIndex:_currentSection];
+	[_timeline skipForwardSeconds:nextEvent.time - _timeline.currentTime - 0.01];
+
+//	_progressView.progress			= nextEvent.time / _timeline.duration;
+//	[_progressView setProgress:nextEvent.time / _timeline.duration animated:YES];
+	[self skipProgressTo:nextEvent.time / _timeline.duration withCompletion:^{
+		[_timeline resume];
+	}];
 }
 
 - (void)displayMessage:(NSString *)string withDuration:(CGFloat)duration andCompletion:(void (^)(LoadingFlow *loadingFlow))completion
@@ -290,6 +300,26 @@ timeSinceStart	= _timeSinceStart;
 	bounceProgress.shake				= YES;
 
 	[_progressView.layer addAnimation:bounceProgress forKey:@"bounceProgress"];
+}
+
+- (void)skipProgressTo:(CGFloat)progress withCompletion:(void (^)(void))completion
+{
+	[CATransaction begin];
+
+	[CATransaction setCompletionBlock:^{
+		completion();
+	}];
+
+	CABasicAnimation *animation	= [CABasicAnimation animationWithKeyPath:@"progress"];
+	animation.duration			= LOADING_FLOW_SKIPPING_SPEED;
+	animation.timingFunction	= [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+	animation.fromValue			= [NSNumber numberWithFloat:_progressView.progress];
+	animation.toValue			= [NSNumber numberWithFloat:progress];
+
+	_progressView.progress		= progress;
+	[_progressView.layer addAnimation:animation forKey:@"progress"];
+
+	[CATransaction commit];
 }
 
 #pragma mark Easy Timeline Delegates
