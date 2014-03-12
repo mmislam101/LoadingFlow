@@ -74,7 +74,7 @@
 
 - (void)startFlow
 {
-	NSLog(@"start");
+	[_loadingFlow start];
 }
 
 #pragma mark LoadingFlowDelegate

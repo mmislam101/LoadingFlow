@@ -37,6 +37,7 @@
 	section.label					= [[UILabel alloc] initWithFrame:CGRectZero];
 	section.label.backgroundColor	= [UIColor clearColor];
 	section.label.text				= text;
+	section.label.textColor			= [UIColor whiteColor];
 	section.backgroundColor			= [[UIColor blackColor] colorWithAlphaComponent:0.5];
 
 	section.duration				= duration;

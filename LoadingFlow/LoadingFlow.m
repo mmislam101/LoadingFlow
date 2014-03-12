@@ -103,6 +103,14 @@ timeSinceStart	= _timeSinceStart;
 
 - (void)start
 {
+	if (_progressView.progress > 0.0)
+	{
+		[self stop];
+		[self startFirstSection];
+
+		return;
+	}
+
 	[self setupAndFadeIn];
 }
 
@@ -113,7 +121,8 @@ timeSinceStart	= _timeSinceStart;
 
 - (void)stop
 {
-
+	_progressView.progress = 0.0;
+	[_timeline stop];
 }
 
 - (void)nextSection
@@ -173,17 +182,27 @@ timeSinceStart	= _timeSinceStart;
 
 - (void)setupSections
 {
-	__block CGFloat degreeCursor = 0.0;
-	CGFloat sectionGap = LOADING_FLOW_SECTION_GAP_RATIO * _sideWidth;
+	__block CGFloat degreeCursor	= 0.0;
+	CGFloat sectionGap				= LOADING_FLOW_SECTION_GAP_RATIO * _sideWidth;
 	[_sections enumerateObjectsUsingBlock:^(LoadingFlowSection *section, NSUInteger idx, BOOL *stop) {
-		[self drawRingWithStartingDegree:degreeCursor + sectionGap endingDegree:(360.0 * (section.duration / _timeline.duration) + degreeCursor - sectionGap)];
-		degreeCursor += 360.0 * (section.duration / _timeline.duration);
+		CGFloat endAngle	= 360.0 * (section.duration / _timeline.duration) + degreeCursor;
+
+		[self drawRingWithStartingDegree:degreeCursor + sectionGap endingDegree:endAngle - sectionGap];
+
+		CGFloat labelDegree	= ((endAngle - degreeCursor) / 2.0) + degreeCursor;
+		CGPoint point		= [self pointOnCircleWithRadius:((_outerRadius - _innerRadius) / 2.0) + _innerRadius andCenter:_progressView.center atDegree:labelDegree];
+		[self addLabelForSection:section atPoint:point andDegree:labelDegree];
+
+		degreeCursor += endAngle;
 	}];
 }
 
 - (void)drawRingWithStartingDegree:(CGFloat)startAngle endingDegree:(CGFloat)endAngle
 {
-	NSLog(@"start: %f end: %f",startAngle, endAngle);
+	// Add a transform of -180.0 to match the loading progress
+	startAngle				-= 180.0;
+	endAngle				-= 180.0;
+
 	UIBezierPath *ringPath	= [UIBezierPath bezierPath];
 
 	// Inner circle
@@ -204,13 +223,27 @@ timeSinceStart	= _timeSinceStart;
 	ringLayer.frame			= self.bounds;
 	ringLayer.path			= ringPath.CGPath;
 	ringLayer.fillColor		= [_sections[0] backgroundColor].CGColor;
-	ringLayer.transform		= CATransform3DMakeRotation(DEGREES_TO_RADIANS(-180.0), 0.0, 0.0, 1.0);
 
 	[self.layer addSublayer:ringLayer];
 }
 
+- (void)addLabelForSection:(LoadingFlowSection *)section atPoint:(CGPoint)point andDegree:(CGFloat)degree
+{
+	CGSize labelSize		= [section.label.text sizeWithAttributes:@{NSFontAttributeName: section.label.font}];
+	section.label.frame		= CGRectMake(0.0,
+										 0.0,
+										 labelSize.width,
+										 labelSize.height);
+
+	section.label.center	= point;
+
+	[self addSubview:section.label];
+}
+
 - (CGPoint)pointOnCircleWithRadius:(CGFloat)radius andCenter:(CGPoint)center atDegree:(CGFloat)degree
 {
+	// Add a transform of -180.0 to match the loading progress
+	degree -= 180.0;
 	return CGPointMake(center.x + (radius * cos(DEGREES_TO_RADIANS(degree))),
 					   center.y + (radius * sin(DEGREES_TO_RADIANS(degree))));
 }
