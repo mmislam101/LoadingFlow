@@ -35,7 +35,7 @@
 	[self.view addSubview:_loadingFlow];
 
 	[_loadingFlow addSection:[LoadingFlowSection loadingFlowWithText:@"monkey" andDuration:2.0]];
-	[_loadingFlow addSection:[LoadingFlowSection loadingFlowWithText:@"butt" andDuration:1.0]];
+	[_loadingFlow addSection:[LoadingFlowSection loadingFlowWithText:@"butt\ndog" andDuration:1.0]];
 }
 
 - (void)viewDidLoad
@@ -69,7 +69,10 @@
 
 - (void)pauseFlow
 {
-	NSLog(@"pause");
+	if (_loadingFlow.isRunning)
+		[_loadingFlow pause];
+	else
+		[_loadingFlow resume];
 }
 
 - (void)startFlow

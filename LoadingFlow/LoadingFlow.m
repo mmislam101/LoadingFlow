@@ -92,6 +92,11 @@ timeSinceStart	= _timeSinceStart;
 	return _progressView.progress / _tickFactor / 100.0;
 }
 
+- (BOOL)isRunning
+{
+	return _timeline.isRunning;
+}
+
 // Hijack the usual view's background color for the ring's color
 - (void)setBackgroundColor:(UIColor *)backgroundColor
 {
@@ -116,7 +121,12 @@ timeSinceStart	= _timeSinceStart;
 
 - (void)pause
 {
+	[_timeline pause];
+}
 
+- (void)resume
+{
+	[_timeline resume];
 }
 
 - (void)stop

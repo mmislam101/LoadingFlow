@@ -38,6 +38,7 @@
 	section.label.backgroundColor	= [UIColor clearColor];
 	section.label.text				= text;
 	section.label.textColor			= [UIColor whiteColor];
+	section.label.numberOfLines		= 0;
 	section.backgroundColor			= [[UIColor blackColor] colorWithAlphaComponent:0.5];
 
 	section.duration				= duration;
