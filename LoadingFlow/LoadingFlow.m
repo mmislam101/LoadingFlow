@@ -32,6 +32,9 @@
 
 #define DEGREES_TO_RADIANS(degrees)	((M_PI * degrees) / 180.0)
 
+#define kSectionMetaStartAngle		@"kSectionMetaStartAngle"
+#define kSectionMetaEndAngle		@"kSectionMetaEndAngle"
+
 @implementation LoadingFlow
 
 @synthesize
@@ -215,7 +218,9 @@ timeSinceStart	= _timeSinceStart;
 	[_sections enumerateObjectsUsingBlock:^(LoadingFlowSection *section, NSUInteger idx, BOOL *stop) {
 		CGFloat endAngle	= 360.0 * (section.duration / _timeline.duration) + degreeCursor;
 
-		[self drawRingWithStartingDegree:degreeCursor + sectionGap endingDegree:endAngle - sectionGap];
+		[_sectionsMeta addObject:@{kSectionMetaStartAngle : @(degreeCursor + sectionGap), kSectionMetaEndAngle : @(endAngle - sectionGap)}];
+
+		[self drawRingWithStartingDegree:degreeCursor + sectionGap endingDegree:endAngle - sectionGap andColor:section.backgroundColor];
 
 		CGFloat labelDegree	= ((endAngle - degreeCursor) / 2.0) + degreeCursor;
 		CGPoint point		= [self pointOnCircleWithRadius:((_outerRadius - _innerRadius) / 2.0) + _innerRadius andCenter:_progressView.center atDegree:labelDegree];
@@ -225,7 +230,7 @@ timeSinceStart	= _timeSinceStart;
 	}];
 }
 
-- (void)drawRingWithStartingDegree:(CGFloat)startAngle endingDegree:(CGFloat)endAngle
+- (void)drawRingWithStartingDegree:(CGFloat)startAngle endingDegree:(CGFloat)endAngle andColor:(UIColor *)color
 {
 	// Add a transform of -180.0 to match the loading progress
 	startAngle				-= 180.0;
@@ -250,7 +255,7 @@ timeSinceStart	= _timeSinceStart;
 	CAShapeLayer *ringLayer	= [CAShapeLayer layer];
 	ringLayer.frame			= self.bounds;
 	ringLayer.path			= ringPath.CGPath;
-	ringLayer.fillColor		= [_sections[0] backgroundColor].CGColor;
+	ringLayer.fillColor		= color.CGColor;
 
 	[self.layer addSublayer:ringLayer];
 }
@@ -326,6 +331,9 @@ timeSinceStart	= _timeSinceStart;
 
 - (void)endOfSection:(LoadingFlowSection *)section
 {
+	NSDictionary *sectionMeta = [_sectionsMeta objectAtIndex:[_sections indexOfObject:section]];
+	[self drawRingWithStartingDegree:[sectionMeta[kSectionMetaStartAngle] floatValue] endingDegree:[sectionMeta[kSectionMetaEndAngle] floatValue] andColor:section.highlightColor];
+
 	[self progressSmallBounce];
 
 	if (_delegate && [_delegate respondsToSelector:@selector(loadingFlow:hasCompletedSection:atIndex:)])
@@ -341,13 +349,19 @@ timeSinceStart	= _timeSinceStart;
 
 - (void)finishedTimeLine:(EasyTimeline *)timeline
 {
+	LoadingFlowSection *section	= _sections[_sections.count-1];
+	NSDictionary *sectionMeta	= [_sectionsMeta objectAtIndex:[_sections indexOfObject:section]];
+	[self drawRingWithStartingDegree:[sectionMeta[kSectionMetaStartAngle] floatValue] endingDegree:[sectionMeta[kSectionMetaEndAngle] floatValue] andColor:section.highlightColor];
+
+	[self progressSmallBounce];
+
 	[timeline stop];
 
 	_progressView.progress = 1.0;
 	[self progressBigBounce];
 
 	if (_delegate && [_delegate respondsToSelector:@selector(loadingFlow:hasCompletedSection:atIndex:)])
-		[_delegate loadingFlow:self hasCompletedSection:_sections[_sections.count-1] atIndex:_sections.count-1];
+		[_delegate loadingFlow:self hasCompletedSection:section atIndex:_sections.count-1];
 }
 
 @end

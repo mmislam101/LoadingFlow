@@ -20,7 +20,7 @@
 	[super loadView];
 
 	CGRect frame				= self.view.frame;
-	self.view.backgroundColor	= [UIColor orangeColor];
+	self.view.backgroundColor	= [UIColor whiteColor];
 
 	_currentLabel				= [[UILabel alloc] initWithFrame:CGRectMake(frame.size.width / 4.0, 100.0, frame.size.width, 44.0)];
 	_currentLabel.text			= @"Current Time:";
@@ -29,7 +29,7 @@
 	[self.view addSubview:_currentLabel];
 
 	_loadingFlow				= [[LoadingFlow alloc] initWithFrame:CGRectMake(0.0, 200.0, self.view.frame.size.width, self.view.frame.size.height - 200.0)];
-	_loadingFlow.tintColor		= [UIColor blueColor];
+	_loadingFlow.tintColor		= [UIColor redColor];
 	_loadingFlow.delegate		= self;
 
 	[self.view addSubview:_loadingFlow];
