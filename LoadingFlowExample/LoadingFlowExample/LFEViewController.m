@@ -92,6 +92,17 @@
 - (void)loadingFlow:(LoadingFlow *)loadingFlow hasCompletedSection:(LoadingFlowSection *)section atIndex:(NSInteger)idx
 {
 	NSLog(@"finished section:%i %@", idx, section.label.text);
+
+	if (idx == loadingFlow.sections.count-1)
+	{
+		// Finished last section
+		UILabel *message		= [[UILabel alloc] init];
+		message.text			= @"monkey";
+		message.textAlignment	= NSTextAlignmentCenter;
+		[loadingFlow displayMessageLabel:message withCompletion:^(LoadingFlow *loadingFlow) {
+			NSLog(@"finished!");
+		}];
+	}
 }
 
 @end

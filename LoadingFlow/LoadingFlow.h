@@ -47,6 +47,8 @@
 
 @interface LoadingFlow : UIView <EasyTimelineDelegate>
 {
+	UIView *_contentView;
+
 	CGFloat _sideWidth;
 	NSMutableArray *_sections;
 	NSMutableArray *_sectionsMeta;
@@ -57,8 +59,6 @@
 
 	NSTimeInterval _timeSinceStart;
 	NSInteger _currentSection;
-
-	UIColor *_ringBackgroundColor;
 
 	__weak id <LoadingFlowDelegate> _delegate;
 
@@ -78,9 +78,10 @@
 #define LOADING_FLOW_RING_GAP_RATIO		0.05	// This determines how large the gap between loading indicator and sections are
 #define LOADING_FLOW_SECTION_GAP_RATIO	0.003	// This determines how large the gaps between sections are
 #define LOADING_FLOW_SKIPPING_SPEED		1.0		// The speed at which sections will be skipped
+#define LOADING_FLOW_MESSAGE_DURATION	2.0		// The duration at which displayMessage:withCompletion will
 
-- (void)addSection:(LoadingFlowSection *)section;
-- (void)removeSection:(LoadingFlowSection *)section;
+- (void)addSection:(LoadingFlowSection *)section;		// This doesn't work after Loading Flow has begun (paused or running)
+- (void)removeSection:(LoadingFlowSection *)section;	// This doesn't work after Loading Flow has begun (paused or running)
 
 #pragma mark Loading Flow State Property
 
@@ -96,6 +97,7 @@
 - (void)stop;
 - (void)skipToNextSection; // This will speed up the loading till it hits the next section. Can only be called once till skip finishes
 
-- (void)displayMessage:(NSString *)string withDuration:(CGFloat)duration andCompletion:(void (^)(LoadingFlow *loadingFlow))completion; // This will stop the LoadingFlow, display the message for the duration and then fade out to completion
+// This will pause the LoadingFlow, display the message for LOADING_FLOW_MESSAGE_DURATION and then fade out to completion
+- (void)displayMessageLabel:(UILabel *)label withCompletion:(void (^)(LoadingFlow *loadingFlow))completion;
 
 @end
