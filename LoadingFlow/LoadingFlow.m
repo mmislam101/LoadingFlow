@@ -266,12 +266,13 @@ contentView		= _contentView;
 		CGPoint point		= [self pointOnCircleWithRadius:((_outerRadius - _innerRadius) / 2.0) + _innerRadius andCenter:_progressView.center atDegree:labelDegree];
 		[self addLabelForSection:section atPoint:point andDegree:labelDegree];
 
-		degreeCursor += endAngle;
+		degreeCursor = endAngle;
 	}];
 }
 
 - (CAShapeLayer *)ringLayerWithStartingDegree:(CGFloat)startAngle endingDegree:(CGFloat)endAngle andColor:(UIColor *)color
 {
+//	NSLog(@"ring start: %f end: %f", startAngle, endAngle);
 	// Add a transform of -180.0 to match the loading progress
 	startAngle				-= 180.0;
 	endAngle				-= 180.0;
@@ -384,7 +385,7 @@ contentView		= _contentView;
 
 - (void)tickAt:(NSTimeInterval)time forTimeline:(EasyTimeline *)timeline
 {
-	_progressView.progress += _tickFactor;
+	_progressView.progress = time / _timeline.duration;
 }
 
 - (void)finishedTimeLine:(EasyTimeline *)timeline
