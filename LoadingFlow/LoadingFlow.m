@@ -74,7 +74,7 @@ contentView		= _contentView;
 	_progressView.progress				= 0.0;
 	_progressView.transform				= CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(-90.0));
 
-	[_contentView addSubview:_progressView];
+	[self addSubview:_progressView];
 
 	_innerRadius				= (_progressView.bounds.size.width / 2.0) + (_sideWidth * LOADING_FLOW_RING_GAP_RATIO);
 	_outerRadius				= _sideWidth / 2.0;
@@ -177,13 +177,13 @@ contentView		= _contentView;
 
 	UIView *messageView				= [[UIView alloc] initWithFrame:self.bounds];
 	messageView.alpha				= 0.0;
-	[messageView.layer addSublayer:[self ringLayerWithStartingDegree:0.0 endingDegree:360.0 andColor:[self.tintColor colorWithAlphaComponent:0.5]]];
 
 	[self addSubview:messageView];
 
-	CGPoint topLeftPoint			= [self pointOnCircleWithRadius:_innerRadius andCenter:_progressView.center atDegree:45.0];
-	CGPoint topRightPoint			= [self pointOnCircleWithRadius:_innerRadius andCenter:_progressView.center atDegree:90.0 + 45.0];
-	CGPoint bottomLeftPoint			= [self pointOnCircleWithRadius:_innerRadius andCenter:_progressView.center atDegree:180.0 + 90.0 + 45.0];
+	CGFloat radius					= _sideWidth / 2.0 - 50.0;
+	CGPoint topLeftPoint			= [self pointOnCircleWithRadius:radius andCenter:_progressView.center atDegree:45.0];
+	CGPoint topRightPoint			= [self pointOnCircleWithRadius:radius andCenter:_progressView.center atDegree:90.0 + 45.0];
+	CGPoint bottomLeftPoint			= [self pointOnCircleWithRadius:radius andCenter:_progressView.center atDegree:180.0 + 90.0 + 45.0];
 	label.frame						= CGRectMake(topLeftPoint.x,
 												 topLeftPoint.y,
 												 topRightPoint.x - topLeftPoint.x,
@@ -191,19 +191,19 @@ contentView		= _contentView;
 
 	[messageView addSubview:label];
 
+	[self progressExpand];
+
 	__weak LoadingFlow *weakSelf	= self;
 	[UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
 		weakSelf.contentView.alpha	= 0.0;
 		messageView.alpha			= 1.0;
 	} completion:^(BOOL finished) {
 		[UIView animateWithDuration:0.5 delay:LOADING_FLOW_MESSAGE_DURATION options:UIViewAnimationOptionCurveEaseOut animations:^{
-			messageView.alpha = 0.0;
+			weakSelf.alpha = 0.0;
 		} completion:^(BOOL finished) {
 			completion(weakSelf);
 		}];
 	}];
-
-	[CATransaction begin];
 }
 
 #pragma mark Loading States
@@ -272,7 +272,6 @@ contentView		= _contentView;
 
 - (CAShapeLayer *)ringLayerWithStartingDegree:(CGFloat)startAngle endingDegree:(CGFloat)endAngle andColor:(UIColor *)color
 {
-//	NSLog(@"ring start: %f end: %f", startAngle, endAngle);
 	// Add a transform of -180.0 to match the loading progress
 	startAngle				-= 180.0;
 	endAngle				-= 180.0;
@@ -348,6 +347,25 @@ contentView		= _contentView;
 	[_progressView.layer addAnimation:bounceProgress forKey:@"bounceProgress"];
 }
 
+- (void)progressExpand
+{
+	CGRect finalRect					= CGRectMake(0.0,
+													 0.0,
+													 _sideWidth,
+													 _sideWidth);
+	SKBounceAnimation *bounceProgress	= [SKBounceAnimation animationWithKeyPath:@"bounds"];
+	bounceProgress.fromValue			= [NSValue valueWithCGRect:_progressView.bounds];
+	bounceProgress.toValue				= [NSValue valueWithCGRect:finalRect];
+	bounceProgress.duration				= 3.0f;
+	bounceProgress.numberOfBounces		= 5;
+	bounceProgress.shouldOvershoot		= NO;
+	bounceProgress.shake				= NO;
+
+	_progressView.bounds				= finalRect;
+
+	[_progressView.layer addAnimation:bounceProgress forKey:@"bounceProgress"];
+}
+
 - (void)skipProgressTo:(CGFloat)progress withCompletion:(void (^)(void))completion
 {
 	[CATransaction begin];
@@ -399,7 +417,6 @@ contentView		= _contentView;
 	[timeline stop];
 
 	_progressView.progress = 1.0;
-	[self progressBigBounce];
 
 	if (_delegate && [_delegate respondsToSelector:@selector(loadingFlow:hasCompletedSection:atIndex:)])
 		[_delegate loadingFlow:self hasCompletedSection:section atIndex:_sections.count-1];

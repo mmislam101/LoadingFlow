@@ -38,7 +38,6 @@
 	[_loadingFlow addSection:[LoadingFlowSection loadingFlowWithText:@"monkey 4" andDuration:1.0]];
 	[_loadingFlow addSection:[LoadingFlowSection loadingFlowWithText:@"monkey 5" andDuration:1.0]];
 	[_loadingFlow addSection:[LoadingFlowSection loadingFlowWithText:@"monkey 6" andDuration:1.0]];
-	[_loadingFlow addSection:[LoadingFlowSection loadingFlowWithText:@"monkey 7" andDuration:1.0]];
 }
 
 - (void)viewDidLoad
@@ -58,7 +57,7 @@
 
 	[NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(displayCurrentTime) userInfo:nil repeats:YES];
 
-//	[self performSelector:@selector(skipSection) withObject:nil afterDelay:1.0];
+	[self performSelector:@selector(skipSection) withObject:nil afterDelay:1.5];
 }
 
 - (void)didReceiveMemoryWarning
@@ -75,6 +74,7 @@
 - (void)skipSection
 {
 	[_loadingFlow skipToNextSection];
+	NSLog(@"skipping to next section");
 }
 
 - (void)pauseFlow
@@ -98,11 +98,12 @@
 	{
 		// Finished last section
 		UILabel *message		= [[UILabel alloc] init];
-		message.text			= @"monkey";
+		message.text			= @"MONKEYS!!!";
 		message.textAlignment	= NSTextAlignmentCenter;
-//		[loadingFlow displayMessageLabel:message withCompletion:^(LoadingFlow *loadingFlow) {
-//			NSLog(@"finished!");
-//		}];
+		[message sizeToFit];
+		[loadingFlow displayMessageLabel:message withCompletion:^(LoadingFlow *loadingFlow) {
+			NSLog(@"finished!");
+		}];
 	}
 }
 
