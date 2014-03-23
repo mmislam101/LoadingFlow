@@ -35,6 +35,6 @@
 @property (nonatomic, strong) UIColor *backgroundColor; // Default set to translucent black
 @property (nonatomic, strong) UIColor *highlightColor; // Default to more translucent black
 
-+ (LoadingFlowSection *)loadingFlowWithText:(NSString *)text andDuration:(NSTimeInterval)duration;
++ (LoadingFlowSection *)sectionWithText:(NSString *)text andDuration:(NSTimeInterval)duration;
 
 @end

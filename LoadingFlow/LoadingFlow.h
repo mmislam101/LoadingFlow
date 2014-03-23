@@ -52,6 +52,7 @@
 	CGFloat _sideWidth;
 	NSMutableArray *_sections;
 	NSMutableArray *_sectionsMeta;
+	NSMutableArray *_sectionLayers;
 	DACircularProgressView *_progressView;
 
 	EasyTimeline *_timeline;
@@ -64,6 +65,7 @@
 
 	CGFloat _innerRadius;
 	CGFloat _outerRadius;
+	BOOL _skipping;
 }
 
 @property (weak, nonatomic) id <LoadingFlowDelegate> delegate;
@@ -77,8 +79,7 @@
 #define LOADING_FLOW_RING_SIZE			0.33	// This determines size of loading ring
 #define LOADING_FLOW_RING_GAP_RATIO		0.05	// This determines how large the gap between loading indicator and sections are
 #define LOADING_FLOW_SECTION_GAP_RATIO	0.003	// This determines how large the gaps between sections are
-#define LOADING_FLOW_SKIPPING_SPEED		1.0		// The speed at which sections will be skipped
-#define LOADING_FLOW_MESSAGE_DURATION	2.0		// The duration at which displayMessage:withCompletion will
+#define LOADING_FLOW_SKIPPING_SPEED		0.5		// The speed at which sections will be skipped
 
 - (void)addSection:(LoadingFlowSection *)section;		// This doesn't work after Loading Flow has begun (paused or running)
 - (void)removeSection:(LoadingFlowSection *)section;	// This doesn't work after Loading Flow has begun (paused or running)
@@ -88,16 +89,19 @@
 @property (nonatomic, readonly) NSTimeInterval timeSinceStart;
 @property (nonatomic, readonly) NSInteger currentSection;
 @property (nonatomic, readonly) BOOL isRunning;
+@property (nonatomic, readonly) BOOL hasStarted;
 
 #pragma mark Loading Flow Control
 
-- (void)start;
+- (void)start; // Cannot restart once started. Has to stop first
 - (void)pause;
 - (void)resume;
 - (void)stop;
 - (void)skipToNextSection; // This will speed up the loading till it hits the next section. Can only be called once till skip finishes
+- (void)clear;
 
-// This will pause the LoadingFlow, display the message for LOADING_FLOW_MESSAGE_DURATION and then fade out to completion
-- (void)displayMessageLabel:(UILabel *)label withCompletion:(void (^)(LoadingFlow *loadingFlow))completion;
+// This will stop the LoadingFlow, display the message for the duration and then fade out to completion
+// You can reuse this loading flow or even clear it and add new events for reuse.
+- (void)displayMessageLabel:(UILabel *)label duration:(NSTimeInterval)duration withCompletion:(void (^)(LoadingFlow *loadingFlow))completion;
 
 @end

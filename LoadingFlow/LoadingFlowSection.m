@@ -30,7 +30,7 @@
 
 @implementation LoadingFlowSection
 
-+ (LoadingFlowSection *)loadingFlowWithText:(NSString *)text andDuration:(NSTimeInterval)duration
++ (LoadingFlowSection *)sectionWithText:(NSString *)text andDuration:(NSTimeInterval)duration
 {
 	LoadingFlowSection *section		= [[LoadingFlowSection alloc] init];
 

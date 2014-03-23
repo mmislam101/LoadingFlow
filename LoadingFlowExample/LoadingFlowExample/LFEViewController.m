@@ -28,16 +28,16 @@
 
 	[self.view addSubview:_currentLabel];
 
-	_loadingFlow				= [[LoadingFlow alloc] initWithFrame:CGRectMake(0.0, 200.0, self.view.frame.size.width, self.view.frame.size.height - 200.0)];
+	_loadingFlow				= [[LoadingFlow alloc] initWithFrame:CGRectMake(0.0, 200.0, self.view.frame.size.width, self.view.frame.size.height - 200.0 - 44.0)];
 	_loadingFlow.tintColor		= [UIColor redColor];
 	_loadingFlow.delegate		= self;
 
 	[self.view addSubview:_loadingFlow];
 
-	[_loadingFlow addSection:[LoadingFlowSection loadingFlowWithText:@"monkey 3" andDuration:3.0]];
-	[_loadingFlow addSection:[LoadingFlowSection loadingFlowWithText:@"monkey 4" andDuration:1.0]];
-	[_loadingFlow addSection:[LoadingFlowSection loadingFlowWithText:@"monkey 5" andDuration:1.0]];
-	[_loadingFlow addSection:[LoadingFlowSection loadingFlowWithText:@"monkey 6" andDuration:1.0]];
+	[_loadingFlow addSection:[LoadingFlowSection sectionWithText:@"monkey 3" andDuration:3.0]];
+	[_loadingFlow addSection:[LoadingFlowSection sectionWithText:@"monkey 4" andDuration:1.0]];
+	[_loadingFlow addSection:[LoadingFlowSection sectionWithText:@"monkey 5" andDuration:1.0]];
+	[_loadingFlow addSection:[LoadingFlowSection sectionWithText:@"monkey 6" andDuration:1.0]];
 }
 
 - (void)viewDidLoad
@@ -45,19 +45,30 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
 
-	self.navigationItem.rightBarButtonItem	= [[UIBarButtonItem alloc] initWithTitle:@"Pause" style:UIBarButtonItemStylePlain target:self action:@selector(pauseFlow)];
-	self.navigationItem.leftBarButtonItem	= [[UIBarButtonItem alloc] initWithTitle:@"Start" style:UIBarButtonItemStylePlain target:self action:@selector(startFlow)];
+//	self.navigationItem.rightBarButtonItem	= [[UIBarButtonItem alloc] initWithTitle:@"Pause" style:UIBarButtonItemStylePlain target:self action:@selector(pauseFlow)];
+//	self.navigationItem.leftBarButtonItem	= [[UIBarButtonItem alloc] initWithTitle:@"Start" style:UIBarButtonItemStylePlain target:self action:@selector(startFlow)];
+
+	[self.navigationController setToolbarHidden:NO];
+
+	UIBarButtonItem *startButton = [[UIBarButtonItem alloc] initWithTitle:@"Start" style:UIBarButtonItemStylePlain target:self action:@selector(startFlow)];
+	UIBarButtonItem *stopButton = [[UIBarButtonItem alloc] initWithTitle:@"Stop" style:UIBarButtonItemStylePlain target:self action:@selector(stopFlow)];
+	UIBarButtonItem *pauseButton = [[UIBarButtonItem alloc] initWithTitle:@"Pause" style:UIBarButtonItemStylePlain target:self action:@selector(pauseFlow)];
+	UIBarButtonItem *skipButton = [[UIBarButtonItem alloc] initWithTitle:@"Skip" style:UIBarButtonItemStylePlain target:self action:@selector(skipSection)];
+
+	[self setToolbarItems:@[startButton,
+							[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil],
+							stopButton,
+							[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil],
+							pauseButton,
+							[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil],
+							skipButton]];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
 
-	[_loadingFlow start];
-
 	[NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(displayCurrentTime) userInfo:nil repeats:YES];
-
-	[self performSelector:@selector(skipSection) withObject:nil afterDelay:1.5];
 }
 
 - (void)didReceiveMemoryWarning
@@ -74,7 +85,6 @@
 - (void)skipSection
 {
 	[_loadingFlow skipToNextSection];
-	NSLog(@"skipping to next section");
 }
 
 - (void)pauseFlow
@@ -90,6 +100,11 @@
 	[_loadingFlow start];
 }
 
+- (void)stopFlow
+{
+	[_loadingFlow stop];
+}
+
 #pragma mark LoadingFlowDelegate
 
 - (void)loadingFlow:(LoadingFlow *)loadingFlow hasCompletedSection:(LoadingFlowSection *)section atIndex:(NSInteger)idx
@@ -101,7 +116,7 @@
 		message.text			= @"MONKEYS!!!";
 		message.textAlignment	= NSTextAlignmentCenter;
 		[message sizeToFit];
-		[loadingFlow displayMessageLabel:message withCompletion:^(LoadingFlow *loadingFlow) {
+		[loadingFlow displayMessageLabel:message duration:2.0 withCompletion:^(LoadingFlow *loadingFlow) {
 			NSLog(@"finished!");
 		}];
 	}

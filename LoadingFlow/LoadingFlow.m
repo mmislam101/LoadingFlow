@@ -37,7 +37,11 @@
 
 @interface LoadingFlow ()
 
+@property (nonatomic, strong) EasyTimeline *timeline;
 @property (nonatomic, strong) UIView *contentView;
+@property (nonatomic, assign) NSInteger currentSection;
+@property (nonatomic, strong) NSMutableArray *sectionLayers;
+@property (nonatomic, strong) DACircularProgressView *progressView;
 
 @end
 
@@ -47,39 +51,64 @@
 progressView	= _progressView,
 currentSection	= _currentSection,
 timeSinceStart	= _timeSinceStart,
-contentView		= _contentView;
+contentView		= _contentView,
+timeline		= _timeline,
+sectionLayers	= _sectionLayers;
 
 - (id)initWithFrame:(CGRect)frame
 {
 	if (!(self = [super initWithFrame:frame]))
         return self;
 
-	_contentView						= [[UIView alloc] initWithFrame:self.bounds];
-	[self addSubview:_contentView];
+	self.alpha							= 0.0;
 
-	_contentView.alpha					= 0.0;
-	_contentView.layer.masksToBounds	= YES;
-	
 	_sections							= [[NSMutableArray alloc] init];
 	_sectionsMeta						= [[NSMutableArray alloc] init];
+	_sectionLayers						= [[NSMutableArray alloc] init];
 	_currentSection						= 0;
 	_timeline							= [[EasyTimeline alloc] init];
 	_timeline.delegate					= self;
-	_sideWidth							= ((_contentView.frame.size.width < _contentView.frame.size.height) ? _contentView.frame.size.width : _contentView.frame.size.height);
+	_sideWidth							= ((frame.size.width < frame.size.height) ? frame.size.width : frame.size.height);
+	_skipping							= NO;
 
-	CGFloat progressViewSide			= ((frame.size.width < frame.size.height) ? frame.size.width : frame.size.height) * LOADING_FLOW_RING_SIZE;
+    return self;
+}
+
+- (void)initValues
+{
+	self.alpha							= 0.0;
+	CGRect frame						= self.frame;
+	_skipping							= NO;
+	_currentSection						= 0;
+
+	_contentView						= [[UIView alloc] initWithFrame:self.bounds];
+	[self addSubview:_contentView];
+	_contentView.layer.masksToBounds	= YES;
+
+	CGFloat progressViewSide			= _sideWidth * LOADING_FLOW_RING_SIZE;
 	CGRect progressFrame				= CGRectMake(0.0, 0.0, progressViewSide, progressViewSide);
 	_progressView						= [[DACircularProgressView alloc] initWithFrame:progressFrame];
 	_progressView.center				= CGPointMake(frame.size.width / 2.0, frame.size.height / 2.0);
 	_progressView.progress				= 0.0;
 	_progressView.transform				= CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(-90.0));
+	_progressView.progressTintColor		= _tintColor;
 
 	[self addSubview:_progressView];
 
-	_innerRadius				= (_progressView.bounds.size.width / 2.0) + (_sideWidth * LOADING_FLOW_RING_GAP_RATIO);
-	_outerRadius				= _sideWidth / 2.0;
+	_innerRadius						= (_progressView.bounds.size.width / 2.0) + (_sideWidth * LOADING_FLOW_RING_GAP_RATIO);
+	_outerRadius						= _sideWidth / 2.0;
+}
 
-    return self;
+- (void)destroyValues
+{
+	[_contentView removeFromSuperview];
+	[_progressView removeFromSuperview];
+
+	_contentView	= nil;
+	_progressView	= nil;
+
+	[_timeline stop];
+	[_timeline clear];
 }
 
 #pragma mark Loading Flow Properties
@@ -87,7 +116,7 @@ contentView		= _contentView;
 - (void)addSection:(LoadingFlowSection *)section
 {
 	// Don't allow updating after the Loading Flow has started
-	if (_timeline.isRunning || _timeline.currentTime > 0.0)
+	if (self.hasStarted)
 		return;
 
 	[_sections addObject:section];
@@ -96,7 +125,7 @@ contentView		= _contentView;
 - (void)removeSection:(LoadingFlowSection *)section
 {
 	// Don't allow updating after the Loading Flow has started
-	if (_timeline.isRunning || _timeline.currentTime > 0.0)
+	if (self.hasStarted)
 		return;
 
 	[_sections removeObject:section];
@@ -120,25 +149,19 @@ contentView		= _contentView;
 	return _timeline.isRunning;
 }
 
+- (BOOL)hasStarted
+{
+	return _timeline.hasStarted;
+}
+
 #pragma mark Loading Flow Control
 
 - (void)start
 {
-	if (_progressView.progress > 0.0) // If Loading Flow is running
-	{
-		[self stop];
-		[self startFirstSection];
-
+	if (self.hasStarted || _progressView.progress)
 		return;
-	}
 
-	if (_timeline.duration > 0.0) // If Loading Flow is stopped, but setup for run, restart it
-	{
-		[self startFirstSection];
-
-		return;
-	}
-
+	[self initValues];
 	[self setupAndFadeIn];
 }
 
@@ -154,13 +177,24 @@ contentView		= _contentView;
 
 - (void)stop
 {
-	_progressView.progress	= 0.0;
-	_currentSection			= 0;
-	[_timeline stop];
+	if (!self.hasStarted)
+		return;
+
+	__weak LoadingFlow *weakSelf = self;
+	[UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+		weakSelf.alpha = 0.0;
+	} completion:^(BOOL finished) {
+		[weakSelf destroyValues];
+	}];
 }
 
 - (void)skipToNextSection
 {
+	// If hasn't started or is currently skipping
+	if (!self.hasStarted || _skipping || _currentSection >= _timeline.events.count)
+		return;
+
+	_skipping = YES;
 	[_timeline pause];
 
 	EasyTimelineEvent *nextEvent	= [_timeline.events objectAtIndex:_currentSection];
@@ -168,28 +202,37 @@ contentView		= _contentView;
 
 	[self skipProgressTo:nextEvent.time / _timeline.duration withCompletion:^{
 		[_timeline resume];
+		_skipping = NO;
 	}];
 }
 
-- (void)displayMessageLabel:(UILabel *)label withCompletion:(void (^)(LoadingFlow *loadingFlow))completion
+- (void)clear
+{
+	[self stop];
+}
+
+- (void)displayMessageLabel:(UILabel *)label duration:(NSTimeInterval)duration withCompletion:(void (^)(LoadingFlow *loadingFlow))completion
 {
 	[_timeline pause];
 
-	UIView *messageView				= [[UIView alloc] initWithFrame:self.bounds];
-	messageView.alpha				= 0.0;
+	UIView *messageView	= [[UIView alloc] initWithFrame:self.bounds];
+	messageView.alpha	= 0.0;
 
 	[self addSubview:messageView];
 
-	CGFloat radius					= _sideWidth / 2.0 - 50.0;
-	CGPoint topLeftPoint			= [self pointOnCircleWithRadius:radius andCenter:_progressView.center atDegree:45.0];
-	CGPoint topRightPoint			= [self pointOnCircleWithRadius:radius andCenter:_progressView.center atDegree:90.0 + 45.0];
-	CGPoint bottomLeftPoint			= [self pointOnCircleWithRadius:radius andCenter:_progressView.center atDegree:180.0 + 90.0 + 45.0];
-	label.frame						= CGRectMake(topLeftPoint.x,
-												 topLeftPoint.y,
-												 topRightPoint.x - topLeftPoint.x,
-												 bottomLeftPoint.y - topLeftPoint.y);
+	if (label)
+	{
+		CGFloat radius			= _sideWidth / 2.0 - 50.0;
+		CGPoint topLeftPoint	= [self pointOnCircleWithRadius:radius andCenter:_progressView.center atDegree:45.0];
+		CGPoint topRightPoint	= [self pointOnCircleWithRadius:radius andCenter:_progressView.center atDegree:90.0 + 45.0];
+		CGPoint bottomLeftPoint	= [self pointOnCircleWithRadius:radius andCenter:_progressView.center atDegree:180.0 + 90.0 + 45.0];
+		label.frame				= CGRectMake(topLeftPoint.x,
+											 topLeftPoint.y,
+											 topRightPoint.x - topLeftPoint.x,
+											 bottomLeftPoint.y - topLeftPoint.y);
 
-	[messageView addSubview:label];
+		[messageView addSubview:label];
+	}
 
 	[self progressExpand];
 
@@ -198,9 +241,13 @@ contentView		= _contentView;
 		weakSelf.contentView.alpha	= 0.0;
 		messageView.alpha			= 1.0;
 	} completion:^(BOOL finished) {
-		[UIView animateWithDuration:0.5 delay:LOADING_FLOW_MESSAGE_DURATION options:UIViewAnimationOptionCurveEaseOut animations:^{
+		[UIView animateWithDuration:0.5 delay:duration options:UIViewAnimationOptionCurveEaseOut animations:^{
 			weakSelf.alpha = 0.0;
 		} completion:^(BOOL finished) {
+			[messageView removeFromSuperview];
+
+			[weakSelf destroyValues];
+			
 			completion(weakSelf);
 		}];
 	}];
@@ -235,12 +282,32 @@ contentView		= _contentView;
 	_timeline.duration				= duration;
 	_timeline.tickPeriod			= 0.01;
 
-	[self setupSections];
+	// Setup Sections
+	__block CGFloat degreeCursor	= 0.0;
+	CGFloat sectionGap				= LOADING_FLOW_SECTION_GAP_RATIO * _sideWidth;
+	[_sections enumerateObjectsUsingBlock:^(LoadingFlowSection *section, NSUInteger idx, BOOL *stop) {
+		CGFloat endAngle	= 360.0 * (section.duration / _timeline.duration) + degreeCursor;
+
+		[_sectionsMeta addObject:@{kSectionMetaStartAngle : @(degreeCursor + sectionGap), kSectionMetaEndAngle : @(endAngle - sectionGap)}];
+
+		CAShapeLayer *layer = [self ringLayerWithStartingDegree:degreeCursor + sectionGap endingDegree:endAngle - sectionGap andColor:section.backgroundColor];
+		[_contentView.layer addSublayer:layer];
+		[_sectionLayers addObject:layer];
+
+		CGFloat labelDegree	= ((endAngle - degreeCursor) / 2.0) + degreeCursor;
+		CGPoint point		= [self pointOnCircleWithRadius:((_outerRadius - _innerRadius) / 2.0) + _innerRadius andCenter:_progressView.center atDegree:labelDegree];
+		[self addLabelForSection:section atPoint:point andDegree:labelDegree];
+
+		degreeCursor = endAngle;
+	}];
+
+	// Start the Loading Flow going!
+	[weakSelf startFirstSection];
 
 	[UIView animateWithDuration:0.3 animations:^{
-		weakSelf.contentView.alpha = 1.0;
+		weakSelf.alpha = 1.0;
 	} completion:^(BOOL finished) {
-		[weakSelf startFirstSection];
+
 	}];
 }
 
@@ -250,25 +317,6 @@ contentView		= _contentView;
 }
 
 #pragma mark Drawing functions
-
-- (void)setupSections
-{
-	__block CGFloat degreeCursor	= 0.0;
-	CGFloat sectionGap				= LOADING_FLOW_SECTION_GAP_RATIO * _sideWidth;
-	[_sections enumerateObjectsUsingBlock:^(LoadingFlowSection *section, NSUInteger idx, BOOL *stop) {
-		CGFloat endAngle	= 360.0 * (section.duration / _timeline.duration) + degreeCursor;
-
-		[_sectionsMeta addObject:@{kSectionMetaStartAngle : @(degreeCursor + sectionGap), kSectionMetaEndAngle : @(endAngle - sectionGap)}];
-
-		[_contentView.layer addSublayer:[self ringLayerWithStartingDegree:degreeCursor + sectionGap endingDegree:endAngle - sectionGap andColor:section.backgroundColor]];
-
-		CGFloat labelDegree	= ((endAngle - degreeCursor) / 2.0) + degreeCursor;
-		CGPoint point		= [self pointOnCircleWithRadius:((_outerRadius - _innerRadius) / 2.0) + _innerRadius andCenter:_progressView.center atDegree:labelDegree];
-		[self addLabelForSection:section atPoint:point andDegree:labelDegree];
-
-		degreeCursor = endAngle;
-	}];
-}
 
 - (CAShapeLayer *)ringLayerWithStartingDegree:(CGFloat)startAngle endingDegree:(CGFloat)endAngle andColor:(UIColor *)color
 {
@@ -366,6 +414,25 @@ contentView		= _contentView;
 	[_progressView.layer addAnimation:bounceProgress forKey:@"bounceProgress"];
 }
 
+- (void)progressRetract
+{
+	CGRect finalRect					= CGRectMake(0.0,
+													 0.0,
+													 _sideWidth,
+													 _sideWidth);
+	SKBounceAnimation *bounceProgress	= [SKBounceAnimation animationWithKeyPath:@"bounds"];
+	bounceProgress.fromValue			= [NSValue valueWithCGRect:_progressView.bounds];
+	bounceProgress.toValue				= [NSValue valueWithCGRect:finalRect];
+	bounceProgress.duration				= 3.0f;
+	bounceProgress.numberOfBounces		= 5;
+	bounceProgress.shouldOvershoot		= NO;
+	bounceProgress.shake				= NO;
+
+	_progressView.bounds				= finalRect;
+
+	[_progressView.layer addAnimation:bounceProgress forKey:@"bounceProgress"];
+}
+
 - (void)skipProgressTo:(CGFloat)progress withCompletion:(void (^)(void))completion
 {
 	[CATransaction begin];
@@ -390,13 +457,16 @@ contentView		= _contentView;
 
 - (void)endOfSection:(LoadingFlowSection *)section
 {
-	NSDictionary *sectionMeta = [_sectionsMeta objectAtIndex:[_sections indexOfObject:section]];
-	[_contentView.layer addSublayer:[self ringLayerWithStartingDegree:[sectionMeta[kSectionMetaStartAngle] floatValue] endingDegree:[sectionMeta[kSectionMetaEndAngle] floatValue] andColor:section.highlightColor]];
+	NSDictionary *sectionMeta	= [_sectionsMeta objectAtIndex:[_sections indexOfObject:section]];
+
+	CAShapeLayer *layer			= [self ringLayerWithStartingDegree:[sectionMeta[kSectionMetaStartAngle] floatValue] endingDegree:[sectionMeta[kSectionMetaEndAngle] floatValue] andColor:section.highlightColor];
+	[_contentView.layer addSublayer:layer];
+	[_sectionLayers addObject:layer];
 
 	[self progressSmallBounce];
 
 	if (_delegate && [_delegate respondsToSelector:@selector(loadingFlow:hasCompletedSection:atIndex:)])
-		[_delegate loadingFlow:self hasCompletedSection:section atIndex:[_sections indexOfObject:section]];
+		[_delegate loadingFlow:self hasCompletedSection:section atIndex:_currentSection];
 
 	_currentSection = [_sections indexOfObject:section] + 1;
 }
@@ -410,7 +480,10 @@ contentView		= _contentView;
 {
 	LoadingFlowSection *section	= _sections[_sections.count-1];
 	NSDictionary *sectionMeta	= [_sectionsMeta objectAtIndex:[_sections indexOfObject:section]];
-	[_contentView.layer addSublayer:[self ringLayerWithStartingDegree:[sectionMeta[kSectionMetaStartAngle] floatValue] endingDegree:[sectionMeta[kSectionMetaEndAngle] floatValue] andColor:section.highlightColor]];
+
+	CAShapeLayer *layer			= [self ringLayerWithStartingDegree:[sectionMeta[kSectionMetaStartAngle] floatValue] endingDegree:[sectionMeta[kSectionMetaEndAngle] floatValue] andColor:section.highlightColor];
+	[_contentView.layer addSublayer:layer];
+	[_sectionLayers addObject:layer];
 
 	[self progressSmallBounce];
 
@@ -419,7 +492,7 @@ contentView		= _contentView;
 	_progressView.progress = 1.0;
 
 	if (_delegate && [_delegate respondsToSelector:@selector(loadingFlow:hasCompletedSection:atIndex:)])
-		[_delegate loadingFlow:self hasCompletedSection:section atIndex:_sections.count-1];
+		[_delegate loadingFlow:self hasCompletedSection:section atIndex:_currentSection];
 }
 
 @end
