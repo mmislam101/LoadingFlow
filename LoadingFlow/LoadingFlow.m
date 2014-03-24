@@ -203,6 +203,7 @@ sectionLayers	= _sectionLayers;
 	[self skipProgressTo:nextEvent.time / _timeline.duration withCompletion:^{
 		[_timeline resume];
 		_skipping = NO;
+		[_sections[_currentSection] setSkipped:YES];
 	}];
 }
 

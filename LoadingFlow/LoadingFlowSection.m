@@ -44,6 +44,7 @@
 	section.highlightColor			= [[UIColor blackColor] colorWithAlphaComponent:0.5];
 
 	section.duration				= duration;
+	section.skipped					= NO;
 
 	return section;
 }
