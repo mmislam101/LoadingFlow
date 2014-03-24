@@ -98,7 +98,6 @@
 - (void)resume;
 - (void)stop;
 - (void)skipToNextSection; // This will speed up the loading till it hits the next section. Can only be called once till skip finishes
-- (void)clear;
 
 // This will stop the LoadingFlow, display the message for the duration and then fade out to completion
 // You can reuse this loading flow or even clear it and add new events for reuse.

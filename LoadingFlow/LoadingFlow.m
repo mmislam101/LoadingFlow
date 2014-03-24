@@ -206,11 +206,6 @@ sectionLayers	= _sectionLayers;
 	}];
 }
 
-- (void)clear
-{
-	[self stop];
-}
-
 - (void)displayMessageLabel:(UILabel *)label duration:(NSTimeInterval)duration withCompletion:(void (^)(LoadingFlow *loadingFlow))completion
 {
 	[_timeline pause];
