@@ -197,10 +197,10 @@ sectionLayers	= _sectionLayers;
 	_skipping = YES;
 	[_timeline pause];
 
-	EasyTimelineEvent *nextEvent	= [_timeline.events objectAtIndex:_currentSection];
-	[_timeline skipForwardSeconds:nextEvent.time - _timeline.currentTime - 0.01];
+	EasyTimelineEvent *currentEvent	= [_timeline.events objectAtIndex:_currentSection];
+	[_timeline skipForwardSeconds:currentEvent.time - _timeline.currentTime - 0.01];
 
-	[self skipProgressTo:nextEvent.time / _timeline.duration withCompletion:^{
+	[self skipProgressTo:currentEvent.time / _timeline.duration withCompletion:^{
 		[_timeline resume];
 		_skipping = NO;
 		[_sections[_currentSection] setSkipped:YES];
@@ -464,7 +464,14 @@ sectionLayers	= _sectionLayers;
 	if (_delegate && [_delegate respondsToSelector:@selector(loadingFlow:hasCompletedSection:atIndex:)])
 		[_delegate loadingFlow:self hasCompletedSection:section atIndex:_currentSection];
 
-	_currentSection = [_sections indexOfObject:section] + 1;
+	// For some reason sometimes the finishedTimeline doesn't fire if you skip within a 1.0 second event
+	if (_currentSection ==  _sections.count - 1)
+	{
+		[_timeline stop];
+		_progressView.progress = 1.0;
+	}
+	else
+		_currentSection = [_sections indexOfObject:section] + 1;
 }
 
 - (void)tickAt:(NSTimeInterval)time forTimeline:(EasyTimeline *)timeline
