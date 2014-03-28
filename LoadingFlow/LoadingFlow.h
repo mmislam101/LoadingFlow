@@ -58,7 +58,6 @@
 	EasyTimeline *_timeline;
 	NSTimeInterval _tickFactor;
 
-	NSTimeInterval _timeSinceStart;
 	NSInteger _currentSection;
 
 	__weak id <LoadingFlowDelegate> _delegate;
@@ -79,7 +78,6 @@
 #define LOADING_FLOW_RING_SIZE			0.33	// This determines size of loading ring
 #define LOADING_FLOW_RING_GAP_RATIO		0.05	// This determines how large the gap between loading indicator and sections are
 #define LOADING_FLOW_SECTION_GAP_RATIO	0.003	// This determines how large the gaps between sections are
-#define LOADING_FLOW_SKIPPING_SPEED		0.5		// The speed at which sections will be skipped
 
 - (void)addSection:(LoadingFlowSection *)section;		// This doesn't work after Loading Flow has begun (paused or running)
 - (void)removeSection:(LoadingFlowSection *)section;	// This doesn't work after Loading Flow has begun (paused or running)
@@ -97,7 +95,8 @@
 - (void)pause;
 - (void)resume;
 - (void)stop;
-- (void)skipToNextSection; // This will speed up the loading till it hits the next section. Can only be called once till skip finishes
+- (void)clear;
+- (void)skipToNextSectionWithDuration:(NSTimeInterval)duration; // This will speed up the loading till it hits the next section. Can only be called once till skip finishes
 
 // This will stop the LoadingFlow, display the message for the duration and then fade out to completion
 // You can reuse this loading flow or even clear it and add new events for reuse.

@@ -50,7 +50,6 @@
 @synthesize
 progressView	= _progressView,
 currentSection	= _currentSection,
-timeSinceStart	= _timeSinceStart,
 contentView		= _contentView,
 timeline		= _timeline,
 sectionLayers	= _sectionLayers;
@@ -188,7 +187,18 @@ sectionLayers	= _sectionLayers;
 	}];
 }
 
-- (void)skipToNextSection
+- (void)clear
+{
+	[self stop];
+
+	[self destroyValues];
+
+	[_sections removeAllObjects];
+	[_sectionsMeta removeAllObjects];
+	[_sectionLayers removeAllObjects];
+}
+
+- (void)skipToNextSectionWithDuration:(NSTimeInterval)duration
 {
 	// If hasn't started or is currently skipping
 	if (!self.hasStarted || _skipping || _currentSection >= _timeline.events.count)
@@ -200,7 +210,7 @@ sectionLayers	= _sectionLayers;
 	EasyTimelineEvent *currentEvent	= [_timeline.events objectAtIndex:_currentSection];
 	[_timeline skipForwardSeconds:currentEvent.time - _timeline.currentTime - 0.01];
 
-	[self skipProgressTo:currentEvent.time / _timeline.duration withCompletion:^{
+	[self skipProgressTo:currentEvent.time / _timeline.duration duration:duration withCompletion:^{
 		[_timeline resume];
 		_skipping = NO;
 		[_sections[_currentSection] setSkipped:YES];
@@ -429,7 +439,7 @@ sectionLayers	= _sectionLayers;
 	[_progressView.layer addAnimation:bounceProgress forKey:@"bounceProgress"];
 }
 
-- (void)skipProgressTo:(CGFloat)progress withCompletion:(void (^)(void))completion
+- (void)skipProgressTo:(CGFloat)progress duration:(NSTimeInterval)duration withCompletion:(void (^)(void))completion
 {
 	[CATransaction begin];
 
@@ -438,7 +448,7 @@ sectionLayers	= _sectionLayers;
 	}];
 
 	CABasicAnimation *animation	= [CABasicAnimation animationWithKeyPath:@"progress"];
-	animation.duration			= LOADING_FLOW_SKIPPING_SPEED;
+	animation.duration			= duration;
 	animation.timingFunction	= [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
 	animation.fromValue			= [NSNumber numberWithFloat:_progressView.progress];
 	animation.toValue			= [NSNumber numberWithFloat:progress];
