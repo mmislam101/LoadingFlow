@@ -45,6 +45,7 @@
 
 	section.duration				= duration;
 	section.skipped					= NO;
+	section.labelPosition			= 0.1;
 
 	return section;
 }

@@ -35,6 +35,7 @@
 @property (nonatomic, strong) UIColor *backgroundColor; // Default set to translucent black
 @property (nonatomic, strong) UIColor *highlightColor; // Default to more translucent black
 @property (nonatomic, assign) BOOL skipped; // Default to NO, this will be set to YES if this section was skipped
+@property (nonatomic, assign) CGFloat labelPosition; // Default to 0.5, so halfway through a section
 
 + (LoadingFlowSection *)sectionWithText:(NSString *)text andDuration:(NSTimeInterval)duration;
 

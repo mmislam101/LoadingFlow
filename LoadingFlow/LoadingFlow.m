@@ -300,7 +300,7 @@ sectionLayers	= _sectionLayers;
 		[_contentView.layer addSublayer:layer];
 		[_sectionLayers addObject:layer];
 
-		CGFloat labelDegree	= ((endAngle - degreeCursor) / 2.0) + degreeCursor;
+		CGFloat labelDegree	= ((endAngle - degreeCursor) * section.labelPosition) + degreeCursor;
 		CGPoint point		= [self pointOnCircleWithRadius:((_outerRadius - _innerRadius) / 2.0) + _innerRadius andCenter:_progressView.center atDegree:labelDegree];
 		[self addLabelForSection:section atPoint:point andDegree:labelDegree];
 
