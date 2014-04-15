@@ -84,7 +84,7 @@
 
 - (void)skipSection
 {
-	[_loadingFlow skipToNextSection];
+	[_loadingFlow skipToNextSectionWithDuration:1.0];
 }
 
 - (void)pauseFlow
