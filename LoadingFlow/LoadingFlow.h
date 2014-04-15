@@ -94,7 +94,7 @@
 - (void)start; // Cannot restart once started. Has to stop first
 - (void)pause;
 - (void)resume;
-- (void)stop;
+- (void)stopWithCompletion:(void (^)(LoadingFlow *loadingFlow))completion;
 - (void)clear;
 - (void)skipToNextSectionWithDuration:(NSTimeInterval)duration; // This will speed up the loading till it hits the next section. Can only be called once till skip finishes
 

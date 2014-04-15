@@ -174,7 +174,7 @@ sectionLayers	= _sectionLayers;
 	[_timeline resume];
 }
 
-- (void)stop
+- (void)stopWithCompletion:(void (^)(LoadingFlow *loadingFlow))completion
 {
 	if (!self.hasStarted)
 		return;
@@ -184,12 +184,14 @@ sectionLayers	= _sectionLayers;
 		weakSelf.alpha = 0.0;
 	} completion:^(BOOL finished) {
 		[weakSelf destroyValues];
+		if (completion)
+			completion(weakSelf);
 	}];
 }
 
 - (void)clear
 {
-	[self stop];
+	[self stopWithCompletion:nil];
 
 	[self destroyValues];
 
@@ -253,8 +255,9 @@ sectionLayers	= _sectionLayers;
 			[messageView removeFromSuperview];
 
 			[weakSelf destroyValues];
-			
-			completion(weakSelf);
+
+			if (completion)
+				completion(weakSelf);
 		}];
 	}];
 }

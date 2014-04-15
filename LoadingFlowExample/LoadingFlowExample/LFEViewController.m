@@ -45,7 +45,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
 
-//	self.navigationItem.rightBarButtonItem	= [[UIBarButtonItem alloc] initWithTitle:@"Pause" style:UIBarButtonItemStylePlain target:self action:@selector(pauseFlow)];
+	self.navigationItem.rightBarButtonItem	= [[UIBarButtonItem alloc] initWithTitle:@"Wait" style:UIBarButtonItemStylePlain target:self action:@selector(waitFlow)];
 //	self.navigationItem.leftBarButtonItem	= [[UIBarButtonItem alloc] initWithTitle:@"Start" style:UIBarButtonItemStylePlain target:self action:@selector(startFlow)];
 
 	[self.navigationController setToolbarHidden:NO];
@@ -102,7 +102,12 @@
 
 - (void)stopFlow
 {
-	[_loadingFlow stop];
+	[_loadingFlow stopWithCompletion:nil];
+}
+
+- (void)waitFlow
+{
+	[_loadingFlow stopWithCompletion:nil];
 }
 
 #pragma mark LoadingFlowDelegate
