@@ -107,7 +107,21 @@
 
 - (void)waitFlow
 {
-	[_loadingFlow stopWithCompletion:nil];
+	[_loadingFlow stopWithCompletion:^(LoadingFlow *loadingFlow) {
+		[self startWait];
+	}];
+}
+
+- (void)waitStop
+{
+	[_loadingFlow stopWaitingWithCompletion:^(LoadingFlow *loadingFlow) {
+		self.navigationItem.rightBarButtonItem	= [[UIBarButtonItem alloc] initWithTitle:@"Wait" style:UIBarButtonItemStylePlain target:self action:@selector(waitFlow)];
+	}];
+}
+
+- (void)startWait
+{
+	self.navigationItem.rightBarButtonItem	= [[UIBarButtonItem alloc] initWithTitle:@"Stop Waiting" style:UIBarButtonItemStylePlain target:self action:@selector(waitStop)];
 }
 
 #pragma mark LoadingFlowDelegate

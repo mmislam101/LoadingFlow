@@ -69,6 +69,7 @@ sectionLayers	= _sectionLayers;
 	_timeline.delegate					= self;
 	_sideWidth							= ((frame.size.width < frame.size.height) ? frame.size.width : frame.size.height);
 	_skipping							= NO;
+	_waiting							= NO;
 
     return self;
 }
@@ -176,10 +177,15 @@ sectionLayers	= _sectionLayers;
 
 - (void)stopWithCompletion:(void (^)(LoadingFlow *loadingFlow))completion
 {
-	if (!self.hasStarted)
-		return;
-
 	__weak LoadingFlow *weakSelf = self;
+	
+	if (!self.hasStarted)
+	{
+		if (completion)
+			completion(weakSelf);
+		return;
+	}
+
 	[UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
 		weakSelf.alpha = 0.0;
 	} completion:^(BOOL finished) {
@@ -260,6 +266,27 @@ sectionLayers	= _sectionLayers;
 				completion(weakSelf);
 		}];
 	}];
+}
+
+- (void)startWaitingWith:(LoadingFlowSection *)section
+{
+	if (_waiting)
+		return;
+
+	_waiting = YES;
+}
+
+- (void)stopWaitingWithCompletion:(void (^)(LoadingFlow *loadingFlow))completion
+{
+	if (!_waiting)
+	{
+		__weak LoadingFlow *weakSelf = self;
+		if (completion)
+			completion(weakSelf);
+		return;
+	}
+
+	_waiting = NO;
 }
 
 #pragma mark Loading States

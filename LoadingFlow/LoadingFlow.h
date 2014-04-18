@@ -65,6 +65,8 @@
 	CGFloat _innerRadius;
 	CGFloat _outerRadius;
 	BOOL _skipping;
+
+	BOOL _waiting;
 }
 
 @property (weak, nonatomic) id <LoadingFlowDelegate> delegate;
@@ -101,5 +103,9 @@
 // This will stop the LoadingFlow, display the message for the duration and then fade out to completion
 // You can reuse this loading flow or even clear it and add new events for reuse.
 - (void)displayMessageLabel:(UILabel *)label duration:(NSTimeInterval)duration withCompletion:(void (^)(LoadingFlow *loadingFlow))completion;
+
+// The following are for moments when you don't know how long something will take
+- (void)startWaitingWith:(LoadingFlowSection *)section;
+- (void)stopWaitingWithCompletion:(void (^)(LoadingFlow *loadingFlow))completion;
 
 @end
