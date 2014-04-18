@@ -29,6 +29,7 @@
 #import "LoadingFlow.h"
 #import "DACircularProgressView.h"
 #import "SKBounceAnimation.h"
+#import "ArcViewFactory.h"
 
 #define DEGREES_TO_RADIANS(degrees)	((M_PI * degrees) / 180.0)
 
@@ -218,6 +219,11 @@ sectionLayers	= _sectionLayers;
 	EasyTimelineEvent *currentEvent	= [_timeline.events objectAtIndex:_currentSection];
 	[_timeline skipForwardSeconds:currentEvent.time - _timeline.currentTime - 0.01];
 
+	// TODO: Treat duration as if it's from the beginning of the section to the end, so account for time remaining in section
+//	NSLog(@"section duration: %f", [_sections[_currentSection] duration]);
+//	NSLog(@"remaining duration: %f", self.timeSinceStart); // TODO: Need to find remaining time in section
+//	duration = duration * (currentEvent.time - _timeline.currentTime / [_sections[_currentSection] duration]);
+
 	[self skipProgressTo:currentEvent.time / _timeline.duration duration:duration withCompletion:^{
 		[_timeline resume];
 		_skipping = NO;
@@ -319,20 +325,25 @@ sectionLayers	= _sectionLayers;
 	_timeline.tickPeriod			= 0.01;
 
 	// Setup Sections
+	ArcViewFactory *arcLayerFactory = [[ArcViewFactory alloc] initWithFrame:self.bounds
+																  innerRadius:_innerRadius
+																  outerRadius:_outerRadius];
 	__block CGFloat degreeCursor	= 0.0;
 	CGFloat sectionGap				= LOADING_FLOW_SECTION_GAP_RATIO * _sideWidth;
 	[_sections enumerateObjectsUsingBlock:^(LoadingFlowSection *section, NSUInteger idx, BOOL *stop) {
 		CGFloat endAngle	= 360.0 * (section.duration / _timeline.duration) + degreeCursor;
 
-		[_sectionsMeta addObject:@{kSectionMetaStartAngle : @(degreeCursor + sectionGap), kSectionMetaEndAngle : @(endAngle - sectionGap)}];
+		NSDictionary *sectionMeta = @{kSectionMetaStartAngle : @(degreeCursor + sectionGap),
+									  kSectionMetaEndAngle : @(endAngle - sectionGap)};
+		[_sectionsMeta addObject:sectionMeta];
 
-		CAShapeLayer *layer = [self ringLayerWithStartingDegree:degreeCursor + sectionGap endingDegree:endAngle - sectionGap andColor:section.backgroundColor];
-		[_contentView.layer addSublayer:layer];
-		[_sectionLayers addObject:layer];
+		ArcView *arc = [arcLayerFactory arcWithStartAngle:[sectionMeta[kSectionMetaStartAngle] floatValue]
+													   endDegree:[sectionMeta[kSectionMetaEndAngle] floatValue]
+														andColor:section.backgroundColor];
 
-		CGFloat labelDegree	= ((endAngle - degreeCursor) * section.labelPosition) + degreeCursor;
-		CGPoint point		= [self pointOnCircleWithRadius:((_outerRadius - _innerRadius) / 2.0) + _innerRadius andCenter:_progressView.center atDegree:labelDegree];
-		[self addLabelForSection:section atPoint:point andDegree:labelDegree];
+		[arcLayerFactory addLabel:section.label toArcView:arc atPosition:section.labelPosition];
+		[_contentView addSubview:arc];
+		[_sectionLayers addObject:arc]; // TODO: Do we need this?
 
 		degreeCursor = endAngle;
 	}];

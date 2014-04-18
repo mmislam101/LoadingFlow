@@ -27,6 +27,7 @@
 		B61AB8DB18C2FFDB0043850F /* LoadingFlow.m in Sources */ = {isa = PBXBuildFile; fileRef = B61AB8D418C2FFDB0043850F /* LoadingFlow.m */; };
 		B61AB8DC18C2FFDB0043850F /* LoadingFlowSection.m in Sources */ = {isa = PBXBuildFile; fileRef = B61AB8D618C2FFDB0043850F /* LoadingFlowSection.m */; };
 		B61AB8E218C995B30043850F /* SKBounceAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = B61AB8E118C995B30043850F /* SKBounceAnimation.m */; };
+		B653905A1900EBF800042DA0 /* ArcViewFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = B65390591900EBF800042DA0 /* ArcViewFactory.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,6 +73,8 @@
 		B61AB8D618C2FFDB0043850F /* LoadingFlowSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingFlowSection.m; sourceTree = "<group>"; };
 		B61AB8E018C995B30043850F /* SKBounceAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKBounceAnimation.h; sourceTree = "<group>"; };
 		B61AB8E118C995B30043850F /* SKBounceAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKBounceAnimation.m; sourceTree = "<group>"; };
+		B65390581900EBF800042DA0 /* ArcViewFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArcViewFactory.h; sourceTree = "<group>"; };
+		B65390591900EBF800042DA0 /* ArcViewFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArcViewFactory.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -181,6 +184,8 @@
 				B61AB8D418C2FFDB0043850F /* LoadingFlow.m */,
 				B61AB8D518C2FFDB0043850F /* LoadingFlowSection.h */,
 				B61AB8D618C2FFDB0043850F /* LoadingFlowSection.m */,
+				B65390581900EBF800042DA0 /* ArcViewFactory.h */,
+				B65390591900EBF800042DA0 /* ArcViewFactory.m */,
 			);
 			name = LoadingFlow;
 			path = ../../LoadingFlow;
@@ -319,6 +324,7 @@
 				B61AB8D818C2FFDB0043850F /* EasyTimeline.m in Sources */,
 				B61AB8DA18C2FFDB0043850F /* NSTimer+EasyTimeline.m in Sources */,
 				B61AB8A318C2FD150043850F /* LFEViewController.m in Sources */,
+				B653905A1900EBF800042DA0 /* ArcViewFactory.m in Sources */,
 				B61AB89618C2FD150043850F /* main.m in Sources */,
 				B61AB8DB18C2FFDB0043850F /* LoadingFlow.m in Sources */,
 				B61AB8DC18C2FFDB0043850F /* LoadingFlowSection.m in Sources */,
