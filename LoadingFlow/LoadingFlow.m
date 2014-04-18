@@ -98,6 +98,10 @@ sectionLayers	= _sectionLayers;
 
 	_innerRadius						= (_progressView.bounds.size.width / 2.0) + (_sideWidth * LOADING_FLOW_RING_GAP_RATIO);
 	_outerRadius						= _sideWidth / 2.0;
+
+	_arcLayerFactory					= [[ArcViewFactory alloc] initWithFrame:self.bounds
+																	innerRadius:_innerRadius
+																	outerRadius:_outerRadius];
 }
 
 - (void)destroyValues
@@ -243,9 +247,9 @@ sectionLayers	= _sectionLayers;
 	if (label)
 	{
 		CGFloat radius			= _sideWidth / 2.0 - 50.0;
-		CGPoint topLeftPoint	= [self pointOnCircleWithRadius:radius andCenter:_progressView.center atDegree:45.0];
-		CGPoint topRightPoint	= [self pointOnCircleWithRadius:radius andCenter:_progressView.center atDegree:90.0 + 45.0];
-		CGPoint bottomLeftPoint	= [self pointOnCircleWithRadius:radius andCenter:_progressView.center atDegree:180.0 + 90.0 + 45.0];
+		CGPoint topLeftPoint	= [ArcViewFactory pointOnCircleWithRadius:radius andCenter:_progressView.center atDegree:45.0];
+		CGPoint topRightPoint	= [ArcViewFactory pointOnCircleWithRadius:radius andCenter:_progressView.center atDegree:90.0 + 45.0];
+		CGPoint bottomLeftPoint	= [ArcViewFactory pointOnCircleWithRadius:radius andCenter:_progressView.center atDegree:180.0 + 90.0 + 45.0];
 		label.frame				= CGRectMake(topLeftPoint.x,
 											 topLeftPoint.y,
 											 topRightPoint.x - topLeftPoint.x,
@@ -365,57 +369,6 @@ sectionLayers	= _sectionLayers;
 
 #pragma mark Drawing functions
 
-- (CAShapeLayer *)ringLayerWithStartingDegree:(CGFloat)startAngle endingDegree:(CGFloat)endAngle andColor:(UIColor *)color
-{
-	// Add a transform of -180.0 to match the loading progress
-	startAngle				-= 180.0;
-	endAngle				-= 180.0;
-
-	UIBezierPath *ringPath	= [UIBezierPath bezierPath];
-
-	// Inner circle
-	[ringPath addArcWithCenter:_progressView.center
-						radius:_innerRadius
-					startAngle:DEGREES_TO_RADIANS(startAngle)
-					  endAngle:DEGREES_TO_RADIANS(endAngle)
-					 clockwise:YES];
-
-	// Outer circle
-	[ringPath addArcWithCenter:_progressView.center
-						radius:_outerRadius
-					startAngle:DEGREES_TO_RADIANS(endAngle)
-					  endAngle:DEGREES_TO_RADIANS(startAngle)
-					 clockwise:NO];
-
-	CAShapeLayer *ringLayer	= [CAShapeLayer layer];
-	ringLayer.frame			= _contentView.bounds;
-	ringLayer.path			= ringPath.CGPath;
-	ringLayer.fillColor		= color.CGColor;
-
-	return ringLayer;
-}
-
-- (void)addLabelForSection:(LoadingFlowSection *)section atPoint:(CGPoint)point andDegree:(CGFloat)degree
-{
-	CGSize labelSize		= [section.label.text sizeWithAttributes:@{NSFontAttributeName: section.label.font}];
-	section.label.frame		= CGRectMake(0.0,
-										 0.0,
-										 labelSize.width,
-										 labelSize.height);
-
-	section.label.center	= point;
-
-	[_contentView addSubview:section.label];
-}
-
-- (CGPoint)pointOnCircleWithRadius:(CGFloat)radius andCenter:(CGPoint)center atDegree:(CGFloat)degree
-{
-	// Add a transform of -180.0 to match the loading progress
-	degree -= 180.0;
-	return CGPointMake(center.x + (radius * cos(DEGREES_TO_RADIANS(degree))),
-					   center.y + (radius * sin(DEGREES_TO_RADIANS(degree))));
-}
-
 - (void)progressBigBounce
 {
 	SKBounceAnimation *bounceProgress	= [SKBounceAnimation animationWithKeyPath:@"bounds"];
@@ -504,11 +457,7 @@ sectionLayers	= _sectionLayers;
 
 - (void)endOfSection:(LoadingFlowSection *)section
 {
-	NSDictionary *sectionMeta	= [_sectionsMeta objectAtIndex:[_sections indexOfObject:section]];
-
-	CAShapeLayer *layer			= [self ringLayerWithStartingDegree:[sectionMeta[kSectionMetaStartAngle] floatValue] endingDegree:[sectionMeta[kSectionMetaEndAngle] floatValue] andColor:section.highlightColor];
-	[_contentView.layer addSublayer:layer];
-	[_sectionLayers addObject:layer];
+	[_arcLayerFactory highlightArc:_sectionLayers[[_sections indexOfObject:section]] withColor:section.highlightColor];
 
 	[self progressSmallBounce];
 
@@ -533,11 +482,8 @@ sectionLayers	= _sectionLayers;
 - (void)finishedTimeLine:(EasyTimeline *)timeline
 {
 	LoadingFlowSection *section	= _sections[_sections.count-1];
-	NSDictionary *sectionMeta	= [_sectionsMeta objectAtIndex:[_sections indexOfObject:section]];
 
-	CAShapeLayer *layer			= [self ringLayerWithStartingDegree:[sectionMeta[kSectionMetaStartAngle] floatValue] endingDegree:[sectionMeta[kSectionMetaEndAngle] floatValue] andColor:section.highlightColor];
-	[_contentView.layer addSublayer:layer];
-	[_sectionLayers addObject:layer];
+	[_arcLayerFactory highlightArc:_sectionLayers[[_sections indexOfObject:section]] withColor:section.highlightColor];
 
 	[self progressSmallBounce];
 

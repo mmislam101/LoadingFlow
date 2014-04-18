@@ -28,5 +28,8 @@
 
 - (ArcView *)arcWithStartAngle:(CGFloat)startDegree endDegree:(CGFloat)endDegree andColor:(UIColor *)backgroundColor;
 - (void)addLabel:(UILabel *)label toArcView:(ArcView *)arcView atPosition:(CGFloat)percentage;
+- (void)highlightArc:(ArcView *)view withColor:(UIColor *)color;
+
++ (CGPoint)pointOnCircleWithRadius:(CGFloat)radius andCenter:(CGPoint)center atDegree:(CGFloat)degree;
 
 @end

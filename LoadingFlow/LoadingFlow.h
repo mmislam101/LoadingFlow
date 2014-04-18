@@ -36,6 +36,7 @@
 #import "EasyTimeline.h"
 
 @class LoadingFlow;
+@class ArcViewFactory;
 
 @protocol LoadingFlowDelegate <NSObject>
 
@@ -67,6 +68,8 @@
 	BOOL _skipping;
 
 	BOOL _waiting;
+
+	ArcViewFactory *_arcLayerFactory;
 }
 
 @property (weak, nonatomic) id <LoadingFlowDelegate> delegate;

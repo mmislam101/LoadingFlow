@@ -77,13 +77,43 @@
 									 labelSize.height);
 
 	CGFloat labelDegree	= ((arcView.endDegree - arcView.startDegree) * percentage) + arcView.startDegree;
-	CGPoint point		= [self pointOnCircleWithRadius:((self.outerRadius - self.innerRadius) / 2.0) + self.innerRadius andCenter:self.center atDegree:labelDegree];
+	CGPoint point		= [ArcViewFactory pointOnCircleWithRadius:((self.outerRadius - self.innerRadius) / 2.0) + self.innerRadius andCenter:self.center atDegree:labelDegree];
 	label.center		= point;
 
 	[arcView addSubview:label];
 }
 
-- (CGPoint)pointOnCircleWithRadius:(CGFloat)radius andCenter:(CGPoint)center atDegree:(CGFloat)degree
+- (void)highlightArc:(ArcView *)view withColor:(UIColor *)color
+{
+	// Add a transform of -180.0 to match the loading progress
+	CGFloat startAngle		= view.startDegree - 180.0;
+	CGFloat endAngle		= view.endDegree - 180.0;
+
+	UIBezierPath *ringPath	= [UIBezierPath bezierPath];
+
+	// Inner circle
+	[ringPath addArcWithCenter:self.center
+						radius:self.innerRadius
+					startAngle:DEGREES_TO_RADIANS(startAngle)
+					  endAngle:DEGREES_TO_RADIANS(endAngle)
+					 clockwise:YES];
+
+	// Outer circle
+	[ringPath addArcWithCenter:self.center
+						radius:self.outerRadius
+					startAngle:DEGREES_TO_RADIANS(endAngle)
+					  endAngle:DEGREES_TO_RADIANS(startAngle)
+					 clockwise:NO];
+
+	CAShapeLayer *arcLayer	= [CAShapeLayer layer];
+	arcLayer.frame			= CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height);
+	arcLayer.path			= ringPath.CGPath;
+	arcLayer.fillColor		= color.CGColor;
+
+	[view.layer addSublayer:arcLayer];
+}
+
++ (CGPoint)pointOnCircleWithRadius:(CGFloat)radius andCenter:(CGPoint)center atDegree:(CGFloat)degree
 {
 	// Add a transform of -180.0 to match the loading progress
 	degree -= 180.0;
