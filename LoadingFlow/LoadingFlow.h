@@ -45,30 +45,6 @@
 @end
 
 @interface LoadingFlow : UIView <EasyTimelineDelegate>
-{
-	UIView *_contentView;
-
-	CGFloat _sideWidth;
-	NSMutableArray *_sections;
-	NSMutableArray *_sectionsMeta;
-	NSMutableArray *_arcViews;
-	LoadingProgressView *_progressView;
-
-	EasyTimeline *_timeline;
-	NSTimeInterval _tickFactor;
-
-	NSInteger _currentSection;
-
-	__weak id <LoadingFlowDelegate> _delegate;
-
-	CGFloat _innerRadius;
-	CGFloat _outerRadius;
-	BOOL _skipping;
-
-	BOOL _waiting;
-
-	ArcViewFactory *_arcLayerFactory;
-}
 
 @property (weak, nonatomic) id <LoadingFlowDelegate> delegate;
 @property (nonatomic, readonly) LoadingProgressView *progressView; // So that users have access to it

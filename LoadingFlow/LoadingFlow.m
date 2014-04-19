@@ -38,6 +38,29 @@
 #define kRatioOfProgressToBounce	1.2
 
 @interface LoadingFlow ()
+{
+	UIView *_contentView;
+
+	CGFloat _sideWidth;
+	NSMutableArray *_sections;
+	NSMutableArray *_arcViews;
+	LoadingProgressView *_progressView;
+
+	EasyTimeline *_timeline;
+	NSTimeInterval _tickFactor;
+
+	NSInteger _currentSection;
+
+	__weak id <LoadingFlowDelegate> _delegate;
+
+	CGFloat _innerRadius;
+	CGFloat _outerRadius;
+	BOOL _skipping;
+
+	BOOL _waiting;
+
+	ArcViewFactory *_arcLayerFactory;
+}
 
 @property (nonatomic, strong) EasyTimeline *timeline;
 @property (nonatomic, strong) UIView *contentView;
@@ -64,7 +87,6 @@ arcViews		= _arcViews;
 	self.alpha			= 0.0;
 
 	_sections			= [[NSMutableArray alloc] init];
-	_sectionsMeta		= [[NSMutableArray alloc] init];
 	_arcViews			= [[NSMutableArray alloc] init];
 	_currentSection		= 0;
 	_timeline			= [[EasyTimeline alloc] init];
@@ -114,7 +136,6 @@ arcViews		= _arcViews;
 	[_timeline stop];
 	[_timeline clear];
 
-	[_sectionsMeta removeAllObjects];
 	[_arcViews removeAllObjects];
 }
 
@@ -339,12 +360,8 @@ arcViews		= _arcViews;
 	[_sections enumerateObjectsUsingBlock:^(LoadingFlowSection *section, NSUInteger idx, BOOL *stop) {
 		CGFloat endAngle	= 360.0 * (section.duration / _timeline.duration) + degreeCursor;
 
-		NSDictionary *sectionMeta = @{kSectionMetaStartAngle : @(degreeCursor + sectionGap),
-									  kSectionMetaEndAngle : @(endAngle - sectionGap)};
-		[_sectionsMeta addObject:sectionMeta];
-
-		ArcView *arc = [arcLayerFactory arcWithStartAngle:[sectionMeta[kSectionMetaStartAngle] floatValue]
-													   endDegree:[sectionMeta[kSectionMetaEndAngle] floatValue]
+		ArcView *arc = [arcLayerFactory arcWithStartAngle:degreeCursor + sectionGap
+													   endDegree:endAngle - sectionGap
 														andColor:section.backgroundColor];
 
 		[arcLayerFactory addLabel:section.label toArcView:arc atPosition:section.labelPosition];

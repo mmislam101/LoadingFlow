@@ -65,7 +65,7 @@
 	animation.fromValue			= [NSNumber numberWithFloat:self.progress];
 	animation.toValue			= [NSNumber numberWithFloat:progress];
 
-	self.progress		= progress;
+	self.progress				= progress;
 	[self.layer addAnimation:animation forKey:@"skipProgress"];
 
 	[CATransaction commit];
