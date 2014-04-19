@@ -98,7 +98,7 @@
 - (void)pause;
 - (void)resume;
 - (void)stopWithCompletion:(void (^)(LoadingFlow *loadingFlow))completion;
-- (void)clear;
+- (void)clear; // Will clear all the section data as well so you'll have to add new ones
 - (void)skipToNextSectionWithDuration:(NSTimeInterval)duration; // This will speed up the loading till it hits the next section. Can only be called once till skip finishes
 
 // This will stop the LoadingFlow, display the message for the duration and then fade out to completion

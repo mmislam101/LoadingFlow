@@ -113,6 +113,9 @@ arcViews		= _arcViews;
 
 	[_timeline stop];
 	[_timeline clear];
+
+	[_sectionsMeta removeAllObjects];
+	[_arcViews removeAllObjects];
 }
 
 #pragma mark Loading Flow Properties
@@ -165,6 +168,7 @@ arcViews		= _arcViews;
 	if (self.hasStarted || _progressView.progress)
 		return;
 
+	[self destroyValues];
 	[self initValues];
 	[self setupAndFadeIn];
 }
@@ -206,8 +210,6 @@ arcViews		= _arcViews;
 	[self destroyValues];
 
 	[_sections removeAllObjects];
-	[_sectionsMeta removeAllObjects];
-	[_arcViews removeAllObjects];
 }
 
 - (void)skipToNextSectionWithDuration:(NSTimeInterval)duration
