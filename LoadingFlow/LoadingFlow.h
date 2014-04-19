@@ -26,17 +26,15 @@
 //  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
-//	This class uses DACircularProgressView https://github.com/danielamitay/DACircularProgress
-//	As well as SKBounceAnimation https://github.com/khanlou/SKBounceAnimation
+//	This class uses SKBounceAnimation https://github.com/khanlou/SKBounceAnimation
 //	And my own EasyTimeline https://github.com/mmislam101/EasyTimeline
 
 #import <UIKit/UIKit.h>
 #import "LoadingFlowSection.h"
-#import "DACircularProgressView.h"
 #import "EasyTimeline.h"
+#import "LoadingProgressView.h"
 
-@class LoadingFlow;
-@class ArcViewFactory;
+@class LoadingFlow, ArcViewFactory;
 
 @protocol LoadingFlowDelegate <NSObject>
 
@@ -54,7 +52,7 @@
 	NSMutableArray *_sections;
 	NSMutableArray *_sectionsMeta;
 	NSMutableArray *_arcViews;
-	DACircularProgressView *_progressView;
+	LoadingProgressView *_progressView;
 
 	EasyTimeline *_timeline;
 	NSTimeInterval _tickFactor;
@@ -73,7 +71,7 @@
 }
 
 @property (weak, nonatomic) id <LoadingFlowDelegate> delegate;
-@property (nonatomic, readonly) DACircularProgressView *progressView; // So that users have access to it
+@property (nonatomic, readonly) LoadingProgressView *progressView; // So that users have access to it
 
 #pragma mark Loading Flow Properties
 

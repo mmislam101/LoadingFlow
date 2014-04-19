@@ -27,7 +27,6 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 
 #import "LoadingFlow.h"
-#import "DACircularProgressView.h"
 #import "SKBounceAnimation.h"
 #import "ArcViewFactory.h"
 
@@ -36,13 +35,15 @@
 #define kSectionMetaStartAngle		@"kSectionMetaStartAngle"
 #define kSectionMetaEndAngle		@"kSectionMetaEndAngle"
 
+#define kRatioOfProgressToBounce	1.2
+
 @interface LoadingFlow ()
 
 @property (nonatomic, strong) EasyTimeline *timeline;
 @property (nonatomic, strong) UIView *contentView;
 @property (nonatomic, assign) NSInteger currentSection;
 @property (nonatomic, strong) NSMutableArray *arcViews;
-@property (nonatomic, strong) DACircularProgressView *progressView;
+@property (nonatomic, strong) LoadingProgressView *progressView;
 
 @end
 
@@ -88,7 +89,7 @@ arcViews	= _arcViews;
 
 	CGFloat progressViewSide			= _sideWidth * LOADING_FLOW_RING_SIZE;
 	CGRect progressFrame				= CGRectMake(0.0, 0.0, progressViewSide, progressViewSide);
-	_progressView						= [[DACircularProgressView alloc] initWithFrame:progressFrame];
+	_progressView						= [[LoadingProgressView alloc] initWithFrame:progressFrame];
 	_progressView.center				= CGPointMake(frame.size.width / 2.0, frame.size.height / 2.0);
 	_progressView.progress				= 0.0;
 	_progressView.transform				= CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(-90.0));
@@ -228,7 +229,7 @@ arcViews	= _arcViews;
 //	NSLog(@"remaining duration: %f", self.timeSinceStart); // TODO: Need to find remaining time in section
 //	duration = duration * (currentEvent.time - _timeline.currentTime / [_sections[_currentSection] duration]);
 
-	[self skipProgressTo:currentEvent.time / _timeline.duration duration:duration withCompletion:^{
+	[_progressView skipProgressTo:currentEvent.time / _timeline.duration duration:duration withCompletion:^{
 		[_timeline resume];
 		_skipping = NO;
 		[_sections[_currentSection] setSkipped:YES];
@@ -258,7 +259,7 @@ arcViews	= _arcViews;
 		[messageView addSubview:label];
 	}
 
-	[self progressExpand];
+	[_progressView bounceToFillFrame:CGRectMake(0.0, 0.0, _sideWidth, _sideWidth)];
 
 	__weak LoadingFlow *weakSelf	= self;
 	[UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
@@ -367,99 +368,13 @@ arcViews	= _arcViews;
 	[_timeline start];
 }
 
-#pragma mark Drawing functions
-
-- (void)progressBigBounce
-{
-	SKBounceAnimation *bounceProgress	= [SKBounceAnimation animationWithKeyPath:@"bounds"];
-	bounceProgress.fromValue			= [NSValue valueWithCGRect:CGRectInset(_progressView.bounds, -(_sideWidth * LOADING_FLOW_RING_GAP_RATIO), -(_sideWidth * LOADING_FLOW_RING_GAP_RATIO))];
-	bounceProgress.toValue				= [NSValue valueWithCGRect:_progressView.bounds];
-	bounceProgress.duration				= 2.0f;
-	bounceProgress.numberOfBounces		= 10;
-	bounceProgress.shouldOvershoot		= YES;
-	bounceProgress.shake				= YES;
-
-	[_progressView.layer addAnimation:bounceProgress forKey:@"bounceProgress"];
-}
-
-- (void)progressSmallBounce
-{
-	SKBounceAnimation *bounceProgress	= [SKBounceAnimation animationWithKeyPath:@"bounds"];
-	bounceProgress.fromValue			= [NSValue valueWithCGRect:CGRectInset(_progressView.bounds, -(_sideWidth * LOADING_FLOW_RING_GAP_RATIO / 3.0), -(_sideWidth * LOADING_FLOW_RING_GAP_RATIO / 3.0))];
-	bounceProgress.toValue				= [NSValue valueWithCGRect:_progressView.bounds];
-	bounceProgress.duration				= 2.0f;
-	bounceProgress.numberOfBounces		= 10;
-	bounceProgress.shouldOvershoot		= YES;
-	bounceProgress.shake				= YES;
-
-	[_progressView.layer addAnimation:bounceProgress forKey:@"bounceProgress"];
-}
-
-- (void)progressExpand
-{
-	CGRect finalRect					= CGRectMake(0.0,
-													 0.0,
-													 _sideWidth,
-													 _sideWidth);
-	SKBounceAnimation *bounceProgress	= [SKBounceAnimation animationWithKeyPath:@"bounds"];
-	bounceProgress.fromValue			= [NSValue valueWithCGRect:_progressView.bounds];
-	bounceProgress.toValue				= [NSValue valueWithCGRect:finalRect];
-	bounceProgress.duration				= 3.0f;
-	bounceProgress.numberOfBounces		= 5;
-	bounceProgress.shouldOvershoot		= NO;
-	bounceProgress.shake				= NO;
-
-	_progressView.bounds				= finalRect;
-
-	[_progressView.layer addAnimation:bounceProgress forKey:@"bounceProgress"];
-}
-
-- (void)progressRetract
-{
-	CGRect finalRect					= CGRectMake(0.0,
-													 0.0,
-													 _sideWidth,
-													 _sideWidth);
-	SKBounceAnimation *bounceProgress	= [SKBounceAnimation animationWithKeyPath:@"bounds"];
-	bounceProgress.fromValue			= [NSValue valueWithCGRect:_progressView.bounds];
-	bounceProgress.toValue				= [NSValue valueWithCGRect:finalRect];
-	bounceProgress.duration				= 3.0f;
-	bounceProgress.numberOfBounces		= 5;
-	bounceProgress.shouldOvershoot		= NO;
-	bounceProgress.shake				= NO;
-
-	_progressView.bounds				= finalRect;
-
-	[_progressView.layer addAnimation:bounceProgress forKey:@"bounceProgress"];
-}
-
-- (void)skipProgressTo:(CGFloat)progress duration:(NSTimeInterval)duration withCompletion:(void (^)(void))completion
-{
-	[CATransaction begin];
-
-	[CATransaction setCompletionBlock:^{
-		completion();
-	}];
-
-	CABasicAnimation *animation	= [CABasicAnimation animationWithKeyPath:@"progress"];
-	animation.duration			= duration;
-	animation.timingFunction	= [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-	animation.fromValue			= [NSNumber numberWithFloat:_progressView.progress];
-	animation.toValue			= [NSNumber numberWithFloat:progress];
-
-	_progressView.progress		= progress;
-	[_progressView.layer addAnimation:animation forKey:@"progress"];
-
-	[CATransaction commit];
-}
-
 #pragma mark Easy Timeline Delegates
 
 - (void)endOfSection:(LoadingFlowSection *)section
 {
 	[_arcLayerFactory highlightArc:_arcViews[[_sections indexOfObject:section]] withColor:section.highlightColor];
 
-	[self progressSmallBounce];
+	[_progressView bounceFrom:kRatioOfProgressToBounce];
 
 	if (_delegate && [_delegate respondsToSelector:@selector(loadingFlow:hasCompletedSection:atIndex:)])
 		[_delegate loadingFlow:self hasCompletedSection:section atIndex:_currentSection];
@@ -485,7 +400,7 @@ arcViews	= _arcViews;
 
 	[_arcLayerFactory highlightArc:_arcViews[[_sections indexOfObject:section]] withColor:section.highlightColor];
 
-	[self progressSmallBounce];
+	[_progressView bounceFrom:kRatioOfProgressToBounce];
 
 	[timeline stop];
 
