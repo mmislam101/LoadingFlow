@@ -11,8 +11,7 @@
 
 @interface LoadingProgressView : DACircularProgressView
 
-- (void)bounceFrom:(CGFloat)percentOfRadius;
-- (void)bounceToFillFrame:(CGRect)frame;
+- (void)bounceFromStretched:(CGFloat)percentOfRadius duration:(NSTimeInterval)duration withCompletion:(void (^)(void))completion;
 - (void)bounceToFillFrame:(CGRect)frame duration:(NSTimeInterval)duration withCompletion:(void (^)(void))completion;
 - (void)skipProgressTo:(CGFloat)progress duration:(NSTimeInterval)duration withCompletion:(void (^)(void))completion;
 

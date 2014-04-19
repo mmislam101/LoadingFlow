@@ -260,7 +260,7 @@ arcViews		= _arcViews;
 		[messageView addSubview:label];
 	}
 
-	[_progressView bounceToFillFrame:CGRectMake(0.0, 0.0, _sideWidth, _sideWidth)];
+	[_progressView bounceToFillFrame:CGRectMake(0.0, 0.0, _sideWidth, _sideWidth) duration:2.0 withCompletion:nil];
 
 	__weak LoadingFlow *weakSelf	= self;
 	[UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
@@ -374,7 +374,7 @@ arcViews		= _arcViews;
 {
 	[_arcLayerFactory highlightArc:_arcViews[[_sections indexOfObject:section]] withColor:section.highlightColor];
 
-	[_progressView bounceFrom:kRatioOfProgressToBounce];
+	[_progressView bounceFromStretched:kRatioOfProgressToBounce duration:2.0 withCompletion:nil];
 
 	if (_delegate && [_delegate respondsToSelector:@selector(loadingFlow:hasCompletedSection:atIndex:)])
 		[_delegate loadingFlow:self hasCompletedSection:section atIndex:_currentSection];
@@ -400,7 +400,7 @@ arcViews		= _arcViews;
 
 	[_arcLayerFactory highlightArc:_arcViews[[_sections indexOfObject:section]] withColor:section.highlightColor];
 
-	[_progressView bounceFrom:kRatioOfProgressToBounce];
+	[_progressView bounceFromStretched:kRatioOfProgressToBounce duration:2.0 withCompletion:nil];
 
 	[timeline stop];
 

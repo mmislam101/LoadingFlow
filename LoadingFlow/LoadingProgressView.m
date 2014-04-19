@@ -11,7 +11,7 @@
 
 @implementation LoadingProgressView
 
-- (void)bounceFrom:(CGFloat)percentOfRadius
+- (void)bounceFromStretched:(CGFloat)percentOfRadius duration:(NSTimeInterval)duration withCompletion:(void (^)(void))completion
 {
 	SKBounceAnimation *bounceProgress	= [SKBounceAnimation animationWithKeyPath:@"bounds"];
 	CGRect fromFrame					= CGRectMake(self.frame.size.width / 2.0 * percentOfRadius,
@@ -20,27 +20,11 @@
 													 self.frame.size.height * percentOfRadius);
 	bounceProgress.fromValue			= [NSValue valueWithCGRect:fromFrame];
 	bounceProgress.toValue				= [NSValue valueWithCGRect:self.bounds];
-	bounceProgress.duration				= 2.0f;
-	bounceProgress.numberOfBounces		= 10;
-	bounceProgress.shouldOvershoot		= YES;
+	bounceProgress.duration				= duration;
+	bounceProgress.numberOfBounces		= 7;
 	bounceProgress.shake				= YES;
 
-	[self.layer addAnimation:bounceProgress forKey:@"bounceProgress"];
-}
-
-- (void)bounceToFillFrame:(CGRect)frame
-{
-	SKBounceAnimation *bounceProgress	= [SKBounceAnimation animationWithKeyPath:@"bounds"];
-	bounceProgress.fromValue			= [NSValue valueWithCGRect:self.bounds];
-	bounceProgress.toValue				= [NSValue valueWithCGRect:frame];
-	bounceProgress.duration				= 3.0f;
-	bounceProgress.numberOfBounces		= 5;
-	bounceProgress.shouldOvershoot		= NO;
-	bounceProgress.shake				= NO;
-
-	self.bounds							= frame;
-
-	[self.layer addAnimation:bounceProgress forKey:@"bounceProgress"];
+	[self.layer addAnimation:bounceProgress forKey:@"bounceFromStretched"];
 }
 
 - (void)bounceToFillFrame:(CGRect)frame duration:(NSTimeInterval)duration withCompletion:(void (^)(void))completion
@@ -48,7 +32,8 @@
 	[CATransaction begin];
 
 	[CATransaction setCompletionBlock:^{
-		completion();
+		if (completion)
+			completion();
 	}];
 
 	SKBounceAnimation *bounceProgress	= [SKBounceAnimation animationWithKeyPath:@"bounds"];
@@ -60,7 +45,7 @@
 
 	self.bounds							= frame;
 
-	[self.layer addAnimation:bounceProgress forKey:@"bounceProgress"];
+	[self.layer addAnimation:bounceProgress forKey:@"bounceToFill"];
 
 	[CATransaction commit];
 }
@@ -70,7 +55,8 @@
 	[CATransaction begin];
 
 	[CATransaction setCompletionBlock:^{
-		completion();
+		if (completion)
+			completion();
 	}];
 
 	CABasicAnimation *animation	= [CABasicAnimation animationWithKeyPath:@"progress"];
@@ -80,7 +66,7 @@
 	animation.toValue			= [NSNumber numberWithFloat:progress];
 
 	self.progress		= progress;
-	[self.layer addAnimation:animation forKey:@"progress"];
+	[self.layer addAnimation:animation forKey:@"skipProgress"];
 
 	[CATransaction commit];
 }
