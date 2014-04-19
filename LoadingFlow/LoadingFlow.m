@@ -54,24 +54,24 @@ progressView	= _progressView,
 currentSection	= _currentSection,
 contentView		= _contentView,
 timeline		= _timeline,
-arcViews	= _arcViews;
+arcViews		= _arcViews;
 
 - (id)initWithFrame:(CGRect)frame
 {
 	if (!(self = [super initWithFrame:frame]))
         return self;
 
-	self.alpha							= 0.0;
+	self.alpha			= 0.0;
 
-	_sections							= [[NSMutableArray alloc] init];
-	_sectionsMeta						= [[NSMutableArray alloc] init];
-	_arcViews						= [[NSMutableArray alloc] init];
-	_currentSection						= 0;
-	_timeline							= [[EasyTimeline alloc] init];
-	_timeline.delegate					= self;
-	_sideWidth							= ((frame.size.width < frame.size.height) ? frame.size.width : frame.size.height);
-	_skipping							= NO;
-	_waiting							= NO;
+	_sections			= [[NSMutableArray alloc] init];
+	_sectionsMeta		= [[NSMutableArray alloc] init];
+	_arcViews			= [[NSMutableArray alloc] init];
+	_currentSection		= 0;
+	_timeline			= [[EasyTimeline alloc] init];
+	_timeline.delegate	= self;
+	_sideWidth			= ((frame.size.width < frame.size.height) ? frame.size.width : frame.size.height);
+	_skipping			= NO;
+	_waiting			= NO;
 
     return self;
 }
@@ -87,9 +87,7 @@ arcViews	= _arcViews;
 	[self addSubview:_contentView];
 	_contentView.layer.masksToBounds	= YES;
 
-	CGFloat progressViewSide			= _sideWidth * LOADING_FLOW_RING_SIZE;
-	CGRect progressFrame				= CGRectMake(0.0, 0.0, progressViewSide, progressViewSide);
-	_progressView						= [[LoadingProgressView alloc] initWithFrame:progressFrame];
+	_progressView						= [[LoadingProgressView alloc] initWithFrame:CGRectMake(0.0, 0.0, 1.0, 1.0)];
 	_progressView.center				= CGPointMake(frame.size.width / 2.0, frame.size.height / 2.0);
 	_progressView.progress				= 0.0;
 	_progressView.transform				= CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(-90.0));
@@ -97,7 +95,7 @@ arcViews	= _arcViews;
 
 	[self addSubview:_progressView];
 
-	_innerRadius						= (_progressView.bounds.size.width / 2.0) + (_sideWidth * LOADING_FLOW_RING_GAP_RATIO);
+	_innerRadius						= (_sideWidth * LOADING_FLOW_RING_SIZE / 2.0) + (_sideWidth * LOADING_FLOW_RING_GAP_RATIO);
 	_outerRadius						= _sideWidth / 2.0;
 
 	_arcLayerFactory					= [[ArcViewFactory alloc] initWithFrame:self.bounds
@@ -248,9 +246,10 @@ arcViews	= _arcViews;
 	if (label)
 	{
 		CGFloat radius			= _sideWidth / 2.0 - 50.0;
-		CGPoint topLeftPoint	= [ArcViewFactory pointOnCircleWithRadius:radius andCenter:_progressView.center atDegree:45.0];
-		CGPoint topRightPoint	= [ArcViewFactory pointOnCircleWithRadius:radius andCenter:_progressView.center atDegree:90.0 + 45.0];
-		CGPoint bottomLeftPoint	= [ArcViewFactory pointOnCircleWithRadius:radius andCenter:_progressView.center atDegree:180.0 + 90.0 + 45.0];
+		CGPoint center			= CGPointMake(self.frame.size.width / 2.0, self.frame.size.height / 2.0);
+		CGPoint topLeftPoint	= [ArcViewFactory pointOnCircleWithRadius:radius andCenter:center atDegree:45.0];
+		CGPoint topRightPoint	= [ArcViewFactory pointOnCircleWithRadius:radius andCenter:center atDegree:90.0 + 45.0];
+		CGPoint bottomLeftPoint	= [ArcViewFactory pointOnCircleWithRadius:radius andCenter:center atDegree:180.0 + 90.0 + 45.0];
 		label.frame				= CGRectMake(topLeftPoint.x,
 											 topLeftPoint.y,
 											 topRightPoint.x - topLeftPoint.x,
@@ -353,13 +352,12 @@ arcViews	= _arcViews;
 		degreeCursor = endAngle;
 	}];
 
-	// Start the Loading Flow going!
-	[weakSelf startFirstSection];
-
-	[UIView animateWithDuration:0.3 animations:^{
-		weakSelf.alpha = 1.0;
-	} completion:^(BOOL finished) {
-
+	self.alpha							= 1.0;
+	_progressView.trackTintColor		= [[UIColor blackColor] colorWithAlphaComponent:0.5]; // TODO: Remove this
+	CGFloat progressViewSide			= _sideWidth * LOADING_FLOW_RING_SIZE;
+	CGRect progressFrame				= CGRectMake(0.0, 0.0, progressViewSide, progressViewSide);
+	[_progressView bounceToFillFrame:progressFrame duration:1.0 withCompletion:^{
+		[weakSelf startFirstSection];
 	}];
 }
 

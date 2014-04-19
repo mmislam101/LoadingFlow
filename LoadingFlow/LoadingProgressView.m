@@ -43,6 +43,28 @@
 	[self.layer addAnimation:bounceProgress forKey:@"bounceProgress"];
 }
 
+- (void)bounceToFillFrame:(CGRect)frame duration:(NSTimeInterval)duration withCompletion:(void (^)(void))completion
+{
+	[CATransaction begin];
+
+	[CATransaction setCompletionBlock:^{
+		completion();
+	}];
+
+	SKBounceAnimation *bounceProgress	= [SKBounceAnimation animationWithKeyPath:@"bounds"];
+	bounceProgress.fromValue			= [NSValue valueWithCGRect:self.bounds];
+	bounceProgress.toValue				= [NSValue valueWithCGRect:frame];
+	bounceProgress.duration				= duration;
+	bounceProgress.numberOfBounces		= 3;
+	bounceProgress.shake				= NO;
+
+	self.bounds							= frame;
+
+	[self.layer addAnimation:bounceProgress forKey:@"bounceProgress"];
+
+	[CATransaction commit];
+}
+
 - (void)skipProgressTo:(CGFloat)progress duration:(NSTimeInterval)duration withCompletion:(void (^)(void))completion
 {
 	[CATransaction begin];

@@ -13,6 +13,7 @@
 
 - (void)bounceFrom:(CGFloat)percentOfRadius;
 - (void)bounceToFillFrame:(CGRect)frame;
+- (void)bounceToFillFrame:(CGRect)frame duration:(NSTimeInterval)duration withCompletion:(void (^)(void))completion;
 - (void)skipProgressTo:(CGFloat)progress duration:(NSTimeInterval)duration withCompletion:(void (^)(void))completion;
 
 @end
