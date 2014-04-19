@@ -293,7 +293,7 @@ arcViews		= _arcViews;
 	LoadingFlowSection *currentSection	= _sections[_currentSection];
 
 	// Lower duration by ratio of remaining time in section
-	duration *= (currentEvent.time - _timeline.currentTime) / currentSection.duration;
+	duration							*= (currentEvent.time - _timeline.currentTime) / currentSection.duration;
 
 	[_timeline skipForwardSeconds:currentEvent.time - _timeline.currentTime - 0.01];
 
