@@ -41,7 +41,7 @@
 @property (nonatomic, strong) EasyTimeline *timeline;
 @property (nonatomic, strong) UIView *contentView;
 @property (nonatomic, assign) NSInteger currentSection;
-@property (nonatomic, strong) NSMutableArray *sectionLayers;
+@property (nonatomic, strong) NSMutableArray *arcViews;
 @property (nonatomic, strong) DACircularProgressView *progressView;
 
 @end
@@ -53,7 +53,7 @@ progressView	= _progressView,
 currentSection	= _currentSection,
 contentView		= _contentView,
 timeline		= _timeline,
-sectionLayers	= _sectionLayers;
+arcViews	= _arcViews;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -64,7 +64,7 @@ sectionLayers	= _sectionLayers;
 
 	_sections							= [[NSMutableArray alloc] init];
 	_sectionsMeta						= [[NSMutableArray alloc] init];
-	_sectionLayers						= [[NSMutableArray alloc] init];
+	_arcViews						= [[NSMutableArray alloc] init];
 	_currentSection						= 0;
 	_timeline							= [[EasyTimeline alloc] init];
 	_timeline.delegate					= self;
@@ -208,7 +208,7 @@ sectionLayers	= _sectionLayers;
 
 	[_sections removeAllObjects];
 	[_sectionsMeta removeAllObjects];
-	[_sectionLayers removeAllObjects];
+	[_arcViews removeAllObjects];
 }
 
 - (void)skipToNextSectionWithDuration:(NSTimeInterval)duration
@@ -347,7 +347,7 @@ sectionLayers	= _sectionLayers;
 
 		[arcLayerFactory addLabel:section.label toArcView:arc atPosition:section.labelPosition];
 		[_contentView addSubview:arc];
-		[_sectionLayers addObject:arc]; // TODO: Do we need this?
+		[_arcViews addObject:arc];
 
 		degreeCursor = endAngle;
 	}];
@@ -457,7 +457,7 @@ sectionLayers	= _sectionLayers;
 
 - (void)endOfSection:(LoadingFlowSection *)section
 {
-	[_arcLayerFactory highlightArc:_sectionLayers[[_sections indexOfObject:section]] withColor:section.highlightColor];
+	[_arcLayerFactory highlightArc:_arcViews[[_sections indexOfObject:section]] withColor:section.highlightColor];
 
 	[self progressSmallBounce];
 
@@ -483,7 +483,7 @@ sectionLayers	= _sectionLayers;
 {
 	LoadingFlowSection *section	= _sections[_sections.count-1];
 
-	[_arcLayerFactory highlightArc:_sectionLayers[[_sections indexOfObject:section]] withColor:section.highlightColor];
+	[_arcLayerFactory highlightArc:_arcViews[[_sections indexOfObject:section]] withColor:section.highlightColor];
 
 	[self progressSmallBounce];
 

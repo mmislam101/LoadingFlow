@@ -53,7 +53,7 @@
 	CGFloat _sideWidth;
 	NSMutableArray *_sections;
 	NSMutableArray *_sectionsMeta;
-	NSMutableArray *_sectionLayers;
+	NSMutableArray *_arcViews;
 	DACircularProgressView *_progressView;
 
 	EasyTimeline *_timeline;
