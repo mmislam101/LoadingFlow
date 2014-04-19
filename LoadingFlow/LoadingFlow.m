@@ -186,12 +186,59 @@ arcViews		= _arcViews;
 
 - (void)start
 {
-	if (self.hasStarted || _progressView.progress)
+	if (_sections.count == 0 || self.hasStarted || _progressView.progress)
 		return;
+
+	// TODO: user can start timer twice till timeline actually starts and the self.hasStarted finally starts returning true.
+	// So need to disconnect hasStarted from timeline
 
 	[self destroyValues];
 	[self initValues];
-	[self setupAndFadeIn];
+
+	__block NSTimeInterval duration			= 0.0;
+	__weak LoadingFlow *weakSelf			= self;
+	[_sections enumerateObjectsUsingBlock:^(LoadingFlowSection *section, NSUInteger i, BOOL *stop) {
+		duration += section.duration;
+		[_timeline addEvent:[EasyTimelineEvent eventAtTime:duration withEventBlock:^(EasyTimelineEvent *event, EasyTimeline *timeline) {
+			[weakSelf endOfSection:section];
+		}]];
+	}];
+
+	if (duration <= 0.0)
+		return;
+
+	_tickFactor						= 1.0 / (duration * 100.0);
+
+	_timeline.duration				= duration;
+	_timeline.tickPeriod			= 0.01;
+
+	// Setup Sections
+	ArcViewFactory *arcLayerFactory = [[ArcViewFactory alloc] initWithFrame:self.bounds
+																innerRadius:_innerRadius
+																outerRadius:_outerRadius];
+	__block CGFloat degreeCursor	= 0.0;
+	CGFloat sectionGap				= LOADING_FLOW_SECTION_GAP_RATIO * _sideWidth;
+	[_sections enumerateObjectsUsingBlock:^(LoadingFlowSection *section, NSUInteger idx, BOOL *stop) {
+		CGFloat endAngle	= 360.0 * (section.duration / _timeline.duration) + degreeCursor;
+
+		ArcView *arc		= [arcLayerFactory arcWithStartAngle:degreeCursor + sectionGap
+												 endDegree:endAngle - sectionGap
+												  andColor:section.backgroundColor];
+
+		[arcLayerFactory addLabel:section.label toArcView:arc atPosition:section.labelPosition];
+		[_contentView addSubview:arc];
+		[_arcViews addObject:arc];
+
+		degreeCursor = endAngle;
+	}];
+
+	self.alpha							= 1.0;
+	_progressView.trackTintColor		= [[UIColor blackColor] colorWithAlphaComponent:0.5]; // TODO: Remove this
+	CGFloat progressViewSide			= _sideWidth * LOADING_FLOW_RING_SIZE;
+	CGRect progressFrame				= CGRectMake(0.0, 0.0, progressViewSide, progressViewSide);
+	[_progressView bounceToFillFrame:progressFrame duration:1.0 withCompletion:^{
+		[weakSelf startFirstSection];
+	}];
 }
 
 - (void)pause
@@ -242,13 +289,13 @@ arcViews		= _arcViews;
 	_skipping = YES;
 	[_timeline pause];
 
-	EasyTimelineEvent *currentEvent	= [_timeline.events objectAtIndex:_currentSection];
-	[_timeline skipForwardSeconds:currentEvent.time - _timeline.currentTime - 0.01];
+	EasyTimelineEvent *currentEvent		= _timeline.events[_currentSection];
+	LoadingFlowSection *currentSection	= _sections[_currentSection];
 
-	// TODO: Treat duration as if it's from the beginning of the section to the end, so account for time remaining in section
-//	NSLog(@"section duration: %f", [_sections[_currentSection] duration]);
-//	NSLog(@"remaining duration: %f", self.timeSinceStart); // TODO: Need to find remaining time in section
-//	duration = duration * (currentEvent.time - _timeline.currentTime / [_sections[_currentSection] duration]);
+	// Lower duration by ratio of remaining time in section
+	duration *= (currentEvent.time - _timeline.currentTime) / currentSection.duration;
+
+	[_timeline skipForwardSeconds:currentEvent.time - _timeline.currentTime - 0.01];
 
 	[_progressView skipProgressTo:currentEvent.time / _timeline.duration duration:duration withCompletion:^{
 		[_timeline resume];
@@ -323,62 +370,6 @@ arcViews		= _arcViews;
 }
 
 #pragma mark Loading States
-
-- (void)setupAndFadeIn
-{
-	if (_sections.count == 0)
-		return;
-
-	__block NSTimeInterval duration = 0.0;
-	[_sections enumerateObjectsUsingBlock:^(LoadingFlowSection *section, NSUInteger idx, BOOL *stop) {
-		duration += section.duration;
-	}];
-
-	if (duration <= 0.0)
-		return;
-
-	__weak LoadingFlow *weakSelf			= self;
-	__block NSTimeInterval sectionAlertTime	= 0.0;
-	[_sections enumerateObjectsUsingBlock:^(LoadingFlowSection *section, NSUInteger i, BOOL *stop) {
-		sectionAlertTime += section.duration;
-		[_timeline addEvent:[EasyTimelineEvent eventAtTime:sectionAlertTime withEventBlock:^(EasyTimelineEvent *event, EasyTimeline *timeline) {
-			[weakSelf endOfSection:section];
-		}]];
-	}];
-
-	_tickFactor						= 1.0 / (duration * 100.0);
-
-	_timeline.duration				= duration;
-	_timeline.tickPeriod			= 0.01;
-
-	// Setup Sections
-	ArcViewFactory *arcLayerFactory = [[ArcViewFactory alloc] initWithFrame:self.bounds
-																  innerRadius:_innerRadius
-																  outerRadius:_outerRadius];
-	__block CGFloat degreeCursor	= 0.0;
-	CGFloat sectionGap				= LOADING_FLOW_SECTION_GAP_RATIO * _sideWidth;
-	[_sections enumerateObjectsUsingBlock:^(LoadingFlowSection *section, NSUInteger idx, BOOL *stop) {
-		CGFloat endAngle	= 360.0 * (section.duration / _timeline.duration) + degreeCursor;
-
-		ArcView *arc = [arcLayerFactory arcWithStartAngle:degreeCursor + sectionGap
-													   endDegree:endAngle - sectionGap
-														andColor:section.backgroundColor];
-
-		[arcLayerFactory addLabel:section.label toArcView:arc atPosition:section.labelPosition];
-		[_contentView addSubview:arc];
-		[_arcViews addObject:arc];
-
-		degreeCursor = endAngle;
-	}];
-
-	self.alpha							= 1.0;
-	_progressView.trackTintColor		= [[UIColor blackColor] colorWithAlphaComponent:0.5]; // TODO: Remove this
-	CGFloat progressViewSide			= _sideWidth * LOADING_FLOW_RING_SIZE;
-	CGRect progressFrame				= CGRectMake(0.0, 0.0, progressViewSide, progressViewSide);
-	[_progressView bounceToFillFrame:progressFrame duration:1.0 withCompletion:^{
-		[weakSelf startFirstSection];
-	}];
-}
 
 - (void)startFirstSection
 {
