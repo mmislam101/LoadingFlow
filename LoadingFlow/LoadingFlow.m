@@ -28,7 +28,7 @@
 
 #import "LoadingFlow.h"
 #import "SKBounceAnimation.h"
-#import "ArcViewFactory.h"
+#import "LoadingFlowSectionView.h"
 
 #define DEGREES_TO_RADIANS(degrees)	((M_PI * degrees) / 180.0)
 
@@ -39,11 +39,8 @@
 
 @interface LoadingFlow ()
 {
-	UIView *_contentView;
-
 	CGFloat _sideWidth;
 	NSMutableArray *_sections;
-	NSMutableArray *_arcViews;
 	LoadingProgressView *_progressView;
 
 	EasyTimeline *_timeline;
@@ -59,13 +56,12 @@
 
 	BOOL _waiting;
 
-	ArcViewFactory *_arcLayerFactory;
+	LoadingFlowSectionView *_arcView;
 }
 
 @property (nonatomic, strong) EasyTimeline *timeline;
-@property (nonatomic, strong) UIView *contentView;
 @property (nonatomic, assign) NSInteger currentSection;
-@property (nonatomic, strong) NSMutableArray *arcViews;
+@property (nonatomic, strong) LoadingFlowSectionView *arcView;
 @property (nonatomic, strong) LoadingProgressView *progressView;
 
 @end
@@ -75,9 +71,8 @@
 @synthesize
 progressView	= _progressView,
 currentSection	= _currentSection,
-contentView		= _contentView,
-timeline		= _timeline,
-arcViews		= _arcViews;
+arcView			= _arcView,
+timeline		= _timeline;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -87,7 +82,6 @@ arcViews		= _arcViews;
 	self.alpha			= 0.0;
 
 	_sections			= [[NSMutableArray alloc] init];
-	_arcViews			= [[NSMutableArray alloc] init];
 	_currentSection		= 0;
 	_timeline			= [[EasyTimeline alloc] init];
 	_timeline.delegate	= self;
@@ -105,10 +99,6 @@ arcViews		= _arcViews;
 	_skipping							= NO;
 	_currentSection						= 0;
 
-	_contentView						= [[UIView alloc] initWithFrame:self.bounds];
-	[self addSubview:_contentView];
-	_contentView.layer.masksToBounds	= YES;
-
 	_progressView						= [[LoadingProgressView alloc] initWithFrame:CGRectMake(0.0, 0.0, 1.0, 1.0)];
 	_progressView.center				= CGPointMake(frame.size.width / 2.0, frame.size.height / 2.0);
 	_progressView.progress				= 0.0;
@@ -120,23 +110,22 @@ arcViews		= _arcViews;
 	_innerRadius						= (_sideWidth * LOADING_FLOW_RING_SIZE / 2.0) + (_sideWidth * LOADING_FLOW_RING_GAP_RATIO);
 	_outerRadius						= _sideWidth / 2.0;
 
-	_arcLayerFactory					= [[ArcViewFactory alloc] initWithFrame:self.bounds
-																	innerRadius:_innerRadius
-																	outerRadius:_outerRadius];
+	_arcView							= [[LoadingFlowSectionView alloc] initWithFrame:self.bounds  innerRadius:_innerRadius outerRadius:_outerRadius];
+
+	[self addSubview:_arcView];
 }
 
 - (void)destroyValues
 {
-	[_contentView removeFromSuperview];
+	[_arcView clearSections];
+	[_arcView removeFromSuperview];
 	[_progressView removeFromSuperview];
 
-	_contentView	= nil;
+	_arcView		= nil;
 	_progressView	= nil;
 
 	[_timeline stop];
 	[_timeline clear];
-
-	[_arcViews removeAllObjects];
 }
 
 #pragma mark Loading Flow Properties
@@ -213,25 +202,21 @@ arcViews		= _arcViews;
 	_timeline.tickPeriod			= 0.01;
 
 	// Setup Sections
-	ArcViewFactory *arcLayerFactory = [[ArcViewFactory alloc] initWithFrame:self.bounds
-																innerRadius:_innerRadius
-																outerRadius:_outerRadius];
 	__block CGFloat degreeCursor	= 0.0;
 	CGFloat sectionGap				= LOADING_FLOW_SECTION_GAP_RATIO * _sideWidth;
 	[_sections enumerateObjectsUsingBlock:^(LoadingFlowSection *section, NSUInteger idx, BOOL *stop) {
 		CGFloat endAngle	= 360.0 * (section.duration / _timeline.duration) + degreeCursor;
 
-		ArcView *arc		= [arcLayerFactory arcWithStartAngle:degreeCursor + sectionGap
-												 endDegree:endAngle - sectionGap
-												  andColor:section.backgroundColor];
+		[_arcView addSectionArcWithStartAngle:degreeCursor + sectionGap
+									endDegree:endAngle - sectionGap
+									 andColor:section.backgroundColor];
 
-		[arcLayerFactory addLabel:section.label toArcView:arc atPosition:section.labelPosition];
-		[_contentView addSubview:arc];
-		[_arcViews addObject:arc];
+		[_arcView addLabel:section.label toSection:_arcView.numberOfSections-1 atPosition:section.labelPosition];
 
 		degreeCursor = endAngle;
 	}];
 
+	// Display the loading flow here
 	self.alpha							= 1.0;
 	_progressView.trackTintColor		= [[UIColor blackColor] colorWithAlphaComponent:0.5]; // TODO: Remove this
 	CGFloat progressViewSide			= _sideWidth * LOADING_FLOW_RING_SIZE;
@@ -317,9 +302,9 @@ arcViews		= _arcViews;
 	{
 		CGFloat radius			= _sideWidth / 2.0 - 50.0;
 		CGPoint center			= CGPointMake(self.frame.size.width / 2.0, self.frame.size.height / 2.0);
-		CGPoint topLeftPoint	= [ArcViewFactory pointOnCircleWithRadius:radius andCenter:center atDegree:45.0];
-		CGPoint topRightPoint	= [ArcViewFactory pointOnCircleWithRadius:radius andCenter:center atDegree:90.0 + 45.0];
-		CGPoint bottomLeftPoint	= [ArcViewFactory pointOnCircleWithRadius:radius andCenter:center atDegree:180.0 + 90.0 + 45.0];
+		CGPoint topLeftPoint	= [LoadingFlowSectionView pointOnCircleWithRadius:radius andCenter:center atDegree:45.0];
+		CGPoint topRightPoint	= [LoadingFlowSectionView pointOnCircleWithRadius:radius andCenter:center atDegree:90.0 + 45.0];
+		CGPoint bottomLeftPoint	= [LoadingFlowSectionView pointOnCircleWithRadius:radius andCenter:center atDegree:180.0 + 90.0 + 45.0];
 		label.frame				= CGRectMake(topLeftPoint.x,
 											 topLeftPoint.y,
 											 topRightPoint.x - topLeftPoint.x,
@@ -332,7 +317,7 @@ arcViews		= _arcViews;
 
 	__weak LoadingFlow *weakSelf	= self;
 	[UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-		weakSelf.contentView.alpha	= 0.0;
+		weakSelf.arcView.alpha		= 0.0;
 		messageView.alpha			= 1.0;
 	} completion:^(BOOL finished) {
 		[UIView animateWithDuration:0.5 delay:duration options:UIViewAnimationOptionCurveEaseOut animations:^{
@@ -380,7 +365,7 @@ arcViews		= _arcViews;
 
 - (void)endOfSection:(LoadingFlowSection *)section
 {
-	[_arcLayerFactory highlightArc:_arcViews[[_sections indexOfObject:section]] withColor:section.highlightColor];
+	[_arcView highlightSection:[_sections indexOfObject:section] withColor:section.highlightColor];
 
 	[_progressView bounceFromStretched:kRatioOfProgressToBounce duration:2.0 withCompletion:nil];
 
@@ -406,7 +391,7 @@ arcViews		= _arcViews;
 {
 	LoadingFlowSection *section	= _sections[_sections.count-1];
 
-	[_arcLayerFactory highlightArc:_arcViews[[_sections indexOfObject:section]] withColor:section.highlightColor];
+	[_arcView highlightSection:_sections.count-1 withColor:section.highlightColor];
 
 	[_progressView bounceFromStretched:kRatioOfProgressToBounce duration:2.0 withCompletion:nil];
 

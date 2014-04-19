@@ -34,7 +34,7 @@
 #import "EasyTimeline.h"
 #import "LoadingProgressView.h"
 
-@class LoadingFlow, ArcViewFactory;
+@class LoadingFlow, LoadingFlowSectionView;
 
 @protocol LoadingFlowDelegate <NSObject>
 
