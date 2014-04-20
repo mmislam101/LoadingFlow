@@ -23,6 +23,6 @@
 @property (nonatomic, assign) CGFloat startAngle;
 @property (nonatomic, assign) CGFloat endAngle;
 
-- (void)startDancing;
+- (void)startDancingWithDelay:(NSTimeInterval)delay;
 
 @end

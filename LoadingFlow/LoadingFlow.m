@@ -350,16 +350,19 @@ timeline		= _timeline;
 
 	_arcView.innerRadius				= _sideWidth * 0.1;
 
-	[_arcView addSectionWithStartAngle:20.0
-							  endAngle:380.0
+	NSInteger startAngle1				= [self randomNumberBetween:0 and:360];
+	NSInteger startAngle2				= [self randomNumberBetween:0 and:360];
+	NSInteger startAngle3				= [self randomNumberBetween:0 and:360];
+	[_arcView addSectionWithStartAngle:startAngle1
+							  endAngle:startAngle1 + 360.0
 							  andColor:section.backgroundColor];
 
-	[_arcView addSectionWithStartAngle:-20.0
-							  endAngle:340.0
+	[_arcView addSectionWithStartAngle:startAngle2
+							  endAngle:startAngle2 + 360.0
 							  andColor:section.backgroundColor];
 
-	[_arcView addSectionWithStartAngle:90.0
-							  endAngle:450.0
+	[_arcView addSectionWithStartAngle:startAngle3
+							  endAngle:startAngle3 + 360.0
 							  andColor:section.backgroundColor];
 
 	// Display the loading flow here
@@ -370,10 +373,15 @@ timeline		= _timeline;
 	_progressView.trackTintColor		= [[UIColor blackColor] colorWithAlphaComponent:0.5]; // TODO: Remove this
 	CGFloat progressViewSide			= _sideWidth * LOADING_FLOW_RING_SIZE;
 	CGRect progressFrame				= CGRectMake(0.0, 0.0, progressViewSide, progressViewSide);
-	[_progressView bounceToFillFrame:progressFrame duration:1.0 withCompletion:^{
+//	[_progressView bounceToFillFrame:progressFrame duration:1.0 withCompletion:^{
 		[weakSelf.arcView danceArc];
 		weakSelf.arcView.alpha = 1.0;
-	}];
+//	}];
+}
+
+- (NSInteger)randomNumberBetween:(NSInteger)min and:(NSInteger)max
+{
+	return min + arc4random() % (max - min + 1);
 }
 
 - (void)stopWaitingWithCompletion:(void (^)(LoadingFlow *loadingFlow))completion

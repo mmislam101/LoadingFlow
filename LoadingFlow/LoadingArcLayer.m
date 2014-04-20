@@ -83,7 +83,6 @@
 -(void)drawInContext:(CGContextRef)ctx
 {
 	CGPoint center			= CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
-	CGFloat outerRadius		= MIN(center.x, center.y);
 	BOOL clockwise			= DEGREES_TO_RADIANS(self.startAngle) > DEGREES_TO_RADIANS(self.endAngle);
 
 	// Outer arc
@@ -118,26 +117,31 @@
 	CGContextDrawPath(ctx, kCGPathFillStroke);
 }
 
-- (void)startDancing
+- (void)startDancingWithDelay:(NSTimeInterval)delay
+{
+	[self performSelector:@selector(chachaForward) withObject:nil afterDelay:delay];
+}
+
+- (void)chachaForward
 {
 	self.endAngle = self.endDegree - 180.0;
 
-	[self performSelector:@selector(danceBack) withObject:nil afterDelay:self.animationDuration];
+	[self performSelector:@selector(chachaBack) withObject:nil afterDelay:self.animationDuration];
 }
 
-- (void)danceBack
+- (void)chachaBack
 {
 	self.startAngle = self.endAngle;
 
-	[self performSelector:@selector(restDance) withObject:nil afterDelay:self.animationDuration];
+	[self performSelector:@selector(bootyPop) withObject:nil afterDelay:self.animationDuration];
 }
 
-- (void)restDance
+- (void)bootyPop
 {
 	self.startAngle	= self.startDegree - 180.0;
 	self.endAngle	= self.startDegree - 180.0;
 
-	[self performSelector:@selector(startDancing) withObject:nil afterDelay:self.animationDuration];
+	[self performSelector:@selector(chachaForward) withObject:nil afterDelay:self.animationDuration];
 }
 
 @end
