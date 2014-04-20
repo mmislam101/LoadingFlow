@@ -222,6 +222,7 @@ timeline		= _timeline;
 	CGFloat progressViewSide			= _sideWidth * LOADING_FLOW_RING_SIZE;
 	CGRect progressFrame				= CGRectMake(0.0, 0.0, progressViewSide, progressViewSide);
 	[_progressView bounceToFillFrame:progressFrame duration:1.0 withCompletion:^{
+		[weakSelf.arcView expandArcs];
 		[weakSelf startFirstSection];
 	}];
 }
@@ -316,6 +317,7 @@ timeline		= _timeline;
 	[_progressView bounceToFillFrame:CGRectMake(0.0, 0.0, _sideWidth, _sideWidth) duration:2.0 withCompletion:nil];
 
 	__weak LoadingFlow *weakSelf	= self;
+	[weakSelf.arcView retractArcs];
 	[UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
 		weakSelf.arcView.alpha		= 0.0;
 		messageView.alpha			= 1.0;

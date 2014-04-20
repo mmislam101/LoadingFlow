@@ -24,6 +24,7 @@
 
 + (CGPoint)pointOnCircleWithRadius:(CGFloat)radius andCenter:(CGPoint)center atDegree:(CGFloat)degree;
 
-- (void)animateSection:(NSInteger)section withCompletion:(void (^)(void))completion;
+- (void)expandArcs;
+- (void)retractArcs;
 
 @end

@@ -7,21 +7,9 @@
 //
 
 #import "LoadingFlowSectionView.h"
+#import "ArcLayer.h"
 
 #define DEGREES_TO_RADIANS(degrees)	((M_PI * degrees) / 180.0)
-
-@interface ArcLayer : CAShapeLayer
-
-@property (nonatomic, assign) CGFloat innerRadius;
-@property (nonatomic, assign) CGFloat outerRadius;
-@property (nonatomic, assign) CGFloat startDegree;
-@property (nonatomic, assign) CGFloat endDegree;
-
-@end
-
-@implementation ArcLayer
-
-@end
 
 @interface LoadingFlowSectionView ()
 {
@@ -62,33 +50,16 @@
 {
 	// Add a transform of -180.0 to match the loading progress
 	CGFloat startAngle		= startDegree - 180.0;
-	CGFloat endAngle		= endDegree - 180.0;
-
-	UIBezierPath *ringPath	= [UIBezierPath bezierPath];
-
-	// Inner circle
-	[ringPath addArcWithCenter:self.center
-						radius:self.innerRadius
-					startAngle:DEGREES_TO_RADIANS(startAngle)
-					  endAngle:DEGREES_TO_RADIANS(endAngle)
-					 clockwise:YES];
-
-	// Outer circle
-	[ringPath addArcWithCenter:self.center
-						radius:self.outerRadius
-					startAngle:DEGREES_TO_RADIANS(endAngle)
-					  endAngle:DEGREES_TO_RADIANS(startAngle)
-					 clockwise:NO];
 
 	ArcLayer *arcLayer		= [ArcLayer layer];
-	arcLayer.frame			= CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height);
-	arcLayer.path			= ringPath.CGPath;
-	arcLayer.fillColor		= backgroundColor.CGColor;
+	arcLayer.frame			= self.bounds;
+	arcLayer.fillColor		= backgroundColor;
 
 	arcLayer.startDegree	= startDegree;
 	arcLayer.endDegree		= endDegree;
+	arcLayer.startAngle		= startAngle;
+	arcLayer.endAngle		= startAngle;
 	arcLayer.innerRadius	= self.innerRadius;
-	arcLayer.outerRadius	= self.outerRadius;
 
 	[self.layer addSublayer:arcLayer];
 
@@ -113,55 +84,31 @@
 
 - (void)highlightSection:(NSInteger)section withColor:(UIColor *)color
 {
-	ArcLayer *layer			= _arcLayers[section];
+	ArcLayer *currentLayer	= _arcLayers[section];
 
-	// Add a transform of -180.0 to match the loading progress
-	CGFloat startAngle		= layer.startDegree - 180.0;
-	CGFloat endAngle		= layer.endDegree - 180.0;
-
-	UIBezierPath *ringPath	= [UIBezierPath bezierPath];
-
-	// Inner circle
-	[ringPath addArcWithCenter:self.center
-						radius:self.innerRadius
-					startAngle:DEGREES_TO_RADIANS(startAngle)
-					  endAngle:DEGREES_TO_RADIANS(endAngle)
-					 clockwise:YES];
-
-	// Outer circle
-	[ringPath addArcWithCenter:self.center
-						radius:self.outerRadius
-					startAngle:DEGREES_TO_RADIANS(endAngle)
-					  endAngle:DEGREES_TO_RADIANS(startAngle)
-					 clockwise:NO];
-
-	CAShapeLayer *arcLayer	= [CAShapeLayer layer];
-	arcLayer.frame			= CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height);
-	arcLayer.path			= ringPath.CGPath;
-	arcLayer.fillColor		= color.CGColor;
+	ArcLayer *arcLayer		= [[ArcLayer alloc] initWithLayer:currentLayer];
+	arcLayer.frame			= self.bounds;
+	arcLayer.fillColor		= color;
 
 	[self.layer addSublayer:arcLayer];
+
+	[_arcLayers addObject:arcLayer];
 }
 
-- (void)animateSection:(NSInteger)section withCompletion:(void (^)(void))completion
+- (void)expandArcs
 {
-	[CATransaction begin];
-	[CATransaction setAnimationDuration:3.0];
-	[CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]];
-	[CATransaction setCompletionBlock:^{
-//		[weakSelf animateBarAtIndex:i];
+	[_arcLayers enumerateObjectsUsingBlock:^(ArcLayer *layer, NSUInteger idx, BOOL *stop) {
+		// Add a transform of -180.0 to match the loading progress
+		layer.endAngle = layer.endDegree - 180.0;
 	}];
+}
 
-	ArcLayer *layer					= _arcLayers[section];
-	layer.hidden					= NO;
-
-	CABasicAnimation *pathAnimation	= [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
-	pathAnimation.fromValue			= [NSNumber numberWithFloat:0.0f];
-	pathAnimation.toValue			= [NSNumber numberWithFloat:1.0f];
-
-	[layer addAnimation:pathAnimation forKey:@"strokeEnd"];
-
-	[CATransaction commit];
+- (void)retractArcs
+{
+	[_arcLayers enumerateObjectsUsingBlock:^(ArcLayer *layer, NSUInteger idx, BOOL *stop) {
+		// Add a transform of -180.0 to match the loading progress
+		layer.endAngle = layer.startAngle;
+	}];
 }
 
 + (CGPoint)pointOnCircleWithRadius:(CGFloat)radius andCenter:(CGPoint)center atDegree:(CGFloat)degree
