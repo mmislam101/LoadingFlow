@@ -28,7 +28,7 @@
 		B61AB8DC18C2FFDB0043850F /* LoadingFlowSection.m in Sources */ = {isa = PBXBuildFile; fileRef = B61AB8D618C2FFDB0043850F /* LoadingFlowSection.m */; };
 		B61AB8E218C995B30043850F /* SKBounceAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = B61AB8E118C995B30043850F /* SKBounceAnimation.m */; };
 		B653905A1900EBF800042DA0 /* LoadingFlowSectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = B65390591900EBF800042DA0 /* LoadingFlowSectionView.m */; };
-		B676CAB0190360570067FC46 /* ArcLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = B676CAAF190360570067FC46 /* ArcLayer.m */; };
+		B676CAB0190360570067FC46 /* LoadingArcLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = B676CAAF190360570067FC46 /* LoadingArcLayer.m */; };
 		B692E1B11901F61900BD200A /* LoadingProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = B692E1B01901F61900BD200A /* LoadingProgressView.m */; };
 /* End PBXBuildFile section */
 
@@ -77,8 +77,8 @@
 		B61AB8E118C995B30043850F /* SKBounceAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKBounceAnimation.m; sourceTree = "<group>"; };
 		B65390581900EBF800042DA0 /* LoadingFlowSectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingFlowSectionView.h; sourceTree = "<group>"; };
 		B65390591900EBF800042DA0 /* LoadingFlowSectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingFlowSectionView.m; sourceTree = "<group>"; };
-		B676CAAE190360570067FC46 /* ArcLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArcLayer.h; sourceTree = "<group>"; };
-		B676CAAF190360570067FC46 /* ArcLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArcLayer.m; sourceTree = "<group>"; };
+		B676CAAE190360570067FC46 /* LoadingArcLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingArcLayer.h; sourceTree = "<group>"; };
+		B676CAAF190360570067FC46 /* LoadingArcLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingArcLayer.m; sourceTree = "<group>"; };
 		B692E1AF1901F61900BD200A /* LoadingProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingProgressView.h; sourceTree = "<group>"; };
 		B692E1B01901F61900BD200A /* LoadingProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingProgressView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -190,12 +190,12 @@
 				B61AB8D418C2FFDB0043850F /* LoadingFlow.m */,
 				B61AB8D518C2FFDB0043850F /* LoadingFlowSection.h */,
 				B61AB8D618C2FFDB0043850F /* LoadingFlowSection.m */,
-				B65390581900EBF800042DA0 /* LoadingFlowSectionView.h */,
-				B65390591900EBF800042DA0 /* LoadingFlowSectionView.m */,
 				B692E1AF1901F61900BD200A /* LoadingProgressView.h */,
 				B692E1B01901F61900BD200A /* LoadingProgressView.m */,
-				B676CAAE190360570067FC46 /* ArcLayer.h */,
-				B676CAAF190360570067FC46 /* ArcLayer.m */,
+				B65390581900EBF800042DA0 /* LoadingFlowSectionView.h */,
+				B65390591900EBF800042DA0 /* LoadingFlowSectionView.m */,
+				B676CAAE190360570067FC46 /* LoadingArcLayer.h */,
+				B676CAAF190360570067FC46 /* LoadingArcLayer.m */,
 			);
 			name = LoadingFlow;
 			path = ../../LoadingFlow;
@@ -331,7 +331,7 @@
 			files = (
 				B61AB89A18C2FD150043850F /* LFEAppDelegate.m in Sources */,
 				B61AB8D718C2FFDB0043850F /* DACircularProgressView.m in Sources */,
-				B676CAB0190360570067FC46 /* ArcLayer.m in Sources */,
+				B676CAB0190360570067FC46 /* LoadingArcLayer.m in Sources */,
 				B692E1B11901F61900BD200A /* LoadingProgressView.m in Sources */,
 				B61AB8D818C2FFDB0043850F /* EasyTimeline.m in Sources */,
 				B61AB8DA18C2FFDB0043850F /* NSTimer+EasyTimeline.m in Sources */,

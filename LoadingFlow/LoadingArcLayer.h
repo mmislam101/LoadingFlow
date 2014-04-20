@@ -8,7 +8,7 @@
 
 #import <QuartzCore/QuartzCore.h>
 
-@interface ArcLayer : CALayer
+@interface LoadingArcLayer : CALayer
 
 @property (nonatomic, strong) UIColor *fillColor;
 @property (nonatomic, assign) CGFloat innerRadius;

@@ -7,7 +7,7 @@
 //
 
 #import "LoadingFlowSectionView.h"
-#import "ArcLayer.h"
+#import "LoadingArcLayer.h"
 
 #define DEGREES_TO_RADIANS(degrees)	((M_PI * degrees) / 180.0)
 
@@ -34,7 +34,7 @@
 
 - (void)clearSections
 {
-	[_arcLayers enumerateObjectsUsingBlock:^(ArcLayer *layer, NSUInteger idx, BOOL *stop) {
+	[_arcLayers enumerateObjectsUsingBlock:^(LoadingArcLayer *layer, NSUInteger idx, BOOL *stop) {
 		[layer removeFromSuperlayer];
 	}];
 
@@ -51,7 +51,7 @@
 	// Add a transform of -180.0 to match the loading progress
 	CGFloat startAngle		= startDegree - 180.0;
 
-	ArcLayer *arcLayer		= [ArcLayer layer];
+	LoadingArcLayer *arcLayer		= [LoadingArcLayer layer];
 	arcLayer.frame			= self.bounds;
 	arcLayer.fillColor		= backgroundColor;
 
@@ -68,7 +68,7 @@
 
 - (void)addLabel:(UILabel *)label toSection:(NSInteger)section atPosition:(CGFloat)percentage
 {
-	ArcLayer *layer		= _arcLayers[section];
+	LoadingArcLayer *layer		= _arcLayers[section];
 	CGSize labelSize	= [label.text sizeWithAttributes:@{NSFontAttributeName: label.font}];
 	label.frame			= CGRectMake(0.0,
 									 0.0,
@@ -84,9 +84,9 @@
 
 - (void)highlightSection:(NSInteger)section withColor:(UIColor *)color
 {
-	ArcLayer *currentLayer	= _arcLayers[section];
+	LoadingArcLayer *currentLayer	= _arcLayers[section];
 
-	ArcLayer *arcLayer		= [[ArcLayer alloc] initWithLayer:currentLayer];
+	LoadingArcLayer *arcLayer		= [[LoadingArcLayer alloc] initWithLayer:currentLayer];
 	arcLayer.frame			= self.bounds;
 	arcLayer.fillColor		= color;
 
@@ -97,7 +97,7 @@
 
 - (void)expandArcs
 {
-	[_arcLayers enumerateObjectsUsingBlock:^(ArcLayer *layer, NSUInteger idx, BOOL *stop) {
+	[_arcLayers enumerateObjectsUsingBlock:^(LoadingArcLayer *layer, NSUInteger idx, BOOL *stop) {
 		// Add a transform of -180.0 to match the loading progress
 		layer.endAngle = layer.endDegree - 180.0;
 	}];
@@ -105,7 +105,7 @@
 
 - (void)retractArcs
 {
-	[_arcLayers enumerateObjectsUsingBlock:^(ArcLayer *layer, NSUInteger idx, BOOL *stop) {
+	[_arcLayers enumerateObjectsUsingBlock:^(LoadingArcLayer *layer, NSUInteger idx, BOOL *stop) {
 		// Add a transform of -180.0 to match the loading progress
 		layer.endAngle = layer.startAngle;
 	}];

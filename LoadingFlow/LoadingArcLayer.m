@@ -7,11 +7,11 @@
 //
 //	Changed code found at https://github.com/pavanpodila/PieChart
 
-#import "ArcLayer.h"
+#import "LoadingArcLayer.h"
 
 #define DEGREES_TO_RADIANS(degrees)	((M_PI * degrees) / 180.0)
 
-@implementation ArcLayer
+@implementation LoadingArcLayer
 
 @dynamic startAngle, endAngle;
 @synthesize fillColor, startDegree, endDegree, innerRadius;
@@ -30,9 +30,9 @@
 {
 	if (self = [super initWithLayer:layer])
 	{
-		if ([layer isKindOfClass:[ArcLayer class]])
+		if ([layer isKindOfClass:[LoadingArcLayer class]])
 		{
-			ArcLayer *other		= (ArcLayer *)layer;
+			LoadingArcLayer *other		= (LoadingArcLayer *)layer;
 			self.startAngle		= other.startAngle;
 			self.endAngle		= other.endAngle;
 			self.startDegree	= other.startDegree;
