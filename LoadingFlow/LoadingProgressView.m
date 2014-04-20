@@ -45,7 +45,19 @@
 
 	self.bounds							= frame;
 
-	[self.layer addAnimation:bounceProgress forKey:@"bounceToFill"];
+	CABasicAnimation *thinProgress		= [CABasicAnimation animationWithKeyPath:@"thicknessRatio"];
+	thinProgress.fromValue				= [NSNumber numberWithFloat:self.thicknessRatio];
+	thinProgress.toValue				= [NSNumber numberWithFloat:self.thicknessRatio * 0.8];
+	thinProgress.duration				= 0.5;
+
+	self.thicknessRatio					= self.thicknessRatio * 0.8;
+
+	// Animation group
+	CAAnimationGroup* group = [CAAnimationGroup animation];
+	group.animations = [NSArray arrayWithObjects:bounceProgress, thinProgress, nil];
+	group.duration = duration;
+
+	[self.layer addAnimation:group forKey:@"alskdf"];
 
 	[CATransaction commit];
 }

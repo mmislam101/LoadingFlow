@@ -32,7 +32,7 @@
 
 + (BOOL)needsDisplayForKey:(NSString *)key
 {
-    if ([key isEqualToString:@"progress"]) {
+    if ([key isEqualToString:@"progress"] || [key isEqualToString:@"thicknessRatio"]) {
         return YES;
     } else {
         return [super needsDisplayForKey:key];

@@ -104,6 +104,7 @@ timeline		= _timeline;
 	_progressView.progress				= 0.0;
 	_progressView.transform				= CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(-90.0));
 	_progressView.progressTintColor		= _tintColor;
+	_progressView.thicknessRatio		= 0.4;
 
 	[self addSubview:_progressView];
 
