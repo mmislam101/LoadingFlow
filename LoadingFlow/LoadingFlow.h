@@ -79,10 +79,11 @@
 
 // This will stop the LoadingFlow, display the message for the duration and then fade out to completion
 // You can reuse this loading flow or even clear it and add new events for reuse.
+// TODO: Make this standalone use as well
 - (void)displayMessageLabel:(UILabel *)label duration:(NSTimeInterval)duration withCompletion:(void (^)(LoadingFlow *loadingFlow))completion;
 
 // The following are for moments when you don't know how long something will take
-- (void)startWaitingWith:(LoadingFlowSection *)section;
+- (void)startWaitingWithSection:(LoadingFlowSection *)section;
 - (void)stopWaitingWithCompletion:(void (^)(LoadingFlow *loadingFlow))completion;
 
 @end

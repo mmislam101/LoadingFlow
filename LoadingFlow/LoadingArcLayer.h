@@ -12,6 +12,8 @@
 
 @property (nonatomic, strong) UIColor *fillColor;
 @property (nonatomic, assign) CGFloat innerRadius;
+@property (nonatomic, assign) CGFloat outerRadius;
+@property (nonatomic, assign) NSTimeInterval animationDuration;
 
 // TODO: Find a better way than this
 @property (nonatomic, assign) CGFloat startDegree;
@@ -20,5 +22,7 @@
 // Animatable properties
 @property (nonatomic, assign) CGFloat startAngle;
 @property (nonatomic, assign) CGFloat endAngle;
+
+- (void)startDancing;
 
 @end

@@ -14,12 +14,19 @@
 @implementation LoadingArcLayer
 
 @dynamic startAngle, endAngle;
-@synthesize fillColor, startDegree, endDegree, innerRadius;
+@synthesize fillColor, startDegree, endDegree, innerRadius, animationDuration;
 
 - (id)init
 {
 	if (!(self = [super init]))
         return self;
+
+	self.fillColor			= [[UIColor blackColor] colorWithAlphaComponent:0.5];
+	self.startAngle			= 0.0;
+	self.endDegree			= 0.0;
+	self.innerRadius		= 0.0;
+	self.outerRadius		= 0.0;
+	self.animationDuration	= 0.5;
 
 	[self setNeedsDisplay];
 
@@ -32,13 +39,15 @@
 	{
 		if ([layer isKindOfClass:[LoadingArcLayer class]])
 		{
-			LoadingArcLayer *other		= (LoadingArcLayer *)layer;
-			self.startAngle		= other.startAngle;
-			self.endAngle		= other.endAngle;
-			self.startDegree	= other.startDegree;
-			self.endDegree		= other.endDegree;
-			self.fillColor		= other.fillColor;
-			self.innerRadius	= other.innerRadius;
+			LoadingArcLayer *other	= (LoadingArcLayer *)layer;
+			self.startAngle			= other.startAngle;
+			self.endAngle			= other.endAngle;
+			self.startDegree		= other.startDegree;
+			self.endDegree			= other.endDegree;
+			self.fillColor			= other.fillColor;
+			self.innerRadius		= other.innerRadius;
+			self.outerRadius		= other.outerRadius;
+			self.animationDuration	= other.animationDuration;
 		}
 	}
 
@@ -58,7 +67,7 @@
 	CABasicAnimation *anim	= [CABasicAnimation animationWithKeyPath:key];
 	anim.fromValue			= [[self presentationLayer] valueForKey:key];
 	anim.timingFunction		= [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-	anim.duration			= 0.5;
+	anim.duration			= self.animationDuration;
 
 	return anim;
 }
@@ -81,10 +90,10 @@
 	CGContextBeginPath(ctx);
 	CGContextMoveToPoint(ctx, center.x, center.y);
 
-	CGPoint pointOuter		= CGPointMake(center.x + outerRadius * cosf(DEGREES_TO_RADIANS(self.startAngle)),
-										  center.y + outerRadius * sinf(DEGREES_TO_RADIANS(self.startAngle)));
+	CGPoint pointOuter		= CGPointMake(center.x + self.outerRadius * cosf(DEGREES_TO_RADIANS(self.startAngle)),
+										  center.y + self.outerRadius * sinf(DEGREES_TO_RADIANS(self.startAngle)));
 	CGContextAddLineToPoint(ctx, pointOuter.x, pointOuter.y);
-	CGContextAddArc(ctx, center.x, center.y, outerRadius, DEGREES_TO_RADIANS(self.startAngle), DEGREES_TO_RADIANS(self.endAngle), clockwise);
+	CGContextAddArc(ctx, center.x, center.y, self.outerRadius, DEGREES_TO_RADIANS(self.startAngle), DEGREES_TO_RADIANS(self.endAngle), clockwise);
 	CGContextClosePath(ctx);
 
 	CGContextSetFillColorWithColor(ctx, self.fillColor.CGColor);
@@ -109,5 +118,26 @@
 	CGContextDrawPath(ctx, kCGPathFillStroke);
 }
 
+- (void)startDancing
+{
+	self.endAngle = self.endDegree - 180.0;
+
+	[self performSelector:@selector(danceBack) withObject:nil afterDelay:self.animationDuration];
+}
+
+- (void)danceBack
+{
+	self.startAngle = self.endAngle;
+
+	[self performSelector:@selector(restDance) withObject:nil afterDelay:self.animationDuration];
+}
+
+- (void)restDance
+{
+	self.startAngle	= self.startDegree - 180.0;
+	self.endAngle	= self.startDegree - 180.0;
+
+	[self performSelector:@selector(startDancing) withObject:nil afterDelay:self.animationDuration];
+}
 
 @end

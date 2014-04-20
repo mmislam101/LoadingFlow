@@ -111,7 +111,7 @@ timeline		= _timeline;
 	_innerRadius						= (_sideWidth * LOADING_FLOW_RING_SIZE / 2.0) + (_sideWidth * LOADING_FLOW_RING_GAP_RATIO);
 	_outerRadius						= _sideWidth / 2.0;
 
-	_arcView							= [[LoadingFlowSectionView alloc] initWithFrame:self.bounds  innerRadius:_innerRadius outerRadius:_outerRadius];
+	_arcView							= [[LoadingFlowSectionView alloc] initWithFrame:self.bounds innerRadius:_innerRadius outerRadius:_outerRadius];
 	_arcView.alpha						= 0.0;
 
 	[self addSubview:_arcView];
@@ -209,8 +209,8 @@ timeline		= _timeline;
 	[_sections enumerateObjectsUsingBlock:^(LoadingFlowSection *section, NSUInteger idx, BOOL *stop) {
 		CGFloat endAngle	= 360.0 * (section.duration / _timeline.duration) + degreeCursor;
 
-		[_arcView addSectionArcWithStartAngle:degreeCursor + sectionGap
-									endDegree:endAngle - sectionGap
+		[_arcView addSectionWithStartAngle:degreeCursor + sectionGap
+									endAngle:endAngle - sectionGap
 									 andColor:section.backgroundColor];
 
 		[_arcView addLabel:section.label toSection:_arcView.numberOfSections-1 atPosition:section.labelPosition];
@@ -338,12 +338,42 @@ timeline		= _timeline;
 	}];
 }
 
-- (void)startWaitingWith:(LoadingFlowSection *)section
+- (void)startWaitingWithSection:(LoadingFlowSection *)section
 {
 	if (_waiting)
 		return;
 
 	_waiting = YES;
+
+	[self destroyValues];
+	[self initValues];
+
+	_arcView.innerRadius				= _sideWidth * 0.1;
+
+	[_arcView addSectionWithStartAngle:20.0
+							  endAngle:380.0
+							  andColor:section.backgroundColor];
+
+	[_arcView addSectionWithStartAngle:-20.0
+							  endAngle:340.0
+							  andColor:section.backgroundColor];
+
+	[_arcView addSectionWithStartAngle:90.0
+							  endAngle:450.0
+							  andColor:section.backgroundColor];
+
+	// Display the loading flow here
+	_arcView.animationDuration			= 1.0;
+	self.alpha							= 1.0;
+
+	__weak LoadingFlow *weakSelf		= self;
+	_progressView.trackTintColor		= [[UIColor blackColor] colorWithAlphaComponent:0.5]; // TODO: Remove this
+	CGFloat progressViewSide			= _sideWidth * LOADING_FLOW_RING_SIZE;
+	CGRect progressFrame				= CGRectMake(0.0, 0.0, progressViewSide, progressViewSide);
+	[_progressView bounceToFillFrame:progressFrame duration:1.0 withCompletion:^{
+		[weakSelf.arcView danceArc];
+		weakSelf.arcView.alpha = 1.0;
+	}];
 }
 
 - (void)stopWaitingWithCompletion:(void (^)(LoadingFlow *loadingFlow))completion
