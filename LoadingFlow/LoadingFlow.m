@@ -112,6 +112,7 @@ timeline		= _timeline;
 	_outerRadius						= _sideWidth / 2.0;
 
 	_arcView							= [[LoadingFlowSectionView alloc] initWithFrame:self.bounds  innerRadius:_innerRadius outerRadius:_outerRadius];
+	_arcView.alpha						= 0.0;
 
 	[self addSubview:_arcView];
 }
@@ -224,6 +225,7 @@ timeline		= _timeline;
 	CGRect progressFrame				= CGRectMake(0.0, 0.0, progressViewSide, progressViewSide);
 	[_progressView bounceToFillFrame:progressFrame duration:1.0 withCompletion:^{
 		[weakSelf.arcView expandArcs];
+		weakSelf.arcView.alpha = 1.0;
 		[weakSelf startFirstSection];
 	}];
 }
@@ -315,10 +317,10 @@ timeline		= _timeline;
 		[messageView addSubview:label];
 	}
 
+	[_arcView retractArcs];
 	[_progressView bounceToFillFrame:CGRectMake(0.0, 0.0, _sideWidth, _sideWidth) duration:2.0 withCompletion:nil];
 
 	__weak LoadingFlow *weakSelf	= self;
-	[weakSelf.arcView retractArcs];
 	[UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
 		weakSelf.arcView.alpha		= 0.0;
 		messageView.alpha			= 1.0;
