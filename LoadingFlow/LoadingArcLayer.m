@@ -141,6 +141,9 @@
 	self.startAngle	= self.startDegree - 180.0;
 	self.endAngle	= self.startDegree - 180.0;
 
+	self.transform = CATransform3DRotate(self.transform, DEGREES_TO_RADIANS(45.0), 0.0, 0.0, 1.0);
+
+
 	[self performSelector:@selector(chachaForward) withObject:nil afterDelay:self.animationDuration];
 }
 

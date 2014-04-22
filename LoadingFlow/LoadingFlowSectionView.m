@@ -116,15 +116,20 @@
 
 - (void)danceArc
 {
+	// Divide the outer ring (outerRadius - innerRadius) by the layers that will be dancing
 	CGFloat radiusMultiplier			= (self.outerRadius - self.innerRadius) / _arcLayers.count;
 	__block CGFloat innerRadius			= self.innerRadius;
-	__block NSTimeInterval startTime	= 0.0;
 	[_arcLayers enumerateObjectsUsingBlock:^(LoadingArcLayer *layer, NSUInteger idx, BOOL *stop) {
-		layer.innerRadius	= innerRadius;
-		layer.outerRadius	= self.innerRadius + (radiusMultiplier * (idx + 1));
-		innerRadius			= layer.outerRadius;
+		layer.innerRadius		= innerRadius;
+		layer.outerRadius		= self.innerRadius + (radiusMultiplier * (idx + 1));
+		innerRadius				= layer.outerRadius;
 
-		[layer startDancingWithDelay:startTime + (idx * (layer.animationDuration / _arcLayers.count))];
+		// Each layer will take 1.3 second longer than the inner layer
+		layer.animationDuration	= idx + 1.0;
+
+		// Each layer will start 1.5 seconds after the previous layer
+		// The 0.1 second delay makes sure first layer begins with animation
+		[layer startDancingWithDelay:0.1 + (idx * 1.5)];
 	}];
 }
 
