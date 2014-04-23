@@ -98,6 +98,8 @@
 - (void)startFlow
 {
 	[_loadingFlow start];
+
+	self.navigationItem.rightBarButtonItem	= [[UIBarButtonItem alloc] initWithTitle:@"Wait" style:UIBarButtonItemStylePlain target:self action:@selector(waitFlow)];
 }
 
 - (void)stopFlow
