@@ -317,7 +317,6 @@ timeline		= _timeline;
 		[messageView addSubview:label];
 	}
 
-	[_arcView retractArcs];
 	[_progressView bounceToFillFrame:CGRectMake(0.0, 0.0, _sideWidth, _sideWidth) duration:2.0 withCompletion:nil];
 
 	__weak LoadingFlow *weakSelf	= self;
