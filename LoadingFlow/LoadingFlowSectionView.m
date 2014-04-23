@@ -33,13 +33,15 @@
 	return self;
 }
 
-- (void)clearSections
+- (void)clear
 {
 	[_arcLayers enumerateObjectsUsingBlock:^(LoadingArcLayer *layer, NSUInteger idx, BOOL *stop) {
 		[layer removeFromSuperlayer];
 	}];
 
 	[_arcLayers removeAllObjects];
+
+	[self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
 }
 
 - (NSInteger)numberOfSections

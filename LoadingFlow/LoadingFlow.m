@@ -119,7 +119,7 @@ timeline		= _timeline;
 
 - (void)destroyValues
 {
-	[_arcView clearSections];
+	[_arcView clear];
 	[_arcView removeFromSuperview];
 	[_progressView removeFromSuperview];
 
@@ -350,6 +350,21 @@ timeline		= _timeline;
 
 	_arcView.innerRadius				= (_sideWidth / 2.0) * 0.4;
 
+	// Add the label
+	if (section.label)
+	{
+		CGPoint topLeftPoint	= [LoadingFlowSectionView pointOnCircleWithRadius:_arcView.innerRadius andCenter:_arcView.center atDegree:45.0];
+		CGPoint topRightPoint	= [LoadingFlowSectionView pointOnCircleWithRadius:_arcView.innerRadius andCenter:_arcView.center atDegree:90.0 + 45.0];
+		CGPoint bottomLeftPoint	= [LoadingFlowSectionView pointOnCircleWithRadius:_arcView.innerRadius andCenter:_arcView.center atDegree:180.0 + 90.0 + 45.0];
+		section.label.frame		= CGRectMake(topLeftPoint.x,
+											 topLeftPoint.y,
+											 topRightPoint.x - topLeftPoint.x,
+											 bottomLeftPoint.y - topLeftPoint.y);
+
+		[_arcView addSubview:section.label];
+	}
+
+	// Get the section arcs ready
 	NSInteger startAngle1				= [self randomNumberBetween:0 and:360];
 	NSInteger startAngle2				= [self randomNumberBetween:0 and:360];
 	[_arcView addSectionWithStartAngle:startAngle1

@@ -17,7 +17,7 @@
 
 - (id)initWithFrame:(CGRect)frame innerRadius:(CGFloat)innerRadius outerRadius:(CGFloat)outerRadius;
 
-- (void)clearSections;
+- (void)clear;
 
 - (void)addSectionWithStartAngle:(CGFloat)startDegree endAngle:(CGFloat)endDegree andColor:(UIColor *)backgroundColor;
 - (void)addLabel:(UILabel *)label toSection:(NSInteger)section atPosition:(CGFloat)percentage;

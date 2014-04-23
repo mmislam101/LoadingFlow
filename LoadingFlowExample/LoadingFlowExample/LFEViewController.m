@@ -123,7 +123,9 @@
 {
 	self.navigationItem.rightBarButtonItem	= [[UIBarButtonItem alloc] initWithTitle:@"Stop Waiting" style:UIBarButtonItemStylePlain target:self action:@selector(waitStop)];
 
-	[_loadingFlow startWaitingWithSection:[LoadingFlowSection sectionWithText:@"monkey 3" andDuration:0.0]];
+	LoadingFlowSection *section				= [LoadingFlowSection sectionWithText:@"Waiting..." andDuration:0.0];
+	section.label.textColor					= [UIColor blackColor];
+	[_loadingFlow startWaitingWithSection:section];
 }
 
 #pragma mark LoadingFlowDelegate
