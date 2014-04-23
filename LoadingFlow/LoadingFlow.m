@@ -112,7 +112,6 @@ timeline		= _timeline;
 	_outerRadius						= _sideWidth / 2.0;
 
 	_arcView							= [[LoadingFlowSectionView alloc] initWithFrame:self.bounds innerRadius:_innerRadius outerRadius:_outerRadius];
-	_arcView.alpha						= 0.0;
 
 	[self addSubview:_arcView];
 }
@@ -125,6 +124,7 @@ timeline		= _timeline;
 
 	_arcView		= nil;
 	_progressView	= nil;
+	_waiting		= NO;
 
 	[_timeline stop];
 	[_timeline clear];
@@ -343,10 +343,10 @@ timeline		= _timeline;
 	if (_waiting)
 		return;
 
-	_waiting = YES;
-
 	[self destroyValues];
 	[self initValues];
+
+	_waiting							= YES;
 
 	_arcView.innerRadius				= (_sideWidth / 2.0) * 0.4;
 
@@ -377,28 +377,34 @@ timeline		= _timeline;
 
 	// Display the loading flow here
 	_arcView.animationDuration			= 1.5;
-	self.alpha							= 1.0;
-	_arcView.alpha = 1.0;
 
 	[_arcView danceArc];
-}
 
-- (NSInteger)randomNumberBetween:(NSInteger)min and:(NSInteger)max
-{
-	return min + arc4random() % (max - min + 1);
+	__weak LoadingFlow *weakSelf		= self;
+	[UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+		weakSelf.alpha = 1.0;
+	} completion:^(BOOL finished) {
+	}];
 }
 
 - (void)stopWaitingWithCompletion:(void (^)(LoadingFlow *loadingFlow))completion
 {
+	__weak LoadingFlow *weakSelf = self;
+
 	if (!_waiting)
 	{
-		__weak LoadingFlow *weakSelf = self;
 		if (completion)
 			completion(weakSelf);
 		return;
 	}
 
-	_waiting = NO;
+	[UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+		weakSelf.alpha = 0.0;
+	} completion:^(BOOL finished) {
+		[weakSelf destroyValues];
+		if (completion)
+			completion(weakSelf);
+	}];
 }
 
 #pragma mark Loading States
@@ -448,6 +454,11 @@ timeline		= _timeline;
 
 	if (_delegate && [_delegate respondsToSelector:@selector(loadingFlow:hasCompletedSection:atIndex:)])
 		[_delegate loadingFlow:self hasCompletedSection:section atIndex:_currentSection];
+}
+
+- (NSInteger)randomNumberBetween:(NSInteger)min and:(NSInteger)max
+{
+	return min + arc4random() % (max - min + 1);
 }
 
 @end
