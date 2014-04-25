@@ -20,7 +20,7 @@
 	[super loadView];
 
 	CGRect frame				= self.view.frame;
-	self.view.backgroundColor	= [UIColor whiteColor];
+	self.view.backgroundColor	= [UIColor grayColor];
 
 	_currentLabel				= [[UILabel alloc] initWithFrame:CGRectMake(frame.size.width / 4.0, 100.0, frame.size.width, 44.0)];
 	_currentLabel.text			= @"Current Time:";

@@ -220,13 +220,17 @@ timeline		= _timeline;
 
 	// Display the loading flow here
 	self.alpha							= 1.0;
+	self.arcView.alpha					= 0.0;
 	_progressView.trackTintColor		= [[UIColor blackColor] colorWithAlphaComponent:0.5]; // TODO: Remove this
 	CGFloat progressViewSide			= _sideWidth * LOADING_FLOW_RING_SIZE;
 	CGRect progressFrame				= CGRectMake(0.0, 0.0, progressViewSide, progressViewSide);
 	[_progressView bounceToFillFrame:progressFrame duration:1.0 withCompletion:^{
 		[weakSelf.arcView expandArcs];
-		weakSelf.arcView.alpha = 1.0;
-		[weakSelf startFirstSection];
+		[UIView animateWithDuration:0.5 animations:^{
+			weakSelf.arcView.alpha = 1.0;
+		} completion:^(BOOL finished) {
+			[weakSelf startFirstSection];
+		}];
 	}];
 }
 
