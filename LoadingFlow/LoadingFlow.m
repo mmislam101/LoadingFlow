@@ -104,6 +104,7 @@ timeline		= _timeline;
 	_progressView.progress				= 0.0;
 	_progressView.transform				= CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(-90.0));
 	_progressView.progressTintColor		= _tintColor;
+	_progressView.trackTintColor		= [[UIColor blackColor] colorWithAlphaComponent:0.5];
 	_progressView.thicknessRatio		= 0.4;
 
 	[self addSubview:_progressView];
@@ -221,7 +222,6 @@ timeline		= _timeline;
 	// Display the loading flow here
 	self.alpha							= 1.0;
 	self.arcView.alpha					= 0.0;
-	_progressView.trackTintColor		= [[UIColor blackColor] colorWithAlphaComponent:0.5]; // TODO: Remove this
 	CGFloat progressViewSide			= _sideWidth * LOADING_FLOW_RING_SIZE;
 	CGRect progressFrame				= CGRectMake(0.0, 0.0, progressViewSide, progressViewSide);
 	[_progressView bounceToFillFrame:progressFrame duration:1.0 withCompletion:^{
@@ -319,6 +319,15 @@ timeline		= _timeline;
 											 bottomLeftPoint.y - topLeftPoint.y);
 
 		[messageView addSubview:label];
+	}
+
+	if (!self.hasStarted)
+	{
+		[self destroyValues];
+		[self initValues];
+
+		// Display the loading flow here
+		self.alpha							= 1.0;
 	}
 
 	[_progressView bounceToFillFrame:CGRectMake(0.0, 0.0, _sideWidth, _sideWidth) duration:2.0 withCompletion:nil];

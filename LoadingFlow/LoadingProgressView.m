@@ -11,6 +11,16 @@
 
 @implementation LoadingProgressView
 
+- (id)initWithFrame:(CGRect)frame
+{
+	if (!(self = [super initWithFrame:frame]))
+        return self;
+
+	self.thicknessRatio = 0.0;
+
+	return self;
+}
+
 - (void)bounceFromStretched:(CGFloat)percentOfRadius duration:(NSTimeInterval)duration withCompletion:(void (^)(void))completion
 {
 	SKBounceAnimation *bounceProgress	= [SKBounceAnimation animationWithKeyPath:@"bounds"];
@@ -45,12 +55,13 @@
 
 	self.bounds							= frame;
 
+	CGFloat thicknessRatio				= (-1.0/1100.0) * self.frame.size.width + (27.0/55.0); // Equation of a line where (100, 0.4) and (320, 0.2)
 	CABasicAnimation *thinProgress		= [CABasicAnimation animationWithKeyPath:@"thicknessRatio"];
 	thinProgress.fromValue				= [NSNumber numberWithFloat:self.thicknessRatio];
-	thinProgress.toValue				= [NSNumber numberWithFloat:self.thicknessRatio * 0.8];
+	thinProgress.toValue				= [NSNumber numberWithFloat:thicknessRatio];
 	thinProgress.duration				= 0.5;
 
-	self.thicknessRatio					= self.thicknessRatio * 0.8;
+	self.thicknessRatio					= thicknessRatio;
 
 	// Animation group
 	CAAnimationGroup* group = [CAAnimationGroup animation];

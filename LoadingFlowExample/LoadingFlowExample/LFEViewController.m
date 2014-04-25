@@ -46,7 +46,7 @@
 	// Do any additional setup after loading the view, typically from a nib.
 
 	self.navigationItem.rightBarButtonItem	= [[UIBarButtonItem alloc] initWithTitle:@"Wait" style:UIBarButtonItemStylePlain target:self action:@selector(waitFlow)];
-//	self.navigationItem.leftBarButtonItem	= [[UIBarButtonItem alloc] initWithTitle:@"Start" style:UIBarButtonItemStylePlain target:self action:@selector(startFlow)];
+	self.navigationItem.leftBarButtonItem	= [[UIBarButtonItem alloc] initWithTitle:@"Message" style:UIBarButtonItemStylePlain target:self action:@selector(messageFlow)];
 
 	[self.navigationController setToolbarHidden:NO];
 
@@ -128,6 +128,18 @@
 	LoadingFlowSection *section				= [LoadingFlowSection sectionWithText:@"Waiting..." andDuration:0.0];
 	section.label.textColor					= [UIColor blackColor];
 	[_loadingFlow startWaitingWithSection:section];
+}
+
+- (void)messageFlow
+{
+	// Finished last section
+	UILabel *message		= [[UILabel alloc] init];
+	message.text			= @"Butts!!!";
+	message.textAlignment	= NSTextAlignmentCenter;
+	[message sizeToFit];
+	[_loadingFlow displayMessageLabel:message duration:2.0 withCompletion:^(LoadingFlow *loadingFlow) {
+		NSLog(@"finished!");
+	}];
 }
 
 #pragma mark LoadingFlowDelegate
