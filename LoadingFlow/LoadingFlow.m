@@ -55,6 +55,7 @@
 	BOOL _skipping;
 
 	BOOL _waiting;
+	BOOL _hasStarted;
 
 	LoadingFlowSectionView *_arcView;
 }
@@ -72,7 +73,8 @@
 progressView	= _progressView,
 currentSection	= _currentSection,
 arcView			= _arcView,
-timeline		= _timeline;
+timeline		= _timeline,
+hasStarted		= _hasStarted;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -88,6 +90,7 @@ timeline		= _timeline;
 	_sideWidth			= ((frame.size.width < frame.size.height) ? frame.size.width : frame.size.height);
 	_skipping			= NO;
 	_waiting			= NO;
+	_hasStarted			= NO;
 
     return self;
 }
@@ -98,6 +101,7 @@ timeline		= _timeline;
 	CGRect frame						= self.frame;
 	_skipping							= NO;
 	_currentSection						= 0;
+	_hasStarted							= NO;
 
 	_progressView						= [[LoadingProgressView alloc] initWithFrame:CGRectMake(0.0, 0.0, 1.0, 1.0)];
 	_progressView.center				= CGPointMake(frame.size.width / 2.0, frame.size.height / 2.0);
@@ -136,7 +140,7 @@ timeline		= _timeline;
 - (void)addSection:(LoadingFlowSection *)section
 {
 	// Don't allow updating after the Loading Flow has started
-	if (self.hasStarted)
+	if (_hasStarted)
 		return;
 
 	[_sections addObject:section];
@@ -145,7 +149,7 @@ timeline		= _timeline;
 - (void)removeSection:(LoadingFlowSection *)section
 {
 	// Don't allow updating after the Loading Flow has started
-	if (self.hasStarted)
+	if (_hasStarted)
 		return;
 
 	[_sections removeObject:section];
@@ -169,23 +173,17 @@ timeline		= _timeline;
 	return _timeline.isRunning;
 }
 
-- (BOOL)hasStarted
-{
-	return _timeline.hasStarted;
-}
-
 #pragma mark Loading Flow Control
 
 - (void)start
 {
-	if (_sections.count == 0 || self.hasStarted || _progressView.progress)
+	if (_sections.count == 0 || _hasStarted || _progressView.progress)
 		return;
-
-	// TODO: user can start timer twice till timeline actually starts and the self.hasStarted finally starts returning true.
-	// So need to disconnect hasStarted from timeline
 
 	[self destroyValues];
 	[self initValues];
+
+	_hasStarted								= YES;
 
 	__block NSTimeInterval duration			= 0.0;
 	__weak LoadingFlow *weakSelf			= self;
@@ -234,6 +232,71 @@ timeline		= _timeline;
 	}];
 }
 
+- (void)displayMessageLabel:(UILabel *)label duration:(NSTimeInterval)duration withCompletion:(void (^)(LoadingFlow *loadingFlow))completion
+{
+	if (_hasStarted)
+	{
+		if (_timeline.hasStarted)
+			[_timeline pause];
+		else
+		{
+			// Animations are going on so this is the inbetween state where timeline hasn't started yet, so just invalidate it so when start is called, it won't do nothing.
+			_timeline.duration = 0.0;
+			[_arcView clear]; // Same for the arcview
+		}
+
+		// This allows the loading flow to start again.
+		_hasStarted = NO;
+	}
+	else
+	{
+		[self destroyValues];
+		[self initValues];
+
+		// Display the loading flow here
+		self.alpha							= 1.0;
+	}
+
+	UIView *messageView	= [[UIView alloc] initWithFrame:self.bounds];
+	messageView.alpha	= 0.0;
+
+	[self addSubview:messageView];
+
+	if (label)
+	{
+		CGFloat radius			= _sideWidth / 2.0 - 50.0;
+		CGPoint center			= CGPointMake(self.frame.size.width / 2.0, self.frame.size.height / 2.0);
+		CGPoint topLeftPoint	= [LoadingFlowSectionView pointOnCircleWithRadius:radius andCenter:center atDegree:45.0];
+		CGPoint topRightPoint	= [LoadingFlowSectionView pointOnCircleWithRadius:radius andCenter:center atDegree:90.0 + 45.0];
+		CGPoint bottomLeftPoint	= [LoadingFlowSectionView pointOnCircleWithRadius:radius andCenter:center atDegree:180.0 + 90.0 + 45.0];
+		label.frame				= CGRectMake(topLeftPoint.x,
+											 topLeftPoint.y,
+											 topRightPoint.x - topLeftPoint.x,
+											 bottomLeftPoint.y - topLeftPoint.y);
+
+		[messageView addSubview:label];
+	}
+
+	[_progressView bounceToFillFrame:CGRectMake(0.0, 0.0, _sideWidth, _sideWidth) duration:2.0 withCompletion:nil];
+
+	__weak LoadingFlow *weakSelf	= self;
+	[UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+		weakSelf.arcView.alpha		= 0.0;
+		messageView.alpha			= 1.0;
+	} completion:^(BOOL finished) {
+		[UIView animateWithDuration:0.5 delay:duration options:UIViewAnimationOptionCurveEaseOut animations:^{
+			weakSelf.alpha = 0.0;
+		} completion:^(BOOL finished) {
+			[messageView removeFromSuperview];
+
+			[weakSelf destroyValues];
+
+			if (completion)
+				completion(weakSelf);
+		}];
+	}];
+}
+
 - (void)pause
 {
 	[_timeline pause];
@@ -248,7 +311,7 @@ timeline		= _timeline;
 {
 	__weak LoadingFlow *weakSelf = self;
 	
-	if (!self.hasStarted)
+	if (!_hasStarted)
 	{
 		if (completion)
 			completion(weakSelf);
@@ -276,7 +339,7 @@ timeline		= _timeline;
 - (void)skipToNextSectionWithDuration:(NSTimeInterval)duration
 {
 	// If hasn't started or is currently skipping
-	if (!self.hasStarted || _skipping || _currentSection >= _timeline.events.count)
+	if (!_hasStarted || _skipping || _currentSection >= _timeline.events.count)
 		return;
 
 	_skipping = YES;
@@ -294,59 +357,6 @@ timeline		= _timeline;
 		[_timeline resume];
 		_skipping = NO;
 		[_sections[_currentSection] setSkipped:YES];
-	}];
-}
-
-- (void)displayMessageLabel:(UILabel *)label duration:(NSTimeInterval)duration withCompletion:(void (^)(LoadingFlow *loadingFlow))completion
-{
-	[_timeline pause];
-
-	UIView *messageView	= [[UIView alloc] initWithFrame:self.bounds];
-	messageView.alpha	= 0.0;
-
-	[self addSubview:messageView];
-
-	if (label)
-	{
-		CGFloat radius			= _sideWidth / 2.0 - 50.0;
-		CGPoint center			= CGPointMake(self.frame.size.width / 2.0, self.frame.size.height / 2.0);
-		CGPoint topLeftPoint	= [LoadingFlowSectionView pointOnCircleWithRadius:radius andCenter:center atDegree:45.0];
-		CGPoint topRightPoint	= [LoadingFlowSectionView pointOnCircleWithRadius:radius andCenter:center atDegree:90.0 + 45.0];
-		CGPoint bottomLeftPoint	= [LoadingFlowSectionView pointOnCircleWithRadius:radius andCenter:center atDegree:180.0 + 90.0 + 45.0];
-		label.frame				= CGRectMake(topLeftPoint.x,
-											 topLeftPoint.y,
-											 topRightPoint.x - topLeftPoint.x,
-											 bottomLeftPoint.y - topLeftPoint.y);
-
-		[messageView addSubview:label];
-	}
-
-	if (!self.hasStarted)
-	{
-		[self destroyValues];
-		[self initValues];
-
-		// Display the loading flow here
-		self.alpha							= 1.0;
-	}
-
-	[_progressView bounceToFillFrame:CGRectMake(0.0, 0.0, _sideWidth, _sideWidth) duration:2.0 withCompletion:nil];
-
-	__weak LoadingFlow *weakSelf	= self;
-	[UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-		weakSelf.arcView.alpha		= 0.0;
-		messageView.alpha			= 1.0;
-	} completion:^(BOOL finished) {
-		[UIView animateWithDuration:0.5 delay:duration options:UIViewAnimationOptionCurveEaseOut animations:^{
-			weakSelf.alpha = 0.0;
-		} completion:^(BOOL finished) {
-			[messageView removeFromSuperview];
-
-			[weakSelf destroyValues];
-
-			if (completion)
-				completion(weakSelf);
-		}];
 	}];
 }
 
