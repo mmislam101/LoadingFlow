@@ -339,7 +339,7 @@ hasStarted		= _hasStarted;
 - (void)skipToNextSectionWithDuration:(NSTimeInterval)duration
 {
 	// If hasn't started or is currently skipping
-	if (!_hasStarted || _skipping || _currentSection >= _timeline.events.count)
+	if (!_hasStarted || _skipping || _currentSection >= _timeline.events.count || !_timeline.hasStarted)
 		return;
 
 	_skipping = YES;
