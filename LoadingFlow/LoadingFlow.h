@@ -70,7 +70,7 @@
 
 #pragma mark Loading Flow Control
 
-- (void)start; // Cannot restart once started. Has to stop first
+- (void)startWithCompletion:(void (^)(LoadingFlow *loadingFlow))completion; // Cannot restart once started, has to stop first. Completion won't be called if start is called at an invalid moment.
 - (void)pause;
 - (void)resume;
 - (void)stopWithCompletion:(void (^)(LoadingFlow *loadingFlow))completion;

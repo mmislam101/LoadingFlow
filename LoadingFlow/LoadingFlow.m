@@ -175,7 +175,7 @@ hasStarted		= _hasStarted;
 
 #pragma mark Loading Flow Control
 
-- (void)start
+- (void)startWithCompletion:(void (^)(LoadingFlow *loadingFlow))completion
 {
 	if (_sections.count == 0 || _hasStarted || _progressView.progress)
 		return;
@@ -228,6 +228,9 @@ hasStarted		= _hasStarted;
 			weakSelf.arcView.alpha = 1.0;
 		} completion:^(BOOL finished) {
 			[weakSelf startFirstSection];
+
+			if (completion)
+				completion(weakSelf);
 		}];
 	}];
 }
@@ -347,6 +350,7 @@ hasStarted		= _hasStarted;
 
 	EasyTimelineEvent *currentEvent		= _timeline.events[_currentSection];
 	LoadingFlowSection *currentSection	= _sections[_currentSection];
+	currentSection.skipped				= YES;
 
 	// Lower duration by ratio of remaining time in section
 	duration							*= (currentEvent.time - _timeline.currentTime) / currentSection.duration;
@@ -356,7 +360,6 @@ hasStarted		= _hasStarted;
 	[_progressView skipProgressTo:currentEvent.time / _timeline.duration duration:duration withCompletion:^{
 		[_timeline resume];
 		_skipping = NO;
-		[_sections[_currentSection] setSkipped:YES];
 	}];
 }
 
