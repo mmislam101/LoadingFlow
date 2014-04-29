@@ -161,4 +161,9 @@
 	}
 }
 
+- (void)loadingFlowWasTapped:(LoadingFlow *)loadingFlow
+{
+	NSLog(@"tapped!");
+}
+
 @end

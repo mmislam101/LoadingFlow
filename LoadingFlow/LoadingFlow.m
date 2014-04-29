@@ -92,6 +92,9 @@ hasStarted		= _hasStarted;
 	_waiting			= NO;
 	_hasStarted			= NO;
 
+	UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+	[self addGestureRecognizer:tapGesture];
+
     return self;
 }
 
@@ -283,20 +286,30 @@ hasStarted		= _hasStarted;
 	[_progressView bounceToFillFrame:CGRectMake(0.0, 0.0, _sideWidth, _sideWidth) duration:2.0 withCompletion:nil];
 
 	__weak LoadingFlow *weakSelf	= self;
-	[UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+	[UIView animateWithDuration:0.5
+						  delay:0.0
+						options:UIViewAnimationOptionCurveEaseIn | UIViewAnimationOptionAllowUserInteraction
+					 animations:^{
 		weakSelf.arcView.alpha		= 0.0;
 		messageView.alpha			= 1.0;
 	} completion:^(BOOL finished) {
-		[UIView animateWithDuration:0.5 delay:duration options:UIViewAnimationOptionCurveEaseOut animations:^{
-			weakSelf.alpha = 0.0;
-		} completion:^(BOOL finished) {
-			[messageView removeFromSuperview];
+		// Using a delay on a normal UIView causes the gesture recognizer to not function even with the UIViewAnimationOptionAllowUserInteraction flag set on options
+		// So did the delay this way
+		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, duration * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+			[UIView animateWithDuration:0.5
+								  delay:0.0
+								options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionAllowUserInteraction
+							 animations:^{
+								 weakSelf.alpha = 0.0;
+							 } completion:^(BOOL finished) {
+				 [messageView removeFromSuperview];
 
-			[weakSelf destroyValues];
+				 [weakSelf destroyValues];
 
-			if (completion)
-				completion(weakSelf);
-		}];
+				 if (completion)
+					 completion(weakSelf);
+			 }];
+		});
 	}];
 }
 
@@ -321,7 +334,9 @@ hasStarted		= _hasStarted;
 		return;
 	}
 
-	[UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+	[UIView animateWithDuration:0.3 delay:0.0
+						options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionAllowUserInteraction
+					 animations:^{
 		weakSelf.alpha = 0.0;
 	} completion:^(BOOL finished) {
 		[weakSelf destroyValues];
@@ -406,7 +421,10 @@ hasStarted		= _hasStarted;
 	[_arcView danceArc];
 
 	__weak LoadingFlow *weakSelf		= self;
-	[UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+	[UIView animateWithDuration:0.3
+						  delay:0.0
+						options:UIViewAnimationOptionCurveEaseIn | UIViewAnimationOptionAllowUserInteraction
+					 animations:^{
 		weakSelf.alpha = 1.0;
 	} completion:^(BOOL finished) {
 	}];
@@ -423,7 +441,10 @@ hasStarted		= _hasStarted;
 		return;
 	}
 
-	[UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+	[UIView animateWithDuration:0.3
+						  delay:0.0
+						options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionAllowUserInteraction
+					 animations:^{
 		weakSelf.alpha = 0.0;
 	} completion:^(BOOL finished) {
 		[weakSelf destroyValues];
@@ -437,6 +458,12 @@ hasStarted		= _hasStarted;
 - (void)startFirstSection
 {
 	[_timeline start];
+}
+
+- (void)handleTap:(UITapGestureRecognizer *)recognizer
+{
+	if (_delegate && [_delegate respondsToSelector:@selector(loadingFlowWasTapped:)])
+		[_delegate loadingFlowWasTapped:self];
 }
 
 #pragma mark Easy Timeline Delegates

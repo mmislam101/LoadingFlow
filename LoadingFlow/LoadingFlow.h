@@ -41,6 +41,7 @@
 @optional
 
 - (void)loadingFlow:(LoadingFlow *)loadingFlow hasCompletedSection:(LoadingFlowSection *)section atIndex:(NSInteger)idx;
+- (void)loadingFlowWasTapped:(LoadingFlow *)loadingFlow;
 
 @end
 
