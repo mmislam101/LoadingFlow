@@ -55,7 +55,8 @@
 	BOOL _skipping;
 
 	BOOL _waiting;
-	BOOL _hasStarted;
+	BOOL _hasStartedLoadingFlow;
+	BOOL _displayingMessage;
 
 	LoadingFlowSectionView *_arcView;
 }
@@ -64,33 +65,36 @@
 @property (nonatomic, assign) NSInteger currentSection;
 @property (nonatomic, strong) LoadingFlowSectionView *arcView;
 @property (nonatomic, strong) LoadingProgressView *progressView;
+@property (nonatomic, assign) BOOL displayingMessage;
 
 @end
 
 @implementation LoadingFlow
 
 @synthesize
-progressView	= _progressView,
-currentSection	= _currentSection,
-arcView			= _arcView,
-timeline		= _timeline,
-hasStarted		= _hasStarted;
+progressView			= _progressView,
+currentSection			= _currentSection,
+arcView					= _arcView,
+timeline				= _timeline,
+hasStartedLoadingFlow	= _hasStartedLoadingFlow,
+displayingMessage		= _displayingMessage;
 
 - (id)initWithFrame:(CGRect)frame
 {
 	if (!(self = [super initWithFrame:frame]))
         return self;
 
-	self.alpha			= 0.0;
+	self.alpha				= 0.0;
 
-	_sections			= [[NSMutableArray alloc] init];
-	_currentSection		= 0;
-	_timeline			= [[EasyTimeline alloc] init];
-	_timeline.delegate	= self;
-	_sideWidth			= ((frame.size.width < frame.size.height) ? frame.size.width : frame.size.height);
-	_skipping			= NO;
-	_waiting			= NO;
-	_hasStarted			= NO;
+	_sections				= [[NSMutableArray alloc] init];
+	_currentSection			= 0;
+	_timeline				= [[EasyTimeline alloc] init];
+	_timeline.delegate		= self;
+	_sideWidth				= ((frame.size.width < frame.size.height) ? frame.size.width : frame.size.height);
+	_skipping				= NO;
+	_waiting				= NO;
+	_hasStartedLoadingFlow	= NO;
+	_displayingMessage		= NO;
 
 	UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
 	[self addGestureRecognizer:tapGesture];
@@ -104,7 +108,7 @@ hasStarted		= _hasStarted;
 	CGRect frame						= self.frame;
 	_skipping							= NO;
 	_currentSection						= 0;
-	_hasStarted							= NO;
+	_hasStartedLoadingFlow							= NO;
 
 	_progressView						= [[LoadingProgressView alloc] initWithFrame:CGRectMake(0.0, 0.0, 1.0, 1.0)];
 	_progressView.center				= CGPointMake(frame.size.width / 2.0, frame.size.height / 2.0);
@@ -130,9 +134,9 @@ hasStarted		= _hasStarted;
 	[_arcView removeFromSuperview];
 	[_progressView removeFromSuperview];
 
-	_arcView		= nil;
-	_progressView	= nil;
-	_waiting		= NO;
+	_arcView			= nil;
+	_progressView		= nil;
+	_waiting			= NO;
 
 	[_timeline stop];
 	[_timeline clear];
@@ -143,7 +147,7 @@ hasStarted		= _hasStarted;
 - (void)addSection:(LoadingFlowSection *)section
 {
 	// Don't allow updating after the Loading Flow has started
-	if (_hasStarted)
+	if (_hasStartedLoadingFlow)
 		return;
 
 	[_sections addObject:section];
@@ -152,7 +156,7 @@ hasStarted		= _hasStarted;
 - (void)removeSection:(LoadingFlowSection *)section
 {
 	// Don't allow updating after the Loading Flow has started
-	if (_hasStarted)
+	if (_hasStartedLoadingFlow)
 		return;
 
 	[_sections removeObject:section];
@@ -180,13 +184,13 @@ hasStarted		= _hasStarted;
 
 - (void)startWithCompletion:(void (^)(LoadingFlow *loadingFlow))completion
 {
-	if (_sections.count == 0 || _hasStarted || _progressView.progress)
+	if (_sections.count == 0 || _hasStartedLoadingFlow || _progressView.progress)
 		return;
 
 	[self destroyValues];
 	[self initValues];
 
-	_hasStarted								= YES;
+	_hasStartedLoadingFlow								= YES;
 
 	__block NSTimeInterval duration			= 0.0;
 	__weak LoadingFlow *weakSelf			= self;
@@ -240,7 +244,12 @@ hasStarted		= _hasStarted;
 
 - (void)displayMessageLabel:(UILabel *)label duration:(NSTimeInterval)duration withCompletion:(void (^)(LoadingFlow *loadingFlow))completion
 {
-	if (_hasStarted)
+	if (_displayingMessage)
+		return;
+
+	_displayingMessage = YES;
+
+	if (_hasStartedLoadingFlow)
 	{
 		if (_timeline.hasStarted)
 			[_timeline pause];
@@ -252,7 +261,7 @@ hasStarted		= _hasStarted;
 		}
 
 		// This allows the loading flow to start again.
-		_hasStarted = NO;
+		_hasStartedLoadingFlow = NO;
 	}
 	else
 	{
@@ -305,6 +314,7 @@ hasStarted		= _hasStarted;
 				 [messageView removeFromSuperview];
 
 				 [weakSelf destroyValues];
+				 weakSelf.displayingMessage = NO;
 
 				 if (completion)
 					 completion(weakSelf);
@@ -327,7 +337,7 @@ hasStarted		= _hasStarted;
 {
 	__weak LoadingFlow *weakSelf = self;
 	
-	if (!_hasStarted)
+	if (!_hasStartedLoadingFlow)
 	{
 		if (completion)
 			completion(weakSelf);
@@ -357,7 +367,7 @@ hasStarted		= _hasStarted;
 - (void)skipToNextSectionWithDuration:(NSTimeInterval)duration
 {
 	// If hasn't started or is currently skipping
-	if (!_hasStarted || _skipping || _currentSection >= _timeline.events.count || !_timeline.hasStarted)
+	if (!_hasStartedLoadingFlow || _skipping || _currentSection >= _timeline.events.count || !_timeline.hasStarted)
 		return;
 
 	_skipping = YES;

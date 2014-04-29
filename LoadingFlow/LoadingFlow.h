@@ -67,7 +67,7 @@
 @property (nonatomic, readonly) NSTimeInterval timeSinceStart;
 @property (nonatomic, readonly) NSInteger currentSection;
 @property (nonatomic, readonly) BOOL isRunning;
-@property (nonatomic, readonly) BOOL hasStarted;
+@property (nonatomic, readonly) BOOL hasStartedLoadingFlow;
 
 #pragma mark Loading Flow Control
 
