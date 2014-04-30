@@ -55,7 +55,7 @@
 
 	self.bounds							= frame;
 
-	CGFloat thicknessRatio				= (-1.0/1100.0) * self.frame.size.width + (27.0/55.0); // Equation of a line where (100, 0.4) and (320, 0.2)
+	CGFloat thicknessRatio				= (-1.0/1100.0) * frame.size.width + (27.0/55.0); // Equation of a line where (100, 0.4) and (320, 0.2)
 	CABasicAnimation *thinProgress		= [CABasicAnimation animationWithKeyPath:@"thicknessRatio"];
 	thinProgress.fromValue				= [NSNumber numberWithFloat:self.thicknessRatio];
 	thinProgress.toValue				= [NSNumber numberWithFloat:thicknessRatio];
