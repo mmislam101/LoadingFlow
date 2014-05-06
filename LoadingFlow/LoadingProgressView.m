@@ -46,29 +46,40 @@
 			completion();
 	}];
 
+	// Resize the bounds with bounce
 	SKBounceAnimation *bounceProgress	= [SKBounceAnimation animationWithKeyPath:@"bounds"];
 	bounceProgress.fromValue			= [NSValue valueWithCGRect:self.bounds];
-	bounceProgress.toValue				= [NSValue valueWithCGRect:frame];
+	bounceProgress.toValue				= [NSValue valueWithCGRect:CGRectMake(0.0, 0.0, frame.size.width, frame.size.height)]; // Important that center doesn't change
 	bounceProgress.duration				= duration;
-	bounceProgress.numberOfBounces		= 3;
+	bounceProgress.numberOfBounces		= 5;
 	bounceProgress.shake				= NO;
 
-	self.bounds							= frame;
+	self.bounds							= CGRectMake(0.0, 0.0, frame.size.width, frame.size.height);
 
+//	// Move the center
+//	CGPoint newCenter					= CGPointMake(frame.origin.x + (frame.size.width / 2.0), frame.origin.y + (frame.size.height / 2.0));
+//	CABasicAnimation *moveProgress		= [CABasicAnimation animationWithKeyPath:@"position"];
+//	moveProgress.fromValue				= [NSValue valueWithCGPoint:self.center];
+//	moveProgress.toValue				= [NSValue valueWithCGPoint:newCenter];
+//	moveProgress.duration				= duration / 3.0;
+//
+//	self.center							= newCenter;
+
+	// Resize the thickness
 	CGFloat thicknessRatio				= (-1.0/1100.0) * frame.size.width + (27.0/55.0); // Equation of a line where (100, 0.4) and (320, 0.2)
 	CABasicAnimation *thinProgress		= [CABasicAnimation animationWithKeyPath:@"thicknessRatio"];
 	thinProgress.fromValue				= [NSNumber numberWithFloat:self.thicknessRatio];
 	thinProgress.toValue				= [NSNumber numberWithFloat:thicknessRatio];
-	thinProgress.duration				= 0.5;
+	thinProgress.duration				= duration / 4.0;
 
 	self.thicknessRatio					= thicknessRatio;
 
 	// Animation group
 	CAAnimationGroup* group = [CAAnimationGroup animation];
-	group.animations = [NSArray arrayWithObjects:bounceProgress, thinProgress, nil];
+	group.animations = [NSArray arrayWithObjects:bounceProgress, /*moveProgress,*/ thinProgress, nil];
 	group.duration = duration;
 
-	[self.layer addAnimation:group forKey:@"alskdf"];
+	[self.layer addAnimation:group forKey:@"bounceToFillProgress"];
 
 	[CATransaction commit];
 }
