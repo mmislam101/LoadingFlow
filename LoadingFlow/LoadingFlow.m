@@ -415,15 +415,14 @@ displayingMessage		= _displayingMessage;
 	}
 
 	// Get the section arcs ready
-	NSInteger startAngle1				= [self randomNumberBetween:0 and:360];
-	NSInteger startAngle2				= [self randomNumberBetween:0 and:360];
-	[_arcView addSectionWithStartAngle:startAngle1
-							  endAngle:startAngle1 + 360.0
-							  andColor:section.backgroundColor];
-
-	[_arcView addSectionWithStartAngle:startAngle2
-							  endAngle:startAngle2 + 360.0
-							  andColor:section.backgroundColor];
+	NSInteger numberOfArcs				= section.duration;
+	for (NSInteger i = 0; i < numberOfArcs; i++)
+	{
+		NSInteger startAngle = [self randomNumberBetween:0 and:360];
+		[_arcView addSectionWithStartAngle:startAngle
+								  endAngle:startAngle + 360.0
+								  andColor:section.backgroundColor];
+	}
 
 	// Display the loading flow here
 	_arcView.animationDuration			= 1.5;

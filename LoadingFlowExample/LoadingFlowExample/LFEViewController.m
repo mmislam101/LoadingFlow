@@ -129,6 +129,7 @@
 
 	LoadingFlowSection *section				= [LoadingFlowSection sectionWithText:@"Waiting..." andDuration:0.0];
 	section.label.textColor					= [UIColor blackColor];
+	section.duration						= 3.0;
 	[_loadingFlow startWaitingWithSection:section];
 }
 

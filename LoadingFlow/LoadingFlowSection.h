@@ -31,7 +31,7 @@
 @interface LoadingFlowSection : NSObject
 
 @property (nonatomic, strong) UILabel *label;
-@property (nonatomic, assign) NSTimeInterval duration;
+@property (nonatomic, assign) NSTimeInterval duration; // For Wait, the Integer of this value determines the number of dancing arcs
 @property (nonatomic, strong) UIColor *backgroundColor; // Default set to translucent black
 @property (nonatomic, strong) UIColor *highlightColor; // Default to more translucent black
 @property (nonatomic, assign) BOOL skipped; // Default to NO, this will be set to YES if this section was skipped
