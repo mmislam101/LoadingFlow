@@ -57,6 +57,7 @@
 	BOOL _waiting;
 	BOOL _hasStartedLoadingFlow;
 	BOOL _displayingMessage;
+	BOOL _isDismissingMessage;
 
 	LoadingFlowSectionView *_arcView;
 }
@@ -95,6 +96,7 @@ displayingMessage		= _displayingMessage;
 	_waiting				= NO;
 	_hasStartedLoadingFlow	= NO;
 	_displayingMessage		= NO;
+	_isDismissingMessage	= NO;
 
 	UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
 	[self addGestureRecognizer:tapGesture];
@@ -108,7 +110,7 @@ displayingMessage		= _displayingMessage;
 	CGRect frame						= self.frame;
 	_skipping							= NO;
 	_currentSection						= 0;
-	_hasStartedLoadingFlow							= NO;
+	_hasStartedLoadingFlow				= NO;
 
 	_progressView						= [[LoadingProgressView alloc] initWithFrame:CGRectMake(0.0, 0.0, 1.0, 1.0)];
 	_progressView.center				= CGPointMake(frame.size.width / 2.0, frame.size.height / 2.0);
@@ -134,12 +136,16 @@ displayingMessage		= _displayingMessage;
 	[_arcView removeFromSuperview];
 	[_progressView removeFromSuperview];
 
-	_arcView			= nil;
-	_progressView		= nil;
-	_waiting			= NO;
+	_arcView				= nil;
+	_progressView			= nil;
+	_waiting				= NO;
+	_hasStartedLoadingFlow	= NO;
+	_isDismissingMessage	= NO;
 
 	[_timeline stop];
 	[_timeline clear];
+
+	[self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
 }
 
 #pragma mark Loading Flow Properties
@@ -190,7 +196,7 @@ displayingMessage		= _displayingMessage;
 	[self destroyValues];
 	[self initValues];
 
-	_hasStartedLoadingFlow								= YES;
+	_hasStartedLoadingFlow					= YES;
 
 	__block NSTimeInterval duration			= 0.0;
 	__weak LoadingFlow *weakSelf			= self;
@@ -302,25 +308,38 @@ displayingMessage		= _displayingMessage;
 		weakSelf.arcView.alpha		= 0.0;
 		messageView.alpha			= 1.0;
 	} completion:^(BOOL finished) {
-		// Using a delay on a normal UIView causes the gesture recognizer to not function even with the UIViewAnimationOptionAllowUserInteraction flag set on options
+		// Using a delay on a normal UIView animation with delay causes the gesture recognizer to not function
+		// even with the UIViewAnimationOptionAllowUserInteraction flag set on options
 		// So did the delay this way
-		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, duration * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-			[UIView animateWithDuration:0.5
-								  delay:0.0
-								options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionAllowUserInteraction
-							 animations:^{
-								 weakSelf.alpha = 0.0;
-							 } completion:^(BOOL finished) {
-				 [messageView removeFromSuperview];
-
-				 [weakSelf destroyValues];
-				 weakSelf.displayingMessage = NO;
-
-				 if (completion)
-					 completion(weakSelf);
-			 }];
-		});
+		if (duration > 0.0)
+		{
+			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, duration * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+				[weakSelf dismissMessageWithCompletion:completion];
+			});
+		}
 	}];
+}
+
+- (void)dismissMessageWithCompletion:(void (^)(LoadingFlow *loadingFlow))completion
+{
+	if (_isDismissingMessage)
+		return;
+
+	_isDismissingMessage = YES;
+
+	__weak LoadingFlow *weakSelf	= self;
+	[UIView animateWithDuration:0.5
+						  delay:0.0
+						options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionAllowUserInteraction
+					 animations:^{
+						 weakSelf.alpha = 0.0;
+					 } completion:^(BOOL finished) {
+						 [weakSelf destroyValues];
+						 weakSelf.displayingMessage = NO;
+
+						 if (completion)
+							 completion(weakSelf);
+					 }];
 }
 
 - (void)pause

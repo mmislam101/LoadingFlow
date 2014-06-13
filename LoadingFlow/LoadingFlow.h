@@ -76,12 +76,14 @@
 - (void)resume;
 - (void)stopWithCompletion:(void (^)(LoadingFlow *loadingFlow))completion;
 - (void)clear; // Will clear all the section data as well so you'll have to add new ones
-- (void)skipToNextSectionWithDuration:(NSTimeInterval)duration; // This will speed up the loading till it hits the next section. Can only be called once till skip finishes
+// TODO: Skipping while pausing causes issues, need to fix that
+- (void)skipToNextSectionWithDuration:(NSTimeInterval)duration; // This will speed up the loading till it hits the next section. Can only be called once till skip finishes.
 
 // This will stop the LoadingFlow, display the message for the duration and then fade out to completion
 // You can reuse this loading flow or even clear it and add new events for reuse.
-// TODO: Make this standalone use as well
+// A 0.0 duration means the message will stay up indefinitely.
 - (void)displayMessageLabel:(UILabel *)label duration:(NSTimeInterval)duration withCompletion:(void (^)(LoadingFlow *loadingFlow))completion;
+- (void)dismissMessage;
 
 // The following are for moments when you don't know how long something will take
 - (void)startWaitingWithSection:(LoadingFlowSection *)section;
