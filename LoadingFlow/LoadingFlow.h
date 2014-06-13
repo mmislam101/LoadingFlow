@@ -83,7 +83,7 @@
 // You can reuse this loading flow or even clear it and add new events for reuse.
 // A 0.0 duration means the message will stay up indefinitely.
 - (void)displayMessageLabel:(UILabel *)label duration:(NSTimeInterval)duration withCompletion:(void (^)(LoadingFlow *loadingFlow))completion;
-- (void)dismissMessage;
+- (void)dismissMessageWithCompletion:(void (^)(LoadingFlow *loadingFlow))completion;
 
 // The following are for moments when you don't know how long something will take
 - (void)startWaitingWithSection:(LoadingFlowSection *)section;
