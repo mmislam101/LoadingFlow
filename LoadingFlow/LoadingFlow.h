@@ -34,6 +34,14 @@
 #import "EasyTimeline.h"
 #import "LoadingProgressView.h"
 
+typedef enum
+{
+	LoadingFlowStateDismissed, // Not being displayed
+	LoadingFlowStateLoading, // Loading sections
+	LoadingFlowStateMessage, // Displaying a message
+	LoadingFlowStateWait // Displaying wait
+} LoadingFlowState;
+
 @class LoadingFlow, LoadingFlowSectionView;
 
 @protocol LoadingFlowDelegate <NSObject>
@@ -54,6 +62,7 @@
 
 @property (nonatomic, strong) UIColor *tintColor;
 @property (nonatomic, readonly) NSArray *sections;
+@property (nonatomic, readonly) LoadingFlowState state;
 
 #define LOADING_FLOW_RING_SIZE			0.33	// This determines size of loading ring
 #define LOADING_FLOW_RING_GAP_RATIO		0.05	// This determines how large the gap between loading indicator and sections are

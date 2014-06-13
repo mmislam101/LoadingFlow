@@ -97,6 +97,7 @@ displayingMessage		= _displayingMessage;
 	_hasStartedLoadingFlow	= NO;
 	_displayingMessage		= NO;
 	_isDismissingMessage	= NO;
+	_state					= LoadingFlowStateDismissed;
 
 	UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
 	[self addGestureRecognizer:tapGesture];
@@ -141,6 +142,7 @@ displayingMessage		= _displayingMessage;
 	_waiting				= NO;
 	_hasStartedLoadingFlow	= NO;
 	_isDismissingMessage	= NO;
+	_state					= LoadingFlowStateDismissed;
 
 	[_timeline stop];
 	[_timeline clear];
@@ -197,6 +199,7 @@ displayingMessage		= _displayingMessage;
 	[self initValues];
 
 	_hasStartedLoadingFlow					= YES;
+	_state									= LoadingFlowStateLoading;
 
 	__block NSTimeInterval duration			= 0.0;
 	__weak LoadingFlow *weakSelf			= self;
@@ -253,7 +256,7 @@ displayingMessage		= _displayingMessage;
 	if (_displayingMessage)
 		return;
 
-	_displayingMessage = YES;
+	_displayingMessage	= YES;
 
 	if (_hasStartedLoadingFlow)
 	{
@@ -277,6 +280,8 @@ displayingMessage		= _displayingMessage;
 		// Display the loading flow here
 		self.alpha							= 1.0;
 	}
+
+	_state				= LoadingFlowStateMessage;
 
 	UIView *messageView	= [[UIView alloc] initWithFrame:self.bounds];
 	messageView.alpha	= 0.0;
@@ -416,6 +421,7 @@ displayingMessage		= _displayingMessage;
 	[self initValues];
 
 	_waiting							= YES;
+	_state								= LoadingFlowStateWait;
 
 	_arcView.innerRadius				= (_sideWidth / 2.0) * 0.4;
 
