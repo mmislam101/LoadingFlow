@@ -105,6 +105,12 @@ displayingMessage		= _displayingMessage;
     return self;
 }
 
+- (void)dealloc
+{
+	// Destroy and invalidate timers
+	[self destroyValues];
+}
+
 - (void)initValues
 {
 	self.alpha							= 0.0;
