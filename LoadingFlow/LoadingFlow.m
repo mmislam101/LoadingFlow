@@ -119,12 +119,12 @@ displayingMessage		= _displayingMessage;
 	_currentSection						= 0;
 	_hasStartedLoadingFlow				= NO;
 
-	_progressView						= [[LoadingProgressView alloc] initWithFrame:CGRectMake(0.0, 0.0, 1.0, 1.0)];
+	_progressView						= [[LoadingProgressView alloc] initWithFrame:CGRectZero];
 	_progressView.center				= CGPointMake(frame.size.width / 2.0, frame.size.height / 2.0);
 	_progressView.progress				= 0.0;
 	_progressView.transform				= CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(-90.0));
 	_progressView.progressTintColor		= _tintColor;
-	_progressView.trackTintColor		= [[UIColor blackColor] colorWithAlphaComponent:0.5];
+	_progressView.trackTintColor		= _trackTintColor;
 	_progressView.thicknessRatio		= 0.4;
 
 	[self addSubview:_progressView];

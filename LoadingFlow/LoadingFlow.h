@@ -61,6 +61,7 @@ typedef enum
 #pragma mark Loading Flow Properties
 
 @property (nonatomic, strong) UIColor *tintColor;
+@property (nonatomic, strong) UIColor *trackTintColor;
 @property (nonatomic, readonly) NSArray *sections;
 @property (nonatomic, readonly) LoadingFlowState state;
 
