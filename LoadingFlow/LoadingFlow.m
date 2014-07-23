@@ -45,6 +45,7 @@
 
 	EasyTimeline *_timeline;
 	NSTimeInterval _tickFactor;
+	EasyTimeline *_messageTimer;
 
 	NSInteger _currentSection;
 
@@ -67,6 +68,7 @@
 @property (nonatomic, strong) LoadingFlowSectionView *arcView;
 @property (nonatomic, strong) LoadingProgressView *progressView;
 @property (nonatomic, assign) BOOL displayingMessage;
+@property (nonatomic, assign) BOOL isDismissingMessage;
 
 @end
 
@@ -78,7 +80,8 @@ currentSection			= _currentSection,
 arcView					= _arcView,
 timeline				= _timeline,
 hasStartedLoadingFlow	= _hasStartedLoadingFlow,
-displayingMessage		= _displayingMessage;
+displayingMessage		= _displayingMessage,
+isDismissingMessage		= _isDismissingMessage;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -319,14 +322,13 @@ displayingMessage		= _displayingMessage;
 		weakSelf.arcView.alpha		= 0.0;
 		messageView.alpha			= 1.0;
 	} completion:^(BOOL finished) {
-		// Using a delay on a normal UIView animation with delay causes the gesture recognizer to not function
-		// even with the UIViewAnimationOptionAllowUserInteraction flag set on options
-		// So did the delay this way
 		if (duration > 0.0)
 		{
-			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, duration * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+			_messageTimer					= [[EasyTimeline alloc] init];
+			_messageTimer.duration			= duration;
+			_messageTimer.completionBlock	= ^void (EasyTimeline *timeline) {
 				[weakSelf dismissMessageWithCompletion:completion];
-			});
+			};
 		}
 	}];
 }
@@ -336,7 +338,14 @@ displayingMessage		= _displayingMessage;
 	if (_isDismissingMessage)
 		return;
 
-	_isDismissingMessage = YES;
+	// Invalidate the cancel timer
+	if (_messageTimer)
+	{
+		[_messageTimer stop];
+		_messageTimer					= nil;
+	}
+
+	_isDismissingMessage			= YES;
 
 	__weak LoadingFlow *weakSelf	= self;
 	[UIView animateWithDuration:0.5
@@ -346,6 +355,7 @@ displayingMessage		= _displayingMessage;
 						 weakSelf.alpha = 0.0;
 					 } completion:^(BOOL finished) {
 						 [weakSelf destroyValues];
+						 weakSelf.isDismissingMessage = NO;
 						 weakSelf.displayingMessage = NO;
 
 						 if (completion)
