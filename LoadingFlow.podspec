@@ -15,6 +15,6 @@ s.requires_arc     = true
 
 s.source_files     = 'LoadingFlow'
 
-s.dependency 'EasyTimeline', :git => 'https://github.com/mmislam101/EasyTimeline.git'
+s.dependency       = 'EasyTimeline', :git => 'https://github.com/mmislam101/EasyTimeline.git'
 
 end
