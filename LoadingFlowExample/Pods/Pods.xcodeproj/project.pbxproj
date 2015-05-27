@@ -1,0 +1,451 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0047101C4FBFC5CEBB9E61FB /* Pods-EasyTimeline-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CDD1E811256429521C6AD49 /* Pods-EasyTimeline-dummy.m */; };
+		13016406CB6086EEE7C58A19 /* Pods-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = AAEFD9D753FF726A5390D0C9 /* Pods-dummy.m */; };
+		4F84B546F18D7746E03F53BB /* NSTimer+EasyTimeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B711B055819D41E50D08A83 /* NSTimer+EasyTimeline.h */; };
+		53E8432DEA29987E4E3F5E90 /* EasyTimeline.m in Sources */ = {isa = PBXBuildFile; fileRef = EC9510A96579B963B041AAC7 /* EasyTimeline.m */; };
+		5A61B6328817E8C59CEF3BDF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77DFA98E39F39CBCFDABB279 /* Foundation.framework */; };
+		9242535221A679A7A395C71E /* EasyTimeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 9DDE900615E5FF77568D8448 /* EasyTimeline.h */; };
+		CDC441131A5C1117A69D305D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77DFA98E39F39CBCFDABB279 /* Foundation.framework */; };
+		D8BA07355C20685BC671F01E /* NSTimer+EasyTimeline.m in Sources */ = {isa = PBXBuildFile; fileRef = 551BD4CDA34C97CAEBAA4850 /* NSTimer+EasyTimeline.m */; };
+		E71836381F881463A4C1BE21 /* EasyTimelineEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 124BD18AB0390313EC5ED666 /* EasyTimelineEvent.m */; };
+		E88AC420580061B5601959A6 /* EasyTimelineEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 860D7FA3AFD24FB38D80CF2F /* EasyTimelineEvent.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		140945D8677FB957A1083465 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1B9E080F002A025796FCB251 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AC7EB0E3656340BEA4D43E82;
+			remoteInfo = "Pods-EasyTimeline";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		116166873F5B79B1857B9EDD /* Pods-EasyTimeline.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-EasyTimeline.xcconfig"; sourceTree = "<group>"; };
+		124BD18AB0390313EC5ED666 /* EasyTimelineEvent.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = EasyTimelineEvent.m; path = EasyTimeline/EasyTimelineEvent.m; sourceTree = "<group>"; };
+		1B9140C971EC82FB26F4ECD7 /* Pods-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-acknowledgements.markdown"; sourceTree = "<group>"; };
+		3CDD1E811256429521C6AD49 /* Pods-EasyTimeline-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-EasyTimeline-dummy.m"; sourceTree = "<group>"; };
+		529BB360270439FA093CAD88 /* Pods-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-acknowledgements.plist"; sourceTree = "<group>"; };
+		539DE2C363B5DC0FCD263E8C /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Pods.debug.xcconfig; sourceTree = "<group>"; };
+		551BD4CDA34C97CAEBAA4850 /* NSTimer+EasyTimeline.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSTimer+EasyTimeline.m"; path = "EasyTimeline/NSTimer+EasyTimeline.m"; sourceTree = "<group>"; };
+		6466BE061A2231AA078DC325 /* Pods-EasyTimeline-Private.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-EasyTimeline-Private.xcconfig"; sourceTree = "<group>"; };
+		6B711B055819D41E50D08A83 /* NSTimer+EasyTimeline.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSTimer+EasyTimeline.h"; path = "EasyTimeline/NSTimer+EasyTimeline.h"; sourceTree = "<group>"; };
+		7009B08B22806D01C91CA4B3 /* Pods-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-resources.sh"; sourceTree = "<group>"; };
+		77DFA98E39F39CBCFDABB279 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		860D7FA3AFD24FB38D80CF2F /* EasyTimelineEvent.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = EasyTimelineEvent.h; path = EasyTimeline/EasyTimelineEvent.h; sourceTree = "<group>"; };
+		9DDE900615E5FF77568D8448 /* EasyTimeline.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = EasyTimeline.h; path = EasyTimeline/EasyTimeline.h; sourceTree = "<group>"; };
+		AAEFD9D753FF726A5390D0C9 /* Pods-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-dummy.m"; sourceTree = "<group>"; };
+		AE7EF38E8BBB27D9EE9EE12B /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Pods.release.xcconfig; sourceTree = "<group>"; };
+		BEEE8B6B2200E601DBBD797E /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D8D3E8E87A7EA64456BEFE52 /* Pods-EasyTimeline-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-EasyTimeline-prefix.pch"; sourceTree = "<group>"; };
+		EA6C25170FC07FCD145A340C /* Podfile */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		EC9510A96579B963B041AAC7 /* EasyTimeline.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = EasyTimeline.m; path = EasyTimeline/EasyTimeline.m; sourceTree = "<group>"; };
+		EFBCDA54B17985F6BB944C51 /* Pods-environment.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-environment.h"; sourceTree = "<group>"; };
+		FDDBD79F2FBB2FB56F12D67C /* libPods-EasyTimeline.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-EasyTimeline.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		7E90BFB459403D9B1D360D51 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5A61B6328817E8C59CEF3BDF /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D87D35ED9E782A76DA45BFBB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CDC441131A5C1117A69D305D /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		057EE9EA7B0F011469D0FB14 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				116166873F5B79B1857B9EDD /* Pods-EasyTimeline.xcconfig */,
+				6466BE061A2231AA078DC325 /* Pods-EasyTimeline-Private.xcconfig */,
+				3CDD1E811256429521C6AD49 /* Pods-EasyTimeline-dummy.m */,
+				D8D3E8E87A7EA64456BEFE52 /* Pods-EasyTimeline-prefix.pch */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/Pods-EasyTimeline";
+			sourceTree = "<group>";
+		};
+		0E7AF3450336BB80C1046867 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				14BFC15DF38B1F8317061A0B /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		14BFC15DF38B1F8317061A0B /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				77DFA98E39F39CBCFDABB279 /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		7770C05C756149159769E30A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BEEE8B6B2200E601DBBD797E /* libPods.a */,
+				FDDBD79F2FBB2FB56F12D67C /* libPods-EasyTimeline.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8B816C58AF18413CB1B8A814 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				8E111399B78A246F4DE7DC55 /* EasyTimeline */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		8E111399B78A246F4DE7DC55 /* EasyTimeline */ = {
+			isa = PBXGroup;
+			children = (
+				9DDE900615E5FF77568D8448 /* EasyTimeline.h */,
+				EC9510A96579B963B041AAC7 /* EasyTimeline.m */,
+				860D7FA3AFD24FB38D80CF2F /* EasyTimelineEvent.h */,
+				124BD18AB0390313EC5ED666 /* EasyTimelineEvent.m */,
+				6B711B055819D41E50D08A83 /* NSTimer+EasyTimeline.h */,
+				551BD4CDA34C97CAEBAA4850 /* NSTimer+EasyTimeline.m */,
+				057EE9EA7B0F011469D0FB14 /* Support Files */,
+			);
+			path = EasyTimeline;
+			sourceTree = "<group>";
+		};
+		B8351BAD01856B47AEAAD156 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				1B9140C971EC82FB26F4ECD7 /* Pods-acknowledgements.markdown */,
+				529BB360270439FA093CAD88 /* Pods-acknowledgements.plist */,
+				AAEFD9D753FF726A5390D0C9 /* Pods-dummy.m */,
+				EFBCDA54B17985F6BB944C51 /* Pods-environment.h */,
+				7009B08B22806D01C91CA4B3 /* Pods-resources.sh */,
+				539DE2C363B5DC0FCD263E8C /* Pods.debug.xcconfig */,
+				AE7EF38E8BBB27D9EE9EE12B /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			path = "Target Support Files/Pods";
+			sourceTree = "<group>";
+		};
+		C531207C48CC281551B0B589 = {
+			isa = PBXGroup;
+			children = (
+				EA6C25170FC07FCD145A340C /* Podfile */,
+				0E7AF3450336BB80C1046867 /* Frameworks */,
+				8B816C58AF18413CB1B8A814 /* Pods */,
+				7770C05C756149159769E30A /* Products */,
+				D1A5572372D5495C63C139AE /* Targets Support Files */,
+			);
+			sourceTree = "<group>";
+		};
+		D1A5572372D5495C63C139AE /* Targets Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				B8351BAD01856B47AEAAD156 /* Pods */,
+			);
+			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		3409A55B348390E86F4FC498 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9242535221A679A7A395C71E /* EasyTimeline.h in Headers */,
+				E88AC420580061B5601959A6 /* EasyTimelineEvent.h in Headers */,
+				4F84B546F18D7746E03F53BB /* NSTimer+EasyTimeline.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		2C7D12EE347231CA628CEFB7 /* Pods */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 12A622D3571DCDA466BC7639 /* Build configuration list for PBXNativeTarget "Pods" */;
+			buildPhases = (
+				9F6D16A2909A2329CDE9EF2B /* Sources */,
+				D87D35ED9E782A76DA45BFBB /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				238E67C99F3852D23603911B /* PBXTargetDependency */,
+			);
+			name = Pods;
+			productName = Pods;
+			productReference = BEEE8B6B2200E601DBBD797E /* libPods.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		AC7EB0E3656340BEA4D43E82 /* Pods-EasyTimeline */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F880BCDF73F017DAC0CFBC56 /* Build configuration list for PBXNativeTarget "Pods-EasyTimeline" */;
+			buildPhases = (
+				6A9628F56DD133A3F5953DC4 /* Sources */,
+				7E90BFB459403D9B1D360D51 /* Frameworks */,
+				3409A55B348390E86F4FC498 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Pods-EasyTimeline";
+			productName = "Pods-EasyTimeline";
+			productReference = FDDBD79F2FBB2FB56F12D67C /* libPods-EasyTimeline.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1B9E080F002A025796FCB251 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0510;
+			};
+			buildConfigurationList = 46FDEEF1443B09B49AF41925 /* Build configuration list for PBXProject "Pods" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = C531207C48CC281551B0B589;
+			productRefGroup = 7770C05C756149159769E30A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2C7D12EE347231CA628CEFB7 /* Pods */,
+				AC7EB0E3656340BEA4D43E82 /* Pods-EasyTimeline */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6A9628F56DD133A3F5953DC4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				53E8432DEA29987E4E3F5E90 /* EasyTimeline.m in Sources */,
+				E71836381F881463A4C1BE21 /* EasyTimelineEvent.m in Sources */,
+				D8BA07355C20685BC671F01E /* NSTimer+EasyTimeline.m in Sources */,
+				0047101C4FBFC5CEBB9E61FB /* Pods-EasyTimeline-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9F6D16A2909A2329CDE9EF2B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				13016406CB6086EEE7C58A19 /* Pods-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		238E67C99F3852D23603911B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Pods-EasyTimeline";
+			target = AC7EB0E3656340BEA4D43E82 /* Pods-EasyTimeline */;
+			targetProxy = 140945D8677FB957A1083465 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		3D8011C2F2D25C3D67E844F1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = AE7EF38E8BBB27D9EE9EE12B /* Pods.release.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		58BF1C243587DE36BB3FF8E0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6466BE061A2231AA078DC325 /* Pods-EasyTimeline-Private.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_PREFIX_HEADER = "Target Support Files/Pods-EasyTimeline/Pods-EasyTimeline-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		71412AF106644344AFB5E9A9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				ONLY_ACTIVE_ARCH = YES;
+				STRIP_INSTALLED_PRODUCT = NO;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Debug;
+		};
+		90756105EAD9506BAC404538 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 539DE2C363B5DC0FCD263E8C /* Pods.debug.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		99B8437B20D6C2B2B779AF02 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PREPROCESSOR_DEFINITIONS = "RELEASE=1";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				STRIP_INSTALLED_PRODUCT = NO;
+				SYMROOT = "${SRCROOT}/../build";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		BD6FA57783347E2B99006623 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6466BE061A2231AA078DC325 /* Pods-EasyTimeline-Private.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_PREFIX_HEADER = "Target Support Files/Pods-EasyTimeline/Pods-EasyTimeline-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		12A622D3571DCDA466BC7639 /* Build configuration list for PBXNativeTarget "Pods" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				90756105EAD9506BAC404538 /* Debug */,
+				3D8011C2F2D25C3D67E844F1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		46FDEEF1443B09B49AF41925 /* Build configuration list for PBXProject "Pods" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				71412AF106644344AFB5E9A9 /* Debug */,
+				99B8437B20D6C2B2B779AF02 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F880BCDF73F017DAC0CFBC56 /* Build configuration list for PBXNativeTarget "Pods-EasyTimeline" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				58BF1C243587DE36BB3FF8E0 /* Debug */,
+				BD6FA57783347E2B99006623 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1B9E080F002A025796FCB251 /* Project object */;
+}

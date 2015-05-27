@@ -1,0 +1,19 @@
+PODS:
+  - EasyTimeline (1.0.0)
+
+DEPENDENCIES:
+  - EasyTimeline (from `https://github.com/mmislam101/EasyTimeline.git`)
+
+EXTERNAL SOURCES:
+  EasyTimeline:
+    :git: https://github.com/mmislam101/EasyTimeline.git
+
+CHECKOUT OPTIONS:
+  EasyTimeline:
+    :commit: 5b149eb3d4db0e54a45976354b10d0e2cc3df7ac
+    :git: https://github.com/mmislam101/EasyTimeline.git
+
+SPEC CHECKSUMS:
+  EasyTimeline: fc605e9dde6c211cc59ab783937b81cbae43d41a
+
+COCOAPODS: 0.36.0

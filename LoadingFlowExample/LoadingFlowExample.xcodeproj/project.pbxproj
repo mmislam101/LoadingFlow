@@ -21,15 +21,13 @@
 		B61AB8B618C2FD160043850F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B61AB8B418C2FD160043850F /* InfoPlist.strings */; };
 		B61AB8B818C2FD160043850F /* LoadingFlowExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B61AB8B718C2FD160043850F /* LoadingFlowExampleTests.m */; };
 		B61AB8D718C2FFDB0043850F /* DACircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = B61AB8CB18C2FFDB0043850F /* DACircularProgressView.m */; };
-		B61AB8D818C2FFDB0043850F /* EasyTimeline.m in Sources */ = {isa = PBXBuildFile; fileRef = B61AB8CE18C2FFDB0043850F /* EasyTimeline.m */; };
-		B61AB8D918C2FFDB0043850F /* EasyTimelineEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = B61AB8D018C2FFDB0043850F /* EasyTimelineEvent.m */; };
-		B61AB8DA18C2FFDB0043850F /* NSTimer+EasyTimeline.m in Sources */ = {isa = PBXBuildFile; fileRef = B61AB8D218C2FFDB0043850F /* NSTimer+EasyTimeline.m */; };
 		B61AB8DB18C2FFDB0043850F /* LoadingFlow.m in Sources */ = {isa = PBXBuildFile; fileRef = B61AB8D418C2FFDB0043850F /* LoadingFlow.m */; };
 		B61AB8DC18C2FFDB0043850F /* LoadingFlowSection.m in Sources */ = {isa = PBXBuildFile; fileRef = B61AB8D618C2FFDB0043850F /* LoadingFlowSection.m */; };
 		B61AB8E218C995B30043850F /* SKBounceAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = B61AB8E118C995B30043850F /* SKBounceAnimation.m */; };
 		B653905A1900EBF800042DA0 /* LoadingFlowSectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = B65390591900EBF800042DA0 /* LoadingFlowSectionView.m */; };
 		B676CAB0190360570067FC46 /* LoadingArcLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = B676CAAF190360570067FC46 /* LoadingArcLayer.m */; };
 		B692E1B11901F61900BD200A /* LoadingProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = B692E1B01901F61900BD200A /* LoadingProgressView.m */; };
+		DC16B585D654B5C29AF286B4 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EF84670EF47B48509208905B /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +41,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		51DEEE10529BFAEAD65B2E85 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		A3452C2267BEC5D95E40C303 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		B61AB88618C2FD150043850F /* LoadingFlowExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LoadingFlowExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B61AB88918C2FD150043850F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B61AB88B18C2FD150043850F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -63,12 +63,6 @@
 		B61AB8B718C2FD160043850F /* LoadingFlowExampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LoadingFlowExampleTests.m; sourceTree = "<group>"; };
 		B61AB8CA18C2FFDB0043850F /* DACircularProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DACircularProgressView.h; sourceTree = "<group>"; };
 		B61AB8CB18C2FFDB0043850F /* DACircularProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DACircularProgressView.m; sourceTree = "<group>"; };
-		B61AB8CD18C2FFDB0043850F /* EasyTimeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EasyTimeline.h; sourceTree = "<group>"; };
-		B61AB8CE18C2FFDB0043850F /* EasyTimeline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EasyTimeline.m; sourceTree = "<group>"; };
-		B61AB8CF18C2FFDB0043850F /* EasyTimelineEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EasyTimelineEvent.h; sourceTree = "<group>"; };
-		B61AB8D018C2FFDB0043850F /* EasyTimelineEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EasyTimelineEvent.m; sourceTree = "<group>"; };
-		B61AB8D118C2FFDB0043850F /* NSTimer+EasyTimeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTimer+EasyTimeline.h"; sourceTree = "<group>"; };
-		B61AB8D218C2FFDB0043850F /* NSTimer+EasyTimeline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSTimer+EasyTimeline.m"; sourceTree = "<group>"; };
 		B61AB8D318C2FFDB0043850F /* LoadingFlow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingFlow.h; sourceTree = "<group>"; };
 		B61AB8D418C2FFDB0043850F /* LoadingFlow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingFlow.m; sourceTree = "<group>"; };
 		B61AB8D518C2FFDB0043850F /* LoadingFlowSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingFlowSection.h; sourceTree = "<group>"; };
@@ -81,6 +75,7 @@
 		B676CAAF190360570067FC46 /* LoadingArcLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingArcLayer.m; sourceTree = "<group>"; };
 		B692E1AF1901F61900BD200A /* LoadingProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingProgressView.h; sourceTree = "<group>"; };
 		B692E1B01901F61900BD200A /* LoadingProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingProgressView.m; sourceTree = "<group>"; };
+		EF84670EF47B48509208905B /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +86,7 @@
 				B61AB88C18C2FD150043850F /* CoreGraphics.framework in Frameworks */,
 				B61AB88E18C2FD150043850F /* UIKit.framework in Frameworks */,
 				B61AB88A18C2FD150043850F /* Foundation.framework in Frameworks */,
+				DC16B585D654B5C29AF286B4 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -107,6 +103,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1E417D7D01CF0555EE3B55F3 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				A3452C2267BEC5D95E40C303 /* Pods.debug.xcconfig */,
+				51DEEE10529BFAEAD65B2E85 /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		B61AB87D18C2FD150043850F = {
 			isa = PBXGroup;
 			children = (
@@ -114,6 +119,7 @@
 				B61AB8B118C2FD160043850F /* LoadingFlowExampleTests */,
 				B61AB88818C2FD150043850F /* Frameworks */,
 				B61AB88718C2FD150043850F /* Products */,
+				1E417D7D01CF0555EE3B55F3 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -133,6 +139,7 @@
 				B61AB88B18C2FD150043850F /* CoreGraphics.framework */,
 				B61AB88D18C2FD150043850F /* UIKit.framework */,
 				B61AB8AB18C2FD160043850F /* XCTest.framework */,
+				EF84670EF47B48509208905B /* libPods.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -185,7 +192,6 @@
 			children = (
 				B61AB8DF18C995B30043850F /* SKBounceAnimation */,
 				B61AB8C918C2FFDB0043850F /* DACircularProgress */,
-				B61AB8CC18C2FFDB0043850F /* EasyTimeline */,
 				B61AB8D318C2FFDB0043850F /* LoadingFlow.h */,
 				B61AB8D418C2FFDB0043850F /* LoadingFlow.m */,
 				B61AB8D518C2FFDB0043850F /* LoadingFlowSection.h */,
@@ -210,19 +216,6 @@
 			path = DACircularProgress;
 			sourceTree = "<group>";
 		};
-		B61AB8CC18C2FFDB0043850F /* EasyTimeline */ = {
-			isa = PBXGroup;
-			children = (
-				B61AB8CD18C2FFDB0043850F /* EasyTimeline.h */,
-				B61AB8CE18C2FFDB0043850F /* EasyTimeline.m */,
-				B61AB8CF18C2FFDB0043850F /* EasyTimelineEvent.h */,
-				B61AB8D018C2FFDB0043850F /* EasyTimelineEvent.m */,
-				B61AB8D118C2FFDB0043850F /* NSTimer+EasyTimeline.h */,
-				B61AB8D218C2FFDB0043850F /* NSTimer+EasyTimeline.m */,
-			);
-			path = EasyTimeline;
-			sourceTree = "<group>";
-		};
 		B61AB8DF18C995B30043850F /* SKBounceAnimation */ = {
 			isa = PBXGroup;
 			children = (
@@ -239,9 +232,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B61AB8BB18C2FD160043850F /* Build configuration list for PBXNativeTarget "LoadingFlowExample" */;
 			buildPhases = (
+				AFB422B1280A70E9AB453DC9 /* Check Pods Manifest.lock */,
 				B61AB88218C2FD150043850F /* Sources */,
 				B61AB88318C2FD150043850F /* Frameworks */,
 				B61AB88418C2FD150043850F /* Resources */,
+				7FA588CC6067011990CADE59 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -324,6 +319,39 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		7FA588CC6067011990CADE59 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AFB422B1280A70E9AB453DC9 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		B61AB88218C2FD150043850F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -333,15 +361,12 @@
 				B61AB8D718C2FFDB0043850F /* DACircularProgressView.m in Sources */,
 				B676CAB0190360570067FC46 /* LoadingArcLayer.m in Sources */,
 				B692E1B11901F61900BD200A /* LoadingProgressView.m in Sources */,
-				B61AB8D818C2FFDB0043850F /* EasyTimeline.m in Sources */,
-				B61AB8DA18C2FFDB0043850F /* NSTimer+EasyTimeline.m in Sources */,
 				B61AB8A318C2FD150043850F /* LFEViewController.m in Sources */,
 				B653905A1900EBF800042DA0 /* LoadingFlowSectionView.m in Sources */,
 				B61AB89618C2FD150043850F /* main.m in Sources */,
 				B61AB8DB18C2FFDB0043850F /* LoadingFlow.m in Sources */,
 				B61AB8DC18C2FFDB0043850F /* LoadingFlowSection.m in Sources */,
 				B61AB8E218C995B30043850F /* SKBounceAnimation.m in Sources */,
-				B61AB8D918C2FFDB0043850F /* EasyTimelineEvent.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -459,6 +484,7 @@
 		};
 		B61AB8BC18C2FD160043850F /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A3452C2267BEC5D95E40C303 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -472,6 +498,7 @@
 		};
 		B61AB8BD18C2FD160043850F /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 51DEEE10529BFAEAD65B2E85 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
